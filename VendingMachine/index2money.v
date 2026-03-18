@@ -1,4 +1,4 @@
-module index2money(
+0module index2money(
 	input wire [5:0] index,
 	output wire [10:0] money
 );
