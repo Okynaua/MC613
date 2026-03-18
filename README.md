@@ -1,7 +1,7 @@
 # MC613
 
 A fazer:
-- AcuuladorModulo
+- AccumuladorModulo
 - Módulo de Conta
 	- Subtrator
 	- Complemento de 2
