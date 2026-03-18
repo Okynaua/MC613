@@ -1,5 +1,5 @@
-Analysis & Synthesis report for VendingMachine
-Wed Mar 18 14:57:31 2026
+Analysis & Elaboration report for VendingMachine
+Wed Mar 18 17:13:22 2026
 Quartus Prime Version 17.1.0 Build 590 10/25/2017 SJ Lite Edition
 
 
@@ -7,10 +7,10 @@ Quartus Prime Version 17.1.0 Build 590 10/25/2017 SJ Lite Edition
 ; Table of Contents ;
 ---------------------
   1. Legal Notice
-  2. Analysis & Synthesis Summary
-  3. Analysis & Synthesis Settings
-  4. Parallel Compilation
-  5. Analysis & Synthesis Messages
+  2. Analysis & Elaboration Summary
+  3. Parallel Compilation
+  4. Analysis & Elaboration Settings
+  5. Analysis & Elaboration Messages
 
 
 
@@ -33,31 +33,47 @@ refer to the applicable agreement for further details.
 
 
 
-+---------------------------------------------------------------------------+
-; Analysis & Synthesis Summary                                              ;
-+-----------------------------+---------------------------------------------+
-; Analysis & Synthesis Status ; Failed - Wed Mar 18 14:57:31 2026           ;
-; Quartus Prime Version       ; 17.1.0 Build 590 10/25/2017 SJ Lite Edition ;
-; Revision Name               ; VendingMachine                              ;
-; Top-level Entity Name       ; VendingMachine                              ;
-; Family                      ; Cyclone V                                   ;
-; Logic utilization (in ALMs) ; N/A until Partition Merge                   ;
-; Total registers             ; N/A until Partition Merge                   ;
-; Total pins                  ; N/A until Partition Merge                   ;
-; Total virtual pins          ; N/A until Partition Merge                   ;
-; Total block memory bits     ; N/A until Partition Merge                   ;
-; Total PLLs                  ; N/A until Partition Merge                   ;
-; Total DLLs                  ; N/A until Partition Merge                   ;
-+-----------------------------+---------------------------------------------+
++-----------------------------------------------------------------------------+
+; Analysis & Elaboration Summary                                              ;
++-------------------------------+---------------------------------------------+
+; Analysis & Elaboration Status ; Failed - Wed Mar 18 17:13:22 2026           ;
+; Quartus Prime Version         ; 17.1.0 Build 590 10/25/2017 SJ Lite Edition ;
+; Revision Name                 ; VendingMachine                              ;
+; Top-level Entity Name         ; Accumulator                                 ;
+; Family                        ; Cyclone V                                   ;
+; Logic utilization (in ALMs)   ; N/A until Partition Merge                   ;
+; Total registers               ; N/A until Partition Merge                   ;
+; Total pins                    ; N/A until Partition Merge                   ;
+; Total virtual pins            ; N/A until Partition Merge                   ;
+; Total block memory bits       ; N/A until Partition Merge                   ;
+; Total PLLs                    ; N/A until Partition Merge                   ;
+; Total DLLs                    ; N/A until Partition Merge                   ;
++-------------------------------+---------------------------------------------+
+
+
++------------------------------------------+
+; Parallel Compilation                     ;
++----------------------------+-------------+
+; Processors                 ; Number      ;
++----------------------------+-------------+
+; Number detected on machine ; 20          ;
+; Maximum allowed            ; 12          ;
+;                            ;             ;
+; Average used               ; 1.00        ;
+; Maximum used               ; 1           ;
+;                            ;             ;
+; Usage by Processor         ; % Time Used ;
+;     Processor 1            ; 100.0%      ;
++----------------------------+-------------+
 
 
 +---------------------------------------------------------------------------------------------------------------------------+
-; Analysis & Synthesis Settings                                                                                             ;
+; Analysis & Elaboration Settings                                                                                           ;
 +---------------------------------------------------------------------------------+--------------------+--------------------+
 ; Option                                                                          ; Setting            ; Default Value      ;
 +---------------------------------------------------------------------------------+--------------------+--------------------+
 ; Device                                                                          ; 5CSEMA5F31C6       ;                    ;
-; Top-level entity name                                                           ; VendingMachine     ; VendingMachine     ;
+; Top-level entity name                                                           ; Accumulator        ; VendingMachine     ;
 ; Family name                                                                     ; Cyclone V          ; Cyclone V          ;
 ; Use smart compilation                                                           ; Off                ; Off                ;
 ; Enable parallel Assembler and TimeQuest Timing Analyzer during compilation      ; On                 ; On                 ;
@@ -138,37 +154,47 @@ refer to the applicable agreement for further details.
 +---------------------------------------------------------------------------------+--------------------+--------------------+
 
 
-+------------------------------------------+
-; Parallel Compilation                     ;
-+----------------------------+-------------+
-; Processors                 ; Number      ;
-+----------------------------+-------------+
-; Number detected on machine ; 20          ;
-; Maximum allowed            ; 12          ;
-;                            ;             ;
-; Average used               ; 1.00        ;
-; Maximum used               ; 1           ;
-;                            ;             ;
-; Usage by Processor         ; % Time Used ;
-;     Processor 1            ; 100.0%      ;
-+----------------------------+-------------+
-
-
-+-------------------------------+
-; Analysis & Synthesis Messages ;
-+-------------------------------+
++---------------------------------+
+; Analysis & Elaboration Messages ;
++---------------------------------+
 Info: *******************************************************************
-Info: Running Quartus Prime Analysis & Synthesis
+Info: Running Quartus Prime Analysis & Elaboration
     Info: Version 17.1.0 Build 590 10/25/2017 SJ Lite Edition
-    Info: Processing started: Wed Mar 18 14:57:22 2026
-Info: Command: quartus_map --read_settings_files=on --write_settings_files=off VendingMachine -c VendingMachine
+    Info: Processing started: Wed Mar 18 17:13:14 2026
+Info: Command: quartus_map --read_settings_files=on --write_settings_files=off VendingMachine -c VendingMachine --analysis_and_elaboration
 Warning (18236): Number of processors has not been specified which may cause overloading on shared machines.  Set the global assignment NUM_PARALLEL_PROCESSORS in your QSF to an appropriate value for best performance.
 Info (20030): Parallel compilation is enabled and will use 12 of the 12 processors detected
-Error (12007): Top-level design entity "VendingMachine" is undefined
-Error: Quartus Prime Analysis & Synthesis was unsuccessful. 1 error, 1 warning
-    Error: Peak virtual memory: 1144 megabytes
-    Error: Processing ended: Wed Mar 18 14:57:31 2026
-    Error: Elapsed time: 00:00:09
+Info (12021): Found 1 design units, including 1 entities, in source file product2value.v
+    Info (12023): Found entity 1: product2value File: /home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine/product2value.v Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file espera_1s.v
+    Info (12023): Found entity 1: espera_1s File: /home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine/espera_1s.v Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file index2money.v
+    Info (12023): Found entity 1: index2money File: /home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine/index2money.v Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file Register.v
+    Info (12023): Found entity 1: register File: /home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine/Register.v Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file multiplexer.v
+    Info (12023): Found entity 1: multiplexer File: /home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine/multiplexer.v Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file acumulador_modulo.v
+    Info (12023): Found entity 1: acumulador_modulo File: /home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine/acumulador_modulo.v Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file bin2hex.v
+    Info (12023): Found entity 1: bin2hex File: /home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine/bin2hex.v Line: 4
+Info (12021): Found 1 design units, including 1 entities, in source file Accumulator.v
+    Info (12023): Found entity 1: accumulator File: /home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine/Accumulator.v Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file is_zero.v
+    Info (12023): Found entity 1: is_zero File: /home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine/is_zero.v Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file bin2decimal.v
+    Info (12023): Found entity 1: bin24hex File: /home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine/bin2decimal.v Line: 1
+Warning (10275): Verilog HDL Module Instantiation warning at product_selection.v(29): ignored dangling comma in List of Port Connections File: /home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine/product_selection.v Line: 29
+Info (12021): Found 1 design units, including 1 entities, in source file product_selection.v
+    Info (12023): Found entity 1: product_selection File: /home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine/product_selection.v Line: 2
+Info (12021): Found 1 design units, including 1 entities, in source file bin11_to_bcd4.v
+    Info (12023): Found entity 1: bin11_to_bcd4 File: /home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine/bin11_to_bcd4.v Line: 1
+Warning (10236): Verilog HDL Implicit Net warning at index2money.v(6): created implicit net for "Value" File: /home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine/index2money.v Line: 6
+Error (12007): Top-level design entity "Accumulator" is undefined
+Error: Quartus Prime Analysis & Elaboration was unsuccessful. 1 error, 3 warnings
+    Error: Peak virtual memory: 1463 megabytes
+    Error: Processing ended: Wed Mar 18 17:13:22 2026
+    Error: Elapsed time: 00:00:08
     Error: Total CPU time (on all processors): 00:00:27
 
 

@@ -1,6 +1,6 @@
 module bin11_to_bcd4 (
     input  [10:0] bin,   // 0..2047
-    output reg [15:0] bcd    // milhar | centena | dezena | unidade
+    output [15:0] bcd    // milhar | centena | dezena | unidade
 );
 
     always @(*) begin
