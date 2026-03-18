@@ -3,13 +3,13 @@ module accumulator(
 	input [10:0] inValue,  // Entrada que será possivelmente somada
 	input syncReset,       // Reset sincrono
 	input add,             // Enabler da soma
-	output [10:0] outValue // Valor de saida / Valor no registrador
+	output reg [10:0] outValue // Valor de saida / Valor no registrador
 );
 	wire [10:0] sum;
 	
 	assign sum = inValue + outValue;
 
-	Register accReg(
+	register accReg(
 		.clk(clk),
 		.inValue(sum),
 		.syncReset(syncReset),
