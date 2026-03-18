@@ -32,4 +32,5 @@ module bin24hex(
 		.HEX(hex0)
 	);
 	
+endmodule
 	
