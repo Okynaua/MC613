@@ -1,4 +1,4 @@
-0module product2value (
+module product2value (
     input wire [3:0] BIN,  // ID do Produto
     output wire [10:0] Value  // Valor em centavos
 );
