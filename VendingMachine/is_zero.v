@@ -1,4 +1,4 @@
-module isZero(
+module is_zero(
 	input [10:0] Value,
 	output out
 );
