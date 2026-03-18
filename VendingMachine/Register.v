@@ -10,7 +10,7 @@ module register(
 		if(syncReset) begin
 			outValue <= 11'd0;
 		end else if(write) begin
-			outValue <= inValue		// Quando write for ativado, o valor inputado vai para o outValue
+			outValue <= inValue;
 		end
 	end
 

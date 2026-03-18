@@ -1,6 +1,6 @@
-module index2money(
+0module index2money(
 	input wire [5:0] index,
-	output wire [2:0] money
+	output wire [10:0] money
 );
 
 assign Value = (index == 6'b000001) ? 11'005 :  // SW[4] 5 centavos
