@@ -33,4 +33,3 @@ module bin24hex(
 	);
 	
 endmodule
-	
