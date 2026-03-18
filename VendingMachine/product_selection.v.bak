@@ -25,5 +25,5 @@ module product_selection(
 	
 	product2value getValue(
 		.BIN(outValue),
-		.Value(productValue),
+		.Value(productValue),]]
 	);
