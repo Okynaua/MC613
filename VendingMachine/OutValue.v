@@ -1,20 +1,20 @@
 module outBinValue(
-	input [12:0] productValue,
-	input [12:0] moneyInserted,
-	output [11:0] muxOut
+	input [11:0] productValue,
+	input [11:0] moneyInserted,
+	output [10:0] muxOut
 );
-	wire [12:0] subtraction;
+	wire [11:0] subtraction;
 
 	assign subtraction = productValue - moneyInserted;
 
-	wire [12:0] twoComplement;
+	wire [11:0] twoComplement;
 	
 	assign twoComplement = -subtraction;
 	
 	Multiplexer mux(
-		.selector(subtraction[12]),
-		.NegValue(twoComplement),
-		.Value(substraction)
+		.selector(subtraction[11]),
+		.NegValue(twoComplement[10:0]),
+		.Value(subtraction[10:0]),
 		.outValue(muxOut)
 	);
 	
