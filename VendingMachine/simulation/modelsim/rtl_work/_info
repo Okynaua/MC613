@@ -1,0 +1,54 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 d/home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine/simulation/modelsim
+vaccumulator
+Z1 !s110 1773865144
+!i10b 1
+!s100 dLCakC>W=Y6fVkPST>fTN2
+IUh1Z7HicBBiEzSH<H6CPU2
+Z2 VDg1SIo80bB@j0V0VzS_@n1
+R0
+w1773865127
+8/home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine/Accumulator.v
+F/home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine/Accumulator.v
+L0 1
+Z3 OV;L;10.5b;63
+r1
+!s85 0
+31
+Z4 !s108 1773865144.000000
+!s107 /home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine/Accumulator.v|
+!s90 -reportprogress|300|-vlog01compat|-work|work|+incdir+/home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine|/home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine/Accumulator.v|
+!i113 1
+Z5 o-vlog01compat -work work
+Z6 !s92 -vlog01compat -work work +incdir+/home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine
+Z7 tCvgOpt 0
+vregister
+R1
+!i10b 1
+!s100 ?Qg3;mgGf[d0fA;1Ri>Z`0
+IWVm2e1[;_SfVVVo>C;`1J0
+R2
+R0
+w1773861051
+8/home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine/Register.v
+F/home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine/Register.v
+L0 1
+R3
+r1
+!s85 0
+31
+R4
+!s107 /home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine/Register.v|
+!s90 -reportprogress|300|-vlog01compat|-work|work|+incdir+/home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine|/home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine/Register.v|
+!i113 1
+R5
+R6
+R7

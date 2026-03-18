@@ -1,5 +1,5 @@
 Analysis & Elaboration report for VendingMachine
-Wed Mar 18 17:13:22 2026
+Wed Mar 18 17:19:00 2026
 Quartus Prime Version 17.1.0 Build 590 10/25/2017 SJ Lite Edition
 
 
@@ -36,10 +36,10 @@ refer to the applicable agreement for further details.
 +-----------------------------------------------------------------------------+
 ; Analysis & Elaboration Summary                                              ;
 +-------------------------------+---------------------------------------------+
-; Analysis & Elaboration Status ; Failed - Wed Mar 18 17:13:22 2026           ;
+; Analysis & Elaboration Status ; Successful - Wed Mar 18 17:19:00 2026       ;
 ; Quartus Prime Version         ; 17.1.0 Build 590 10/25/2017 SJ Lite Edition ;
 ; Revision Name                 ; VendingMachine                              ;
-; Top-level Entity Name         ; Accumulator                                 ;
+; Top-level Entity Name         ; accumulator                                 ;
 ; Family                        ; Cyclone V                                   ;
 ; Logic utilization (in ALMs)   ; N/A until Partition Merge                   ;
 ; Total registers               ; N/A until Partition Merge                   ;
@@ -73,7 +73,7 @@ refer to the applicable agreement for further details.
 ; Option                                                                          ; Setting            ; Default Value      ;
 +---------------------------------------------------------------------------------+--------------------+--------------------+
 ; Device                                                                          ; 5CSEMA5F31C6       ;                    ;
-; Top-level entity name                                                           ; Accumulator        ; VendingMachine     ;
+; Top-level entity name                                                           ; accumulator        ; VendingMachine     ;
 ; Family name                                                                     ; Cyclone V          ; Cyclone V          ;
 ; Use smart compilation                                                           ; Off                ; Off                ;
 ; Enable parallel Assembler and TimeQuest Timing Analyzer during compilation      ; On                 ; On                 ;
@@ -160,7 +160,7 @@ refer to the applicable agreement for further details.
 Info: *******************************************************************
 Info: Running Quartus Prime Analysis & Elaboration
     Info: Version 17.1.0 Build 590 10/25/2017 SJ Lite Edition
-    Info: Processing started: Wed Mar 18 17:13:14 2026
+    Info: Processing started: Wed Mar 18 17:18:51 2026
 Info: Command: quartus_map --read_settings_files=on --write_settings_files=off VendingMachine -c VendingMachine --analysis_and_elaboration
 Warning (18236): Number of processors has not been specified which may cause overloading on shared machines.  Set the global assignment NUM_PARALLEL_PROCESSORS in your QSF to an appropriate value for best performance.
 Info (20030): Parallel compilation is enabled and will use 12 of the 12 processors detected
@@ -190,11 +190,12 @@ Info (12021): Found 1 design units, including 1 entities, in source file product
 Info (12021): Found 1 design units, including 1 entities, in source file bin11_to_bcd4.v
     Info (12023): Found entity 1: bin11_to_bcd4 File: /home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine/bin11_to_bcd4.v Line: 1
 Warning (10236): Verilog HDL Implicit Net warning at index2money.v(6): created implicit net for "Value" File: /home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine/index2money.v Line: 6
-Error (12007): Top-level design entity "Accumulator" is undefined
-Error: Quartus Prime Analysis & Elaboration was unsuccessful. 1 error, 3 warnings
-    Error: Peak virtual memory: 1463 megabytes
-    Error: Processing ended: Wed Mar 18 17:13:22 2026
-    Error: Elapsed time: 00:00:08
-    Error: Total CPU time (on all processors): 00:00:27
+Info (12127): Elaborating entity "accumulator" for the top level hierarchy
+Info (12128): Elaborating entity "register" for hierarchy "register:accReg" File: /home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine/Accumulator.v Line: 18
+Info: Quartus Prime Analysis & Elaboration was successful. 0 errors, 3 warnings
+    Info: Peak virtual memory: 1463 megabytes
+    Info: Processing ended: Wed Mar 18 17:19:00 2026
+    Info: Elapsed time: 00:00:09
+    Info: Total CPU time (on all processors): 00:00:27
 
 

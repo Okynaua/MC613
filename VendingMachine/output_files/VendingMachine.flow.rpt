@@ -1,5 +1,5 @@
 Flow report for VendingMachine
-Wed Mar 18 17:13:22 2026
+Wed Mar 18 17:19:00 2026
 Quartus Prime Version 17.1.0 Build 590 10/25/2017 SJ Lite Edition
 
 
@@ -40,10 +40,10 @@ refer to the applicable agreement for further details.
 +---------------------------------------------------------------------------+
 ; Flow Summary                                                              ;
 +-----------------------------+---------------------------------------------+
-; Flow Status                 ; Flow Failed - Wed Mar 18 17:13:22 2026      ;
+; Flow Status                 ; Successful - Wed Mar 18 17:19:00 2026       ;
 ; Quartus Prime Version       ; 17.1.0 Build 590 10/25/2017 SJ Lite Edition ;
 ; Revision Name               ; VendingMachine                              ;
-; Top-level Entity Name       ; Accumulator                                 ;
+; Top-level Entity Name       ; accumulator                                 ;
 ; Family                      ; Cyclone V                                   ;
 ; Device                      ; 5CSEMA5F31C6                                ;
 ; Timing Models               ; Final                                       ;
@@ -62,7 +62,7 @@ refer to the applicable agreement for further details.
 +-------------------+---------------------+
 ; Option            ; Setting             ;
 +-------------------+---------------------+
-; Start date & time ; 03/18/2026 17:13:14 ;
+; Start date & time ; 03/18/2026 17:18:52 ;
 ; Main task         ; Compilation         ;
 ; Revision Name     ; VendingMachine      ;
 +-------------------+---------------------+
@@ -73,7 +73,7 @@ refer to the applicable agreement for further details.
 +--------------------------------------+----------------------------------------+----------------+-------------+-----------------------------------+
 ; Assignment Name                      ; Value                                  ; Default Value  ; Entity Name ; Section Id                        ;
 +--------------------------------------+----------------------------------------+----------------+-------------+-----------------------------------+
-; COMPILER_SIGNATURE_ID                ; 42296233146989.177386479427417         ; --             ; --          ; --                                ;
+; COMPILER_SIGNATURE_ID                ; 126183484484188.177386513127810        ; --             ; --          ; --                                ;
 ; EDA_DESIGN_INSTANCE_NAME             ; NA                                     ; --             ; --          ; Accumulator                       ;
 ; EDA_GENERATE_FUNCTIONAL_NETLIST      ; Off                                    ; --             ; --          ; eda_board_design_timing           ;
 ; EDA_GENERATE_FUNCTIONAL_NETLIST      ; Off                                    ; --             ; --          ; eda_board_design_boundary_scan    ;
@@ -89,13 +89,13 @@ refer to the applicable agreement for further details.
 ; EDA_TIME_SCALE                       ; 1 ps                                   ; --             ; --          ; eda_simulation                    ;
 ; MAX_CORE_JUNCTION_TEMP               ; 85                                     ; --             ; --          ; --                                ;
 ; MIN_CORE_JUNCTION_TEMP               ; 0                                      ; --             ; --          ; --                                ;
-; PARTITION_COLOR                      ; -- (Not supported for targeted family) ; --             ; Accumulator ; Top                               ;
-; PARTITION_FITTER_PRESERVATION_LEVEL  ; -- (Not supported for targeted family) ; --             ; Accumulator ; Top                               ;
-; PARTITION_NETLIST_TYPE               ; -- (Not supported for targeted family) ; --             ; Accumulator ; Top                               ;
+; PARTITION_COLOR                      ; -- (Not supported for targeted family) ; --             ; accumulator ; Top                               ;
+; PARTITION_FITTER_PRESERVATION_LEVEL  ; -- (Not supported for targeted family) ; --             ; accumulator ; Top                               ;
+; PARTITION_NETLIST_TYPE               ; -- (Not supported for targeted family) ; --             ; accumulator ; Top                               ;
 ; POWER_BOARD_THERMAL_MODEL            ; None (CONSERVATIVE)                    ; --             ; --          ; --                                ;
 ; POWER_PRESET_COOLING_SOLUTION        ; 23 MM HEAT SINK WITH 200 LFPM AIRFLOW  ; --             ; --          ; --                                ;
 ; PROJECT_OUTPUT_DIRECTORY             ; output_files                           ; --             ; --          ; --                                ;
-; TOP_LEVEL_ENTITY                     ; Accumulator                            ; VendingMachine ; --          ; --                                ;
+; TOP_LEVEL_ENTITY                     ; accumulator                            ; VendingMachine ; --          ; --                                ;
 +--------------------------------------+----------------------------------------+----------------+-------------+-----------------------------------+
 
 
@@ -104,8 +104,8 @@ refer to the applicable agreement for further details.
 +------------------------+--------------+-------------------------+---------------------+------------------------------------+
 ; Module Name            ; Elapsed Time ; Average Processors Used ; Peak Virtual Memory ; Total CPU Time (on all processors) ;
 +------------------------+--------------+-------------------------+---------------------+------------------------------------+
-; Analysis & Elaboration ; 00:00:08     ; 1.0                     ; 1463 MB             ; 00:00:27                           ;
-; Total                  ; 00:00:08     ; --                      ; --                  ; 00:00:27                           ;
+; Analysis & Elaboration ; 00:00:09     ; 1.0                     ; 1463 MB             ; 00:00:27                           ;
+; Total                  ; 00:00:09     ; --                      ; --                  ; 00:00:27                           ;
 +------------------------+--------------+-------------------------+---------------------+------------------------------------+
 
 
