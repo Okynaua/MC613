@@ -3,6 +3,6 @@ module is_zero(
 	output out
 );
 
-assign out = (Value == 11'b0) ? 1 : 0;
+assign out = (Value == 11'b0) ? 1'b1 : 1'b0;
 
 endmodule
