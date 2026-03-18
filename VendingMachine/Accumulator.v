@@ -7,7 +7,7 @@ module accumulator(
 );
 	wire [10:0] sum;
 	
-	assign sum = inValue + outValue
+	assign sum = inValue + outValue;
 
 	Register accReg(
 		.clk(clk),
