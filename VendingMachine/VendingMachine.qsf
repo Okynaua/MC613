@@ -52,7 +52,29 @@ set_global_assignment -name EDA_GENERATE_FUNCTIONAL_NETLIST OFF -section_id eda_
 set_global_assignment -name EDA_GENERATE_FUNCTIONAL_NETLIST OFF -section_id eda_board_design_symbol
 set_global_assignment -name EDA_GENERATE_FUNCTIONAL_NETLIST OFF -section_id eda_board_design_signal_integrity
 set_global_assignment -name EDA_GENERATE_FUNCTIONAL_NETLIST OFF -section_id eda_board_design_boundary_scan
-set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
+set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id Accumulator
+set_global_assignment -name EDA_NATIVELINK_SIMULATION_TEST_BENCH Accumulator -section_id eda_simulation
+set_global_assignment -name EDA_TEST_BENCH_ENABLE_STATUS TEST_BENCH_MODE -section_id eda_simulation
+set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME Accumulator -section_id Accumulator
+set_global_assignment -name EDA_TEST_BENCH_NAME Accumulator -section_id eda_simulation
+set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
+set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
+set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
+set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
+set_global_assignment -name EDA_TEST_BENCH_FILE Accumulator.v -section_id Accumulator
+set_global_assignment -name VERILOG_FILE product2value.v
+set_global_assignment -name VERILOG_FILE espera_1s.v
+set_global_assignment -name VERILOG_FILE index2money.v
+set_global_assignment -name VERILOG_FILE Register.v
+set_global_assignment -name VERILOG_FILE multiplexer.v
+set_global_assignment -name VERILOG_FILE acumulador_modulo.v
+set_global_assignment -name VERILOG_FILE bin2hex.v
+set_global_assignment -name VERILOG_FILE Accumulator.v
+set_global_assignment -name VERILOG_FILE is_zero.v
+set_global_assignment -name VERILOG_FILE bin2decimal.v
+set_global_assignment -name VERILOG_FILE product_selection.v
+set_global_assignment -name VERILOG_FILE bin11_to_bcd4.v
+set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
