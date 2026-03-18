@@ -1,0 +1,8 @@
+module isZero(
+	input [10:0] Value,
+	output out
+);
+
+assign out = (Value == 11'b0) ? 1 : 0 //
+
+endmodule
