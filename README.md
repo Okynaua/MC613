@@ -3,7 +3,7 @@
 A fazer:
 - Máquina de Controle 
 
-Módulos verificados como funcionando:
+Módulos verificados na simulação:
 - product2value
 - iszero
 - index2money
