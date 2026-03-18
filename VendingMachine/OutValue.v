@@ -1,4 +1,4 @@
-module outBinValue(
+module outValue(
 	input [11:0] productValue,
 	input [11:0] moneyInserted,
 	output [10:0] muxOut
