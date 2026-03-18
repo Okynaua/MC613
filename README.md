@@ -8,3 +8,4 @@ Módulos verificados como funcionando:
 - iszero
 - index2money
 - bin2hex
+- bin2decimal
