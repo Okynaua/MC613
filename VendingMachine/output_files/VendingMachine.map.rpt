@@ -1,5 +1,5 @@
 Analysis & Elaboration report for VendingMachine
-Wed Mar 18 17:19:00 2026
+Sat Mar 21 18:20:41 2026
 Quartus Prime Version 17.1.0 Build 590 10/25/2017 SJ Lite Edition
 
 
@@ -36,10 +36,10 @@ refer to the applicable agreement for further details.
 +-----------------------------------------------------------------------------+
 ; Analysis & Elaboration Summary                                              ;
 +-------------------------------+---------------------------------------------+
-; Analysis & Elaboration Status ; Successful - Wed Mar 18 17:19:00 2026       ;
+; Analysis & Elaboration Status ; Successful - Sat Mar 21 18:20:41 2026       ;
 ; Quartus Prime Version         ; 17.1.0 Build 590 10/25/2017 SJ Lite Edition ;
 ; Revision Name                 ; VendingMachine                              ;
-; Top-level Entity Name         ; accumulator                                 ;
+; Top-level Entity Name         ; product2value                               ;
 ; Family                        ; Cyclone V                                   ;
 ; Logic utilization (in ALMs)   ; N/A until Partition Merge                   ;
 ; Total registers               ; N/A until Partition Merge                   ;
@@ -73,7 +73,7 @@ refer to the applicable agreement for further details.
 ; Option                                                                          ; Setting            ; Default Value      ;
 +---------------------------------------------------------------------------------+--------------------+--------------------+
 ; Device                                                                          ; 5CSEMA5F31C6       ;                    ;
-; Top-level entity name                                                           ; accumulator        ; VendingMachine     ;
+; Top-level entity name                                                           ; product2value      ; VendingMachine     ;
 ; Family name                                                                     ; Cyclone V          ; Cyclone V          ;
 ; Use smart compilation                                                           ; Off                ; Off                ;
 ; Enable parallel Assembler and TimeQuest Timing Analyzer during compilation      ; On                 ; On                 ;
@@ -160,42 +160,40 @@ refer to the applicable agreement for further details.
 Info: *******************************************************************
 Info: Running Quartus Prime Analysis & Elaboration
     Info: Version 17.1.0 Build 590 10/25/2017 SJ Lite Edition
-    Info: Processing started: Wed Mar 18 17:18:51 2026
+    Info: Processing started: Sat Mar 21 18:20:36 2026
 Info: Command: quartus_map --read_settings_files=on --write_settings_files=off VendingMachine -c VendingMachine --analysis_and_elaboration
 Warning (18236): Number of processors has not been specified which may cause overloading on shared machines.  Set the global assignment NUM_PARALLEL_PROCESSORS in your QSF to an appropriate value for best performance.
 Info (20030): Parallel compilation is enabled and will use 12 of the 12 processors detected
 Info (12021): Found 1 design units, including 1 entities, in source file product2value.v
-    Info (12023): Found entity 1: product2value File: /home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine/product2value.v Line: 1
+    Info (12023): Found entity 1: product2value File: /home/f-ec2024/ra195440/MC613/VendingMachine/product2value.v Line: 1
 Info (12021): Found 1 design units, including 1 entities, in source file espera_1s.v
-    Info (12023): Found entity 1: espera_1s File: /home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine/espera_1s.v Line: 1
+    Info (12023): Found entity 1: espera_1s File: /home/f-ec2024/ra195440/MC613/VendingMachine/espera_1s.v Line: 1
 Info (12021): Found 1 design units, including 1 entities, in source file index2money.v
-    Info (12023): Found entity 1: index2money File: /home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine/index2money.v Line: 1
+    Info (12023): Found entity 1: index2money File: /home/f-ec2024/ra195440/MC613/VendingMachine/index2money.v Line: 1
 Info (12021): Found 1 design units, including 1 entities, in source file Register.v
-    Info (12023): Found entity 1: register File: /home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine/Register.v Line: 1
+    Info (12023): Found entity 1: register File: /home/f-ec2024/ra195440/MC613/VendingMachine/Register.v Line: 1
 Info (12021): Found 1 design units, including 1 entities, in source file multiplexer.v
-    Info (12023): Found entity 1: multiplexer File: /home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine/multiplexer.v Line: 1
+    Info (12023): Found entity 1: multiplexer File: /home/f-ec2024/ra195440/MC613/VendingMachine/multiplexer.v Line: 1
 Info (12021): Found 1 design units, including 1 entities, in source file acumulador_modulo.v
-    Info (12023): Found entity 1: acumulador_modulo File: /home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine/acumulador_modulo.v Line: 1
+    Info (12023): Found entity 1: acumulador_modulo File: /home/f-ec2024/ra195440/MC613/VendingMachine/acumulador_modulo.v Line: 1
 Info (12021): Found 1 design units, including 1 entities, in source file bin2hex.v
-    Info (12023): Found entity 1: bin2hex File: /home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine/bin2hex.v Line: 4
+    Info (12023): Found entity 1: bin2hex File: /home/f-ec2024/ra195440/MC613/VendingMachine/bin2hex.v Line: 4
 Info (12021): Found 1 design units, including 1 entities, in source file Accumulator.v
-    Info (12023): Found entity 1: accumulator File: /home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine/Accumulator.v Line: 1
-Info (12021): Found 1 design units, including 1 entities, in source file is_zero.v
-    Info (12023): Found entity 1: is_zero File: /home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine/is_zero.v Line: 1
+    Info (12023): Found entity 1: accumulator File: /home/f-ec2024/ra195440/MC613/VendingMachine/Accumulator.v Line: 1
 Info (12021): Found 1 design units, including 1 entities, in source file bin2decimal.v
-    Info (12023): Found entity 1: bin24hex File: /home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine/bin2decimal.v Line: 1
-Warning (10275): Verilog HDL Module Instantiation warning at product_selection.v(29): ignored dangling comma in List of Port Connections File: /home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine/product_selection.v Line: 29
+    Info (12023): Found entity 1: bin24hex File: /home/f-ec2024/ra195440/MC613/VendingMachine/bin2decimal.v Line: 1
+Warning (10275): Verilog HDL Module Instantiation warning at product_selection.v(29): ignored dangling comma in List of Port Connections File: /home/f-ec2024/ra195440/MC613/VendingMachine/product_selection.v Line: 29
 Info (12021): Found 1 design units, including 1 entities, in source file product_selection.v
-    Info (12023): Found entity 1: product_selection File: /home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine/product_selection.v Line: 2
+    Info (12023): Found entity 1: product_selection File: /home/f-ec2024/ra195440/MC613/VendingMachine/product_selection.v Line: 2
 Info (12021): Found 1 design units, including 1 entities, in source file bin11_to_bcd4.v
-    Info (12023): Found entity 1: bin11_to_bcd4 File: /home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine/bin11_to_bcd4.v Line: 1
-Warning (10236): Verilog HDL Implicit Net warning at index2money.v(6): created implicit net for "Value" File: /home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine/index2money.v Line: 6
-Info (12127): Elaborating entity "accumulator" for the top level hierarchy
-Info (12128): Elaborating entity "register" for hierarchy "register:accReg" File: /home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine/Accumulator.v Line: 18
-Info: Quartus Prime Analysis & Elaboration was successful. 0 errors, 3 warnings
-    Info: Peak virtual memory: 1463 megabytes
-    Info: Processing ended: Wed Mar 18 17:19:00 2026
-    Info: Elapsed time: 00:00:09
-    Info: Total CPU time (on all processors): 00:00:27
+    Info (12023): Found entity 1: bin11_to_bcd4 File: /home/f-ec2024/ra195440/MC613/VendingMachine/bin11_to_bcd4.v Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file OutValue.v
+    Info (12023): Found entity 1: outValue File: /home/f-ec2024/ra195440/MC613/VendingMachine/OutValue.v Line: 1
+Info (12127): Elaborating entity "product2value" for the top level hierarchy
+Info: Quartus Prime Analysis & Elaboration was successful. 0 errors, 2 warnings
+    Info: Peak virtual memory: 1461 megabytes
+    Info: Processing ended: Sat Mar 21 18:20:41 2026
+    Info: Elapsed time: 00:00:05
+    Info: Total CPU time (on all processors): 00:00:13
 
 

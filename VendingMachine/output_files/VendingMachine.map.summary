@@ -1,7 +1,7 @@
-Analysis & Elaboration Status : Successful - Wed Mar 18 17:19:00 2026
+Analysis & Elaboration Status : Successful - Sat Mar 21 18:20:41 2026
 Quartus Prime Version : 17.1.0 Build 590 10/25/2017 SJ Lite Edition
 Revision Name : VendingMachine
-Top-level Entity Name : accumulator
+Top-level Entity Name : product2value
 Family : Cyclone V
 Logic utilization (in ALMs) : N/A until Partition Merge
 Total registers : N/A until Partition Merge

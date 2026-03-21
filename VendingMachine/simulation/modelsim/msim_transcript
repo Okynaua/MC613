@@ -9,88 +9,49 @@
 # Copying /opt/altera/17.1/modelsim_ase/linuxaloem/../modelsim.ini to modelsim.ini
 # Modifying modelsim.ini
 # 
-# vlog -vlog01compat -work work +incdir+/home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine {/home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine/Register.v}
+# vlog -vlog01compat -work work +incdir+/home/f-ec2024/ra195440/MC613/VendingMachine {/home/f-ec2024/ra195440/MC613/VendingMachine/product2value.v}
 # Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
-# Start time: 17:19:04 on Mar 18,2026
-# vlog -reportprogress 300 -vlog01compat -work work "+incdir+/home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine" /home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine/Register.v 
-# -- Compiling module register
+# Start time: 18:21:46 on Mar 21,2026
+# vlog -reportprogress 300 -vlog01compat -work work "+incdir+/home/f-ec2024/ra195440/MC613/VendingMachine" /home/f-ec2024/ra195440/MC613/VendingMachine/product2value.v 
+# -- Compiling module product2value
 # 
 # Top level modules:
-# 	register
-# End time: 17:19:04 on Mar 18,2026, Elapsed time: 0:00:00
+# 	product2value
+# End time: 18:21:46 on Mar 21,2026, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
-# vlog -vlog01compat -work work +incdir+/home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine {/home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine/Accumulator.v}
+# 
+# vlog -vlog01compat -work work +incdir+/home/f-ec2024/ra195440/MC613/VendingMachine {/home/f-ec2024/ra195440/MC613/VendingMachine/product2value.v}
 # Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
-# Start time: 17:19:04 on Mar 18,2026
-# vlog -reportprogress 300 -vlog01compat -work work "+incdir+/home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine" /home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine/Accumulator.v 
-# -- Compiling module accumulator
+# Start time: 18:21:46 on Mar 21,2026
+# vlog -reportprogress 300 -vlog01compat -work work "+incdir+/home/f-ec2024/ra195440/MC613/VendingMachine" /home/f-ec2024/ra195440/MC613/VendingMachine/product2value.v 
+# -- Compiling module product2value
 # 
 # Top level modules:
-# 	accumulator
-# End time: 17:19:04 on Mar 18,2026, Elapsed time: 0:00:00
+# 	product2value
+# End time: 18:21:46 on Mar 21,2026, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
-# 
-# vlog -vlog01compat -work work +incdir+/home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine {/home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine/Accumulator.v}
+# vlog -vlog01compat -work work +incdir+/home/f-ec2024/ra195440/MC613/VendingMachine/testbenches {/home/f-ec2024/ra195440/MC613/VendingMachine/testbenches/product2value_tb.v}
 # Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
-# Start time: 17:19:04 on Mar 18,2026
-# vlog -reportprogress 300 -vlog01compat -work work "+incdir+/home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine" /home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine/Accumulator.v 
-# -- Compiling module accumulator
+# Start time: 18:21:46 on Mar 21,2026
+# vlog -reportprogress 300 -vlog01compat -work work "+incdir+/home/f-ec2024/ra195440/MC613/VendingMachine/testbenches" /home/f-ec2024/ra195440/MC613/VendingMachine/testbenches/product2value_tb.v 
+# -- Compiling module product2value_tb
 # 
 # Top level modules:
-# 	accumulator
-# End time: 17:19:04 on Mar 18,2026, Elapsed time: 0:00:00
+# 	product2value_tb
+# End time: 18:21:46 on Mar 21,2026, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # 
-# vsim -t 1ps -L altera_ver -L lpm_ver -L sgate_ver -L altera_mf_ver -L altera_lnsim_ver -L cyclonev_ver -L cyclonev_hssi_ver -L cyclonev_pcie_hip_ver -L rtl_work -L work -voptargs="+acc"  Accumulator
-# vsim -t 1ps -L altera_ver -L lpm_ver -L sgate_ver -L altera_mf_ver -L altera_lnsim_ver -L cyclonev_ver -L cyclonev_hssi_ver -L cyclonev_pcie_hip_ver -L rtl_work -L work -voptargs=""+acc"" Accumulator 
-# Start time: 17:19:04 on Mar 18,2026
-# ** Error: (vsim-3170) Could not find 'Accumulator'.
-#         Searched libraries:
-#             /opt/altera/17.1/modelsim_ase/altera/verilog/altera
-#             /opt/altera/17.1/modelsim_ase/altera/verilog/220model
-#             /opt/altera/17.1/modelsim_ase/altera/verilog/sgate
-#             /opt/altera/17.1/modelsim_ase/altera/verilog/altera_mf
-#             /opt/altera/17.1/modelsim_ase/altera/verilog/altera_lnsim
-#             /opt/altera/17.1/modelsim_ase/altera/verilog/cyclonev
-#             /opt/altera/17.1/modelsim_ase/altera/verilog/cyclonev_hssi
-#             /opt/altera/17.1/modelsim_ase/altera/verilog/cyclonev_pcie_hip
-#             /home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine/simulation/modelsim/rtl_work
-#             /home/c-ec2024/ra281174/MC613/MC613_Projetos/MC613/VendingMachine/simulation/modelsim/rtl_work
-# Error loading design
-# Error: Error loading design
-#        Pausing macro execution
-# MACRO ./VendingMachine_run_msim_rtl_verilog.do PAUSED at line 13
-vsim work.accumulator
-# vsim work.accumulator 
-# Start time: 17:19:04 on Mar 18,2026
-# Loading work.accumulator
-# Loading work.register
-add wave -position end  sim:/accumulator/clk
-add wave -position end  sim:/accumulator/add
-add wave -position end  sim:/accumulator/inValue
-add wave -position end  sim:/accumulator/outValue
-add wave -position end  sim:/accumulator/sum
-add wave -position end  sim:/accumulator/syncReset
-force -freeze sim:/accumulator/clk 0 0, 1 {50 ps} -r 100
-run
+# vsim -t 1ps -L altera_ver -L lpm_ver -L sgate_ver -L altera_mf_ver -L altera_lnsim_ver -L cyclonev_ver -L cyclonev_hssi_ver -L cyclonev_pcie_hip_ver -L rtl_work -L work -voptargs="+acc"  product2value
+# vsim -t 1ps -L altera_ver -L lpm_ver -L sgate_ver -L altera_mf_ver -L altera_lnsim_ver -L cyclonev_ver -L cyclonev_hssi_ver -L cyclonev_pcie_hip_ver -L rtl_work -L work -voptargs=""+acc"" product2value 
+# Start time: 18:21:46 on Mar 21,2026
+# Loading work.product2value
+# 
+# add wave *
+# view structure
+# .main_pane.structure.interior.cs.body.struct
+# view signals
+# .main_pane.objects.interior.cs.body.tree
+# run -all
 # ** Warning: (vsim-3116) Problem reading symbols from linux-gate.so.1 : can not open ELF file.
-force -freeze sim:/accumulator/inValue 11 0
-force -freeze sim:/accumulator/add 0 0
-force -freeze sim:/accumulator/syncReset 0 0
-run
-run
-run
-force -freeze sim:/accumulator/add 1 0
-run
-force -freeze sim:/accumulator/outValue 0 0
-run
-run
-force -freeze sim:/accumulator/syncReset 1 0
-run
-run
-force -freeze sim:/accumulator/add 0 0
-run
-run
-force -freeze sim:/accumulator/syncReset 0 0
-run
-run
+# End time: 18:22:03 on Mar 21,2026, Elapsed time: 0:00:17
+# Errors: 0, Warnings: 1
