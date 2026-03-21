@@ -3,7 +3,7 @@ module accumulator(
 	input [10:0] inValue,  // Entrada que será possivelmente somada
 	input syncReset,       // Reset sincrono
 	input add,             // Enabler da soma
-	output reg [10:0] outValue // Valor de saida / Valor no registrador
+	output [10:0] outValue // Valor de saida / Valor no registrador
 );
 	wire [10:0] sum;
 	
