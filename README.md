@@ -12,6 +12,9 @@ Módulos verificados na simulação:
 
 
 Comando testbenches:
+
 vlog product2value.v product2value_tb.v
+
 vsim -voptargs=+acc=n work.product2value_tb
+
 run -all
