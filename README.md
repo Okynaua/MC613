@@ -9,3 +9,9 @@ Módulos verificados na simulação:
 - index2money
 - bin2hex
 - bin2decimal
+
+
+Comando testbenches:
+vlog product2value.v product2value_tb.v
+vsim -voptargs=+acc=n work.product2value_tb
+run -all
