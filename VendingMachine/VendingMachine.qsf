@@ -70,7 +70,6 @@ set_global_assignment -name VERILOG_FILE multiplexer.v
 set_global_assignment -name VERILOG_FILE acumulador_modulo.v
 set_global_assignment -name VERILOG_FILE bin2hex.v
 set_global_assignment -name VERILOG_FILE Accumulator.v
-set_global_assignment -name VERILOG_FILE is_zero.v
 set_global_assignment -name VERILOG_FILE bin2decimal.v
 set_global_assignment -name VERILOG_FILE product_selection.v
 set_global_assignment -name VERILOG_FILE bin11_to_bcd4.v
@@ -78,3 +77,5 @@ set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
+set_global_assignment -name VERILOG_FILE stateMachine.v
+set_global_assignment -name VERILOG_FILE OutValue.v
