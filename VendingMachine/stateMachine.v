@@ -16,8 +16,8 @@ module stateMachine(
 
 
 	//Registrador do Estado atual instanciado
-	wire reg [1:0] currentState; 
-	wire [1:0] inputState;
+	reg [1:0] currentState; 
+	reg [1:0] inputState;
 	wire writeState;
 	wire resetState;
 	Register currentStateReg(
@@ -38,35 +38,46 @@ module stateMachine(
 	
 	
 	//l´ogica para os bot~oes advance e cancel contarem como 1 pulso de ativaç~ao
-	reg last_pulse_advance;
-	reg last_pulse_cancel;
+	reg last_pulse_advance, reg last_pulse_cancel;
 	always @(posedge clk) begin
 		last_pulse_advance <= advance;
 		last_pulse_cancel <= cancel;
 	end
-	wire pulse_advance;
-	wire pulse_cancel;
-	assign pulse_advance = (advance == 1'b1) && (last_pulse_advance == 1'b0);
-	assign pulse_cancel = (cancel == 1'b1) && (last_pulse_cancel == 1'b0);
+	wire pulse_advance = (advance == 1'b1) && (last_pulse_advance == 1'b0);
+	wire pulse_cancel = (cancel == 1'b1) && (last_pulse_cancel == 1'b0);
 	
-	always @(posedge clk or posedge advance or posedge cancel) begin
-		//Avanço do estado selection para insertion
-		if (last_pulse_advance and currentState == selection) begin
-			inputState = insertion;
-			writeState = 1;
-			writeState = 0;
-
-			product_enable = 0; //desativa a alteraç~ao de produto
-		//Inserç~ao de dinheiro
-		end else if (last_pulse_advance and currentState == insertion) begin
-			acc_enable = 1;
-			acc_enable = 0
-		end
-		if(currentState == insertion and subtraction < 0
+	//L´ogica de pr´oximo estado
+	always @(*) begin
+		inputState = currentState;
+		writeState = 0;
 		
-		
-
-	
-		
+		case (currentState)
+			selection: begin
+				if(pulse_advance) begin
+					inputState = insertion;
+					writeState = 1;
+				end
+			end
+			insertion: begin
+				if(pulse_cancel) begin
+					inputState = canceled;
+					writeState = 1;
+				end else if (subtraction <= 0) begin
+					inputState = sold;
+					writeState = 1;
+				end
+			end
+			sold: begin
+				if (secondPassed) begin
+					inputState = selection;
+					writeState = 1;
+				end
+			end
+			canceled: begin
+				if (secondPassed) begin
+					inputState = selection;
+					writeState = 1;
+				end
+			end
 	end
 endmodule
