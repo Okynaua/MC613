@@ -1,6 +1,6 @@
 Flow report for VendingMachine
-Sat Mar 21 18:20:41 2026
-Quartus Prime Version 17.1.0 Build 590 10/25/2017 SJ Lite Edition
+Sat Mar 21 21:54:00 2026
+Quartus Prime Version 20.1.1 Build 720 11/11/2020 SJ Lite Edition
 
 
 ---------------------
@@ -21,9 +21,9 @@ Quartus Prime Version 17.1.0 Build 590 10/25/2017 SJ Lite Edition
 ----------------
 ; Legal Notice ;
 ----------------
-Copyright (C) 2017  Intel Corporation. All rights reserved.
+Copyright (C) 2020  Intel Corporation. All rights reserved.
 Your use of Intel Corporation's design tools, logic functions 
-and other software and tools, and its AMPP partner logic 
+and other software and tools, and any partner logic 
 functions, and any output files from any of the foregoing 
 (including device programming or simulation files), and any 
 associated documentation or information are expressly subject 
@@ -33,15 +33,16 @@ the Intel FPGA IP License Agreement, or other applicable license
 agreement, including, without limitation, that your use is for
 the sole purpose of programming logic devices manufactured by
 Intel and sold by Intel or its authorized distributors.  Please
-refer to the applicable agreement for further details.
+refer to the applicable agreement for further details, at
+https://fpgasoftware.intel.com/eula.
 
 
 
 +---------------------------------------------------------------------------+
 ; Flow Summary                                                              ;
 +-----------------------------+---------------------------------------------+
-; Flow Status                 ; Successful - Sat Mar 21 18:20:41 2026       ;
-; Quartus Prime Version       ; 17.1.0 Build 590 10/25/2017 SJ Lite Edition ;
+; Flow Status                 ; Successful - Sat Mar 21 21:54:00 2026       ;
+; Quartus Prime Version       ; 20.1.1 Build 720 11/11/2020 SJ Lite Edition ;
 ; Revision Name               ; VendingMachine                              ;
 ; Top-level Entity Name       ; product2value                               ;
 ; Family                      ; Cyclone V                                   ;
@@ -62,7 +63,7 @@ refer to the applicable agreement for further details.
 +-------------------+---------------------+
 ; Option            ; Setting             ;
 +-------------------+---------------------+
-; Start date & time ; 03/21/2026 18:20:36 ;
+; Start date & time ; 03/21/2026 21:53:56 ;
 ; Main task         ; Compilation         ;
 ; Revision Name     ; VendingMachine      ;
 +-------------------+---------------------+
@@ -73,19 +74,19 @@ refer to the applicable agreement for further details.
 +--------------------------------------+----------------------------------------+----------------+---------------+-----------------------------------+
 ; Assignment Name                      ; Value                                  ; Default Value  ; Entity Name   ; Section Id                        ;
 +--------------------------------------+----------------------------------------+----------------+---------------+-----------------------------------+
-; COMPILER_SIGNATURE_ID                ; 251776451552115.177412803609833        ; --             ; --            ; --                                ;
+; COMPILER_SIGNATURE_ID                ; 193675821164703.177414083637312        ; --             ; --            ; --                                ;
 ; EDA_DESIGN_INSTANCE_NAME             ; NA                                     ; --             ; --            ; bin2hex                           ;
 ; EDA_DESIGN_INSTANCE_NAME             ; NA                                     ; --             ; --            ; product2value                     ;
 ; EDA_GENERATE_FUNCTIONAL_NETLIST      ; Off                                    ; --             ; --            ; eda_board_design_timing           ;
 ; EDA_GENERATE_FUNCTIONAL_NETLIST      ; Off                                    ; --             ; --            ; eda_board_design_boundary_scan    ;
 ; EDA_GENERATE_FUNCTIONAL_NETLIST      ; Off                                    ; --             ; --            ; eda_board_design_signal_integrity ;
 ; EDA_GENERATE_FUNCTIONAL_NETLIST      ; Off                                    ; --             ; --            ; eda_board_design_symbol           ;
-; EDA_NATIVELINK_SIMULATION_TEST_BENCH ; product2value                          ; --             ; --            ; eda_simulation                    ;
+; EDA_NATIVELINK_SIMULATION_TEST_BENCH ; bin2hex                                ; --             ; --            ; eda_simulation                    ;
 ; EDA_OUTPUT_DATA_FORMAT               ; Verilog Hdl                            ; --             ; --            ; eda_simulation                    ;
 ; EDA_SIMULATION_TOOL                  ; ModelSim-Altera (Verilog)              ; <None>         ; --            ; --                                ;
 ; EDA_TEST_BENCH_ENABLE_STATUS         ; TEST_BENCH_MODE                        ; --             ; --            ; eda_simulation                    ;
-; EDA_TEST_BENCH_FILE                  ; ../../bin2hex/bin2hex.v                ; --             ; --            ; bin2hex                           ;
-; EDA_TEST_BENCH_FILE                  ; ../../bin2hex/bin2hex_tb.v             ; --             ; --            ; bin2hex                           ;
+; EDA_TEST_BENCH_FILE                  ; bin2hex.v                              ; --             ; --            ; bin2hex                           ;
+; EDA_TEST_BENCH_FILE                  ; testbenches/bix2hex_tb.v               ; --             ; --            ; bin2hex                           ;
 ; EDA_TEST_BENCH_FILE                  ; product2value.v                        ; --             ; --            ; product2value                     ;
 ; EDA_TEST_BENCH_FILE                  ; testbenches/product2value_tb.v         ; --             ; --            ; product2value                     ;
 ; EDA_TEST_BENCH_MODULE_NAME           ; bin2hex                                ; --             ; --            ; bin2hex                           ;
@@ -110,18 +111,18 @@ refer to the applicable agreement for further details.
 +------------------------+--------------+-------------------------+---------------------+------------------------------------+
 ; Module Name            ; Elapsed Time ; Average Processors Used ; Peak Virtual Memory ; Total CPU Time (on all processors) ;
 +------------------------+--------------+-------------------------+---------------------+------------------------------------+
-; Analysis & Elaboration ; 00:00:05     ; 1.0                     ; 1461 MB             ; 00:00:13                           ;
-; Total                  ; 00:00:05     ; --                      ; --                  ; 00:00:13                           ;
+; Analysis & Elaboration ; 00:00:04     ; 1.0                     ; 4782 MB             ; 00:00:11                           ;
+; Total                  ; 00:00:04     ; --                      ; --                  ; 00:00:11                           ;
 +------------------------+--------------+-------------------------+---------------------+------------------------------------+
 
 
-+----------------------------------------------------------------------------------------------+
-; Flow OS Summary                                                                              ;
-+------------------------+------------------------+-------------+-------------+----------------+
-; Module Name            ; Machine Hostname       ; OS Name     ; OS Version  ; Processor type ;
-+------------------------+------------------------+-------------+-------------+----------------+
-; Analysis & Elaboration ; odie.lab.ic.unicamp.br ; Fedora Core ; Fedora Core ; x86_64         ;
-+------------------------+------------------------+-------------+-------------+----------------+
++--------------------------------------------------------------------------------------+
+; Flow OS Summary                                                                      ;
++------------------------+------------------+------------+------------+----------------+
+; Module Name            ; Machine Hostname ; OS Name    ; OS Version ; Processor type ;
++------------------------+------------------+------------+------------+----------------+
+; Analysis & Elaboration ; Queen            ; Windows 10 ; 10.0       ; x86_64         ;
++------------------------+------------------+------------+------------+----------------+
 
 
 ------------

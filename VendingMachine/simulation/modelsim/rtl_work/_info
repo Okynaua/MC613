@@ -1,54 +1,83 @@
 m255
 K4
 z2
+!s11f vlog 2020.1 2020.02, Feb 28 2020
 13
 !s112 1.1
 !i10d 8192
 !i10e 25
 !i10f 100
 cModel Technology
-Z0 d/home/f-ec2024/ra195440/MC613/VendingMachine/simulation/modelsim
-vproduct2value
-Z1 !s110 1774128106
+Z0 dC:/Users/samue/Desktop/UNICAMP/2026/MC613/MC613/VendingMachine/simulation/modelsim
+vbin2hex
+Z1 !s110 1774142314
 !i10b 1
-!s100 N^DEAf0fI`fGDhCY<geP=3
-IBzjz<lZ?oh=5^`CBo@_en1
-Z2 VDg1SIo80bB@j0V0VzS_@n1
+!s100 k3i5oPd@44QY0FUT:_b0O3
+Z2 !s11b Dg1SIo80bB@j0V0VzS_@n1
+IWjKTN1`aT=NI]lSUQJK5n1
+Z3 VDg1SIo80bB@j0V0VzS_@n1
 R0
-w1774123883
-8/home/f-ec2024/ra195440/MC613/VendingMachine/product2value.v
-F/home/f-ec2024/ra195440/MC613/VendingMachine/product2value.v
-L0 1
-Z3 OV;L;10.5b;63
+Z4 w1774139719
+8C:/Users/samue/Desktop/UNICAMP/2026/MC613/MC613/VendingMachine/bin2hex.v
+FC:/Users/samue/Desktop/UNICAMP/2026/MC613/MC613/VendingMachine/bin2hex.v
+!i122 2
+L0 4 25
+Z5 OV;L;2020.1;71
 r1
 !s85 0
 31
-Z4 !s108 1774128106.000000
-!s107 /home/f-ec2024/ra195440/MC613/VendingMachine/product2value.v|
-!s90 -reportprogress|300|-vlog01compat|-work|work|+incdir+/home/f-ec2024/ra195440/MC613/VendingMachine|/home/f-ec2024/ra195440/MC613/VendingMachine/product2value.v|
+Z6 !s108 1774142314.000000
+!s107 C:/Users/samue/Desktop/UNICAMP/2026/MC613/MC613/VendingMachine/bin2hex.v|
+!s90 -reportprogress|300|-vlog01compat|-work|work|+incdir+C:/Users/samue/Desktop/UNICAMP/2026/MC613/MC613/VendingMachine|C:/Users/samue/Desktop/UNICAMP/2026/MC613/MC613/VendingMachine/bin2hex.v|
 !i113 1
-Z5 o-vlog01compat -work work
-!s92 -vlog01compat -work work +incdir+/home/f-ec2024/ra195440/MC613/VendingMachine
-Z6 tCvgOpt 0
-vproduct2value_tb
+Z7 o-vlog01compat -work work
+Z8 !s92 -vlog01compat -work work +incdir+C:/Users/samue/Desktop/UNICAMP/2026/MC613/MC613/VendingMachine
+Z9 tCvgOpt 0
+vbin2hex_tb
 R1
 !i10b 1
-!s100 IdZ@amVWC<KnPzODcP<4a2
-I`09Jj9kK]E2Oe`ACi4bfI2
+!s100 NX`AdlGH;[_E<Ch>@_Ah`1
 R2
-R0
-w1774127014
-8/home/f-ec2024/ra195440/MC613/VendingMachine/testbenches/product2value_tb.v
-F/home/f-ec2024/ra195440/MC613/VendingMachine/testbenches/product2value_tb.v
-L0 1
+Im<?T;2XSFJARRYSYOjYTc0
 R3
+R0
+w1774141642
+8C:/Users/samue/Desktop/UNICAMP/2026/MC613/MC613/VendingMachine/testbenches/bin2hex_tb.v
+FC:/Users/samue/Desktop/UNICAMP/2026/MC613/MC613/VendingMachine/testbenches/bin2hex_tb.v
+!i122 1
+L0 1 27
+R5
 r1
 !s85 0
 31
-R4
-!s107 /home/f-ec2024/ra195440/MC613/VendingMachine/testbenches/product2value_tb.v|
-!s90 -reportprogress|300|-vlog01compat|-work|work|+incdir+/home/f-ec2024/ra195440/MC613/VendingMachine/testbenches|/home/f-ec2024/ra195440/MC613/VendingMachine/testbenches/product2value_tb.v|
-!i113 1
-R5
-!s92 -vlog01compat -work work +incdir+/home/f-ec2024/ra195440/MC613/VendingMachine/testbenches
 R6
+!s107 C:/Users/samue/Desktop/UNICAMP/2026/MC613/MC613/VendingMachine/testbenches/bin2hex_tb.v|
+!s90 -reportprogress|300|-vlog01compat|-work|work|+incdir+C:/Users/samue/Desktop/UNICAMP/2026/MC613/MC613/VendingMachine/testbenches|C:/Users/samue/Desktop/UNICAMP/2026/MC613/MC613/VendingMachine/testbenches/bin2hex_tb.v|
+!i113 1
+R7
+!s92 -vlog01compat -work work +incdir+C:/Users/samue/Desktop/UNICAMP/2026/MC613/MC613/VendingMachine/testbenches
+R9
+vproduct2value
+R1
+!i10b 1
+!s100 PgUGPE4fzI;`V5=BObcf]2
+R2
+I7GHDVDPGY<?8FAU42cWJ80
+R3
+R0
+R4
+8C:/Users/samue/Desktop/UNICAMP/2026/MC613/MC613/VendingMachine/product2value.v
+FC:/Users/samue/Desktop/UNICAMP/2026/MC613/MC613/VendingMachine/product2value.v
+!i122 0
+L0 1 25
+R5
+r1
+!s85 0
+31
+!s108 1774142313.000000
+!s107 C:/Users/samue/Desktop/UNICAMP/2026/MC613/MC613/VendingMachine/product2value.v|
+!s90 -reportprogress|300|-vlog01compat|-work|work|+incdir+C:/Users/samue/Desktop/UNICAMP/2026/MC613/MC613/VendingMachine|C:/Users/samue/Desktop/UNICAMP/2026/MC613/MC613/VendingMachine/product2value.v|
+!i113 1
+R7
+R8
+R9

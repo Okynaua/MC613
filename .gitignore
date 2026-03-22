@@ -1,0 +1,34 @@
+# Temporários
+
+*.bak*
+*.tmp
+*.log
+*.flock
+
+# Texto/config gerado
+
+*.ini
+*.txt
+
+# Quartus (arquivos gerados)
+
+db/
+incremental_db/
+output_files/
+simulation/
+
+*.qws
+*.qdf
+
+# ModelSim
+
+work/
+transcript
+vsim.wlf
+*.wlf
+
+# Sistema/IDE
+
+.DS_Store
+.vscode/
+.idea/

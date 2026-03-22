@@ -1,11 +1,11 @@
-// Encapsula m´odulos para fazer a l´ogica de seleç~ao de produto.
+// Encapsula módulos para fazer a lógica de seleç~ao de produto.
 module product_selection(
 	input clk,            // Clock
-	input [3:0] product,  // C´odigo bin´ario do produto
-	input enable,         // M´aquina de estados vai determinar se pode escrever no registrador
-	input syncReset,       // Reset s´incrono do registrador
+	input [3:0] product,  // Código binário do produto
+	input enable,         // Máquina de estados vai determinar se pode escrever no registrador
+	input syncReset,       // Reset síncrono do registrador
 	output [10:0] productValue,    // Valor do produto
-	output [6:0] hexCode        // C´odigo de 7 segmentos para o c´odigo bin´ario do produto
+	output [6:0] hexCode        // Código de 7 segmentos para o c´odigo bin´ario do produto
 );
 
 	wire [10:0] outValue;

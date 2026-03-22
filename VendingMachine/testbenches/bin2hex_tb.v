@@ -1,24 +1,24 @@
-module product2value_tb;
+module bin2hex_tb;
 
 reg [3:0] test_input;
-wire [10:0] test_output;
+wire [6:0] test_output;
 
-product2value uut (
+bin2hex uut (
     .BIN(test_input),
-    .Value(test_output)
+    .HEX(test_output)
 );
 
 // Variável para o loop (deve ser integer)
 integer i;
 
 initial begin
-    $display("Testando product2value...");
+    $display("Testando bin2hex...");
     
     // Loop de 0 a 15
     for (i = 0; i < 16; i = i + 1) begin
         test_input = i;
         #10;  // Aguarda para o sinal estabilizar
-        $display("Entrada: %h | Saida: %d", test_input, test_output);
+        $display("Entrada: %d | Saida: %b", test_input, test_output);
     end
     
     $finish;
