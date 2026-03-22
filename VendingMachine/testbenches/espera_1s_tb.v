@@ -35,9 +35,8 @@ initial begin
 
     #200;
 
-    $display("=== Aplicando reset apos pulso ===");
+    $display("\n=== Aplicando reset apos pulso ===");
 
-    // 🔴 Teste de reset após pulso
     reset = 1;
     #20;
     reset = 0;
@@ -48,7 +47,7 @@ initial begin
 
     #200;
 
-    $display("=== Teste finalizado ===");
+    $display("\n=== Teste finalizado ===");
     $finish;
 end
 

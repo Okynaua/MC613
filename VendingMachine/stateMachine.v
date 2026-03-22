@@ -20,7 +20,7 @@ module stateMachine(
 	reg [1:0] inputState;
 	wire writeState;
 	wire resetState;
-	Register currentStateReg(
+	register currentStateReg(
 		.clk(clk),
 		.invalue(inputState),
 		.syncReset(resetState),
