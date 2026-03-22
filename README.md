@@ -23,6 +23,7 @@ Repositório da disciplina **MC613A - Laboratório de Circuitos Digitais**.
 **A fazer:**
 
 * Máquina de Controle
+* Testbenches
 
 ---
 
