@@ -13,7 +13,6 @@ Módulos verificados na simulação:
 
 Comando testbenches:
 ```
-vlog file.v file_tb.v
 vsim -voptargs=+acc=n work.file_tb
 add wave -r *
 run -all
