@@ -5,7 +5,7 @@ module espera_1s(
 );
 
     reg [25:0] contador;
-    reg pronto; // Flag para travar a contagem após o pulso
+    reg pronto = 1'b1; // Flag para travar a contagem após o pulso
 
     always @(posedge clk or posedge reset) begin
         if (reset) begin
