@@ -2,7 +2,7 @@ module Accumulator_tb;
 
 reg clk_test;             	// Entrada de Clock
 reg [10:0] inValue_test;  	// Entrada que será possivelmente somada
-reg syncReset_test;       	// Reset sincrono
+reg reset_test;       	// Reset sincrono
 reg add_test;             	// Enabler da soma
 wire [10:0] outValue_test; // Valor de saida / Valor no registrador
 
@@ -10,7 +10,7 @@ wire [10:0] outValue_test; // Valor de saida / Valor no registrador
 Accumulator uut (
     .clk(clk_test),
     .inValue(inValue_test),
-	 .syncReset(syncReset_test),
+	 .reset(reset_test),
 	 .add(add_test),
 	 .outValue(outValue_test)
 );
@@ -23,7 +23,7 @@ Accumulator uut (
 	
 	initial begin
 		$monitor("t=%0t | clk=%b | reset=%b | add=%b | in=%d | out=%d",
-				 $time, clk_test, syncReset_test, add_test, inValue_test, outValue_test);
+				 $time, clk_test, reset_test, add_test, inValue_test, outValue_test);
 	end
 
 initial begin
@@ -32,14 +32,14 @@ initial begin
 	// Inicializando variaveis que serao utilizadas
 	inValue_test = 0;
 	add_test = 0;
-	syncReset_test = 0;
+	reset_test = 0;
 	 
 	// 1. Teste de reset
 	#20;
 	$display("\n[TESTE] Ativando reset");
-	syncReset_test = 1;
+	reset_test = 1;
 	#20;
-	syncReset_test = 0;
+	reset_test = 0;
 	$display("[TESTE] Reset desativado");
 	
 	// 2. Teste de soma no Acumulador
@@ -67,9 +67,9 @@ initial begin
 	// 5. Testando o reset
 	#20
 	$display("\n[TESTE] Ativando Reset");
-	syncReset_test = 1;
+	reset_test = 1;
 	#20;
-	syncReset_test = 0;
+	reset_test = 0;
 	$display("[TESTE] Reset desativado");
 	
 	// 6. Adicao de varios numeros sem destivar o add

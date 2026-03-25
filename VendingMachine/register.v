@@ -12,7 +12,7 @@ module register(
 	end
 	
 	always @(*) begin
-		if(syncReset) begin
+		if(reset) begin
 			outValue <= 11'd0;
 		end
 	end

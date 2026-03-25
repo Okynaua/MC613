@@ -1,7 +1,7 @@
 module Accumulator(
 	input clk,             // Entrada de Clock
 	input [10:0] inValue,  // Entrada que será possivelmente somada
-	input syncReset,       // Reset sincrono
+	input reset,       // Reset sincrono
 	input add,             // Enabler da soma
 	output [10:0] outValue // Valor de saida / Valor no registrador
 );
@@ -12,7 +12,7 @@ module Accumulator(
 	register accReg(
 		.clk(clk),
 		.inValue(sum),
-		.reset(syncReset),
+		.reset(reset),
 		.write(add),
 		.outValue(outValue)
 	);
