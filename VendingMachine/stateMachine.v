@@ -4,6 +4,7 @@ module stateMachine(
 	input cancel,              	//Sinal bot~ao cancelar
 	input subtraction_carry,	//Se subtraction teve carry
 	input subtraction_zero,		//Se inserido = valor produto
+	input accumulator_zero,     //Se inserido = 0ss
 	output product_enable,     	//Ativar a escrita no registrador de produto
 	output product_reset,      	//Reseta o registrador de produto
 	output pulse_acc_enable,    //Ativa a escrita no acumulador
@@ -44,9 +45,9 @@ module stateMachine(
 
 	reg last_acc_enable;
 	always @(posedge clk) begin
-		last_acc_enable <= acc_enable
+		last_acc_enable <= acc_enable;
 	end
-	wire pulse_acc_enable = (acc_enable == 1'b1) && (last_acc_enable == 1'b0);
+	assign pulse_acc_enable = (acc_enable == 1'b1) && (last_acc_enable == 1'b0);
 
 
 	//L´ogica de pr´oximo estado
@@ -88,7 +89,7 @@ module stateMachine(
 				end
 			end
 			canceled: begin
-				if (subtraction_zero) begin
+				if (accumulator_zero) begin
 					acc_reset = 1'b1;
 					product_reset = 1'b1;
 					currentState = selection;
@@ -104,5 +105,6 @@ module stateMachine(
 					currentState = selection;
 				end
 			end
+		endcase
 	end
 endmodule
