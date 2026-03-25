@@ -16,7 +16,7 @@ module register_tb;
 		.outValue(outValue)
 	);
 
-	// Geração de clock (50M)
+	// Geração de clock (50Mhz)
 	initial begin
 		clk = 0;
 		forever #10 clk = ~clk;
