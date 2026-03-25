@@ -5,9 +5,9 @@ reg [5:0] index_test;
 reg enable_test;         				// Maquina de estados vai determinar se pode usar o acumulador
 reg reset_test;       					// Maquina de estados vai resetar o acumulador
 wire is_zero_test;    					// Acumulador esta com 0
-wire [11:0] acumulador_out_test; 	// Valor acumulador
+wire [10:0] acumulador_out_test; 	// Valor acumulador
 
-acumulador_modulo_tb uut (
+acumulador_modulo uut (
     .clk(clk_test),
     .index(index_test),
 	 .enable(enable_test),
@@ -15,6 +15,8 @@ acumulador_modulo_tb uut (
 	 .is_zero(is_zero_test),
 	 .acumulador_out(acumulador_out_test)
 );
+
+integer i;
 
 	// Geração de clock (50M)
 	initial begin
@@ -34,7 +36,6 @@ acumulador_modulo_tb uut (
 	index_test = 0;
 	enable_test = 0;
 	reset_test = 0;
-	is_zero_test = 0;
 	 
 	// 1. Teste de reset
 	#20;
@@ -44,30 +45,32 @@ acumulador_modulo_tb uut (
 	reset_test = 0;
 	$display("[TESTE] Reset desativado");
 	
-	// 2. Teste de soma no Acumulador
+	// 2. Teste de soma de nota acumulador_modulo
 	#20;
-	$display("\n[TESTE] Escrita: inValue = 25");
-	index_test = 6'b10000;
+	$display("\n[TESTE] Escrita: index = 100000");
+	index_test = 6'b100000;
 	enable_test = 1;
 	#20;
-	add_test = 0;
+	enable_test = 0;
 	$display("[TESTE] Write desativado");
 	
-	// 3. Mudança sem add (não deve alterar)
+	// 3. Mudança sem enable
 	#20;
-	$display("\n[TESTE] Mudando entrada sem write (inValue = 100)");
-	inValue_test = 11'd100;
+	$display("\n[TESTE] Mudando entrada sem write (index = 100)");
+	index_test = 6'b000100;
+	#20;
+	index_test = 6'b000010;
 	#20;
 	
 	// 4. Soma de um novo valor
-	$display("\n[TESTE] Escrita: inValue = 150");
-	inValue_test = 11'd150;
-	add_test = 1;
+	$display("\n[TESTE] Escrita: index = 1");
+	index_test = 6'b000001;
+	enable_test = 1;
 	#20;
-	add_test = 0;
+	enable_test = 0;
 	
 	// 5. Testando o reset
-	#20
+	#20;
 	$display("\n[TESTE] Ativando Reset");
 	reset_test = 1;
 	#20;
@@ -76,17 +79,39 @@ acumulador_modulo_tb uut (
 	
 	// 6. Adicao de varios numeros sem destivar o add
 	#20;
-	$display("\n[TESTE] Escrita apos reset: inValue = 7");
-	inValue_test = 11'd7;
-	add_test = 1;
+	$display("\n[TESTE] Escrita apos reset: index's = 010000, 000100, 001000");
+	index_test = 6'b010000;
+	enable_test = 1;
 	#20;
-	inValue_test = 11'd100;
+	index_test = 6'b000100;
 	#20;
-	inValue_test = 11'd360;
-	#20
-	inValue_test = 11'd29;
+	index_test = 6'b001000;
+	#20;
 	
+	// 7. Testando possiveis erros do index
+	$display("\n[TESTE] Erros do index2money, mais de um bit ativo, nenhum bit ativo");
 	#20;
+	index_test = 6'b000000;
+	#20;
+	index_test = 6'b110000;
+	#20;
+	index_test = 6'b000110;
+	
+	// 8. Valores válidos: 000001 até 100000
+	$display("\n[TESTE] Testando todos os valores de dinheiro possiveis");
+	 
+    for (i = 0; i < 6; i = i + 1) begin
+        index_test = 6'b000001 << i;
+        #20;  // Aguarda para o sinal estabilizar
+		  reset_test = 1;
+		  #20;
+		  reset_test = 0;
+		  #20;
+		  $display("index: %d | money: %d", index_test, acumulador_out_test);
+    end
+	
+	
+
 	$display("\n==== FIM DA SIMULACAO ====");
 	
 	$finish;
