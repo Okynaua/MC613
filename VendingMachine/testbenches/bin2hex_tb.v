@@ -12,14 +12,16 @@ bin2hex uut (
 integer i;
 
 initial begin
-    $display("Testando bin2hex...");
+    $display("==== INICIO DA SIMULACAO ====");
     
     // Loop de 0 a 15
     for (i = 0; i < 16; i = i + 1) begin
         test_input = i;
         #10;  // Aguarda para o sinal estabilizar
-        $display("Entrada: %d | Saida: %b", test_input, test_output);
+        $display("BIN: %d | HEX: %b", test_input, test_output);
     end
+	 
+	 $display("\n==== FIM DA SIMULACAO ====");
     
     $finish;
 end

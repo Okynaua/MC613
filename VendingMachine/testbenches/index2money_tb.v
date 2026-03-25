@@ -12,7 +12,7 @@ index2money uut (
 integer i;
 
 initial begin
-    $display("Testando index2money...");
+    $display("==== INICIO DA SIMULACAO ====");
 	 
 	 $display("\nTestando valores validos...");
     
@@ -21,7 +21,7 @@ initial begin
     for (i = 0; i < 6; i = i + 1) begin
         test_input = 6'b000001 << i;
         #10;  // Aguarda para o sinal estabilizar
-		  $display("Entrada: %b | Saida: %d", test_input, test_output);
+		  $display("index: %b | money: %d", test_input, test_output);
     end
 
     $display("\nTestando valores invalidos...");
@@ -29,7 +29,7 @@ initial begin
     // Caso inválido: nenhum ativo
     test_input = 6'b000000;
     #10;
-	 $display("Entrada: %b | Saida: %d", test_input, test_output);
+	 $display("index: %b | money: %d", test_input, test_output);
 
 		 for (i = 0; i < 64; i = i + 1) begin
 			  test_input = i;
@@ -37,9 +37,11 @@ initial begin
 			  // Verifica se tem mais de 1 bit ativo
 			  if ((test_input & (test_input - 1)) != 0) begin
 					#10;
-					$display("Entrada: %b | Saida: %d", test_input, test_output);
+					$display("index: %b | money: %d", test_input, test_output);
 			  end
 		 end	 
+		 
+	 $display("\n==== FIM DA SIMULACAO ====");
     
     $finish;
 end
