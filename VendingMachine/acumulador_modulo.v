@@ -4,7 +4,7 @@ module acumulador_modulo(
 	input enable,         // M´aquina de estados vai determinar se pode usar o acumulador
 	input reset,       // M´aquina de estados vai resetar o acumulador
 	output is_zero,    // Acumulador est´a com 0
-	output [11:0] acumulador_out  // Valor acumulador
+	output [10:0] acumulador_out  // Valor acumulador
 );
 
 	wire [10:0] money;
@@ -18,14 +18,11 @@ module acumulador_modulo(
 	Accumulator acumulador(
 		.clk(clk),
 		.inValue(money),
-		.syncReset(reset),
+		.reset(reset),
 		.add(enable),
 		.outValue(acumulador_out)
 	);
 	
-	is_zero is0 (
-		.Value(acumulador_out),
-		.out(is_zero)	
-	);
+	assign is_zero = (acumulador_out == 12'd0);
 
 endmodule

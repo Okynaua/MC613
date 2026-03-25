@@ -5,16 +5,11 @@ module register(
 	input write,						// Entrada para mudar o valor do reg
 	output reg [10:0] outValue		// Valor do reg propriamente dito
 );
-	always @(posedge clk) begin  	// Quando o reset for ativado, o outValue e resetado
-		if(write) begin
+	always @(posedge clk or posedge reset) begin  	// Quando o reset for ativado, o outValue e resetado
+		if(reset) begin
+			outValue <= 11'd0;
+		end else if(write) begin
 			outValue <= inValue;
 		end
 	end
-	
-	always @(*) begin
-		if(reset) begin
-			outValue <= 11'd0;
-		end
-	end
-
 endmodule
