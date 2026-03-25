@@ -1,4 +1,4 @@
-module accumulator(
+module Accumulator(
 	input clk,             // Entrada de Clock
 	input [10:0] inValue,  // Entrada que será possivelmente somada
 	input syncReset,       // Reset sincrono
