@@ -5,12 +5,12 @@ module stateMachine(
 	input subtraction_carry,	//Se subtraction teve carry
 	input subtraction_zero,		//Se inserido = valor produto
 	input accumulator_zero,     //Se inserido = 0ss
-	output product_enable,     	//Ativar a escrita no registrador de produto
-	output product_reset,      	//Reseta o registrador de produto
+	output reg product_enable,     	//Ativar a escrita no registrador de produto
+	output reg product_reset,      	//Reseta o registrador de produto
 	output pulse_acc_enable,    //Ativa a escrita no acumulador
-	output acc_reset,          	//Reseta o acumuladro
-	output change_led,			//Led para troco pendente
-	output paid_led				//Led para informar pagamento
+	output reg acc_reset,          	//Reseta o acumuladro
+	output reg change_led,			//Led para troco pendente
+	output reg paid_led				//Led para informar pagamento
 );
 	//definiç~ao dos 4 estados poss´iveis
 	localparam selection = 2'b00;
@@ -24,7 +24,7 @@ module stateMachine(
 	
 	//Contador de tempo instanciado
 	wire secondElapsed;           //Define o sinal do segundo passado
-	wire resetTimer;             //Reseta o contador de tempo
+	reg resetTimer;             //Reseta o contador de tempo
 	espera_1s timer(
 		.clk(clk),
 		.reset(resetTimer),
@@ -43,6 +43,7 @@ module stateMachine(
 	wire pulse_advance = (advance == 1'b1) && (last_pulse_advance == 1'b0);
 	wire pulse_cancel = (cancel == 1'b1) && (last_pulse_cancel == 1'b0);
 
+	reg acc_enable;
 	reg last_acc_enable;
 	always @(posedge clk) begin
 		last_acc_enable <= acc_enable;
@@ -57,6 +58,8 @@ module stateMachine(
 		product_reset = 1'b0;
 		product_enable = 1'b0;
 		resetTimer = 1'b0;
+		change_led = 1'b0;
+		paid_led = 1'b0;
 
 		case (currentState)
 			selection: begin
