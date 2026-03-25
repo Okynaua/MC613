@@ -12,7 +12,7 @@ module Accumulator(
 	register accReg(
 		.clk(clk),
 		.inValue(sum),
-		.syncReset(syncReset),
+		.reset(syncReset),
 		.write(add),
 		.outValue(outValue)
 	);

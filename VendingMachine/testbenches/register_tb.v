@@ -11,7 +11,7 @@ module register_tb;
 	register uut (
 		.clk(clk),
 		.inValue(inValue),
-		.syncReset(syncReset),
+		.reset(syncReset),
 		.write(write),
 		.outValue(outValue)
 	);

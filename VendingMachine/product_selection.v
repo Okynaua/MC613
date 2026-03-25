@@ -12,7 +12,7 @@ module product_selection(
 	
 	register productBin(
 		.clk(clk),
-		.syncReset(syncReset),
+		.reset(syncReset),
 		.write(enable),
 		.inValue(product),
 		.outValue(outValue)
