@@ -52,7 +52,6 @@ set_global_assignment -name EDA_GENERATE_FUNCTIONAL_NETLIST OFF -section_id eda_
 set_global_assignment -name EDA_GENERATE_FUNCTIONAL_NETLIST OFF -section_id eda_board_design_symbol
 set_global_assignment -name EDA_GENERATE_FUNCTIONAL_NETLIST OFF -section_id eda_board_design_signal_integrity
 set_global_assignment -name EDA_GENERATE_FUNCTIONAL_NETLIST OFF -section_id eda_board_design_boundary_scan
-<<<<<<< HEAD
 set_global_assignment -name EDA_NATIVELINK_SIMULATION_TEST_BENCH Accumulator -section_id eda_simulation
 set_global_assignment -name EDA_TEST_BENCH_ENABLE_STATUS TEST_BENCH_MODE -section_id eda_simulation
 set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
@@ -89,6 +88,9 @@ set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME register_tb -section_id r
 set_global_assignment -name EDA_TEST_BENCH_NAME Accumulator -section_id eda_simulation
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id Accumulator
 set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME Accumulator_tb -section_id Accumulator
+set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -entity Accumulator -section_id Top
+set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -entity Accumulator -section_id Top
+set_global_assignment -name PARTITION_COLOR 16764057 -entity Accumulator -section_id Top
 set_global_assignment -name EDA_TEST_BENCH_FILE product2value.v -section_id product2value
 set_global_assignment -name EDA_TEST_BENCH_FILE testbenches/product2value_tb.v -section_id product2value
 set_global_assignment -name EDA_TEST_BENCH_FILE testbenches/bin2hex_tb.v -section_id bin2hex
@@ -101,60 +103,12 @@ set_global_assignment -name EDA_TEST_BENCH_FILE register.v -section_id register
 set_global_assignment -name EDA_TEST_BENCH_FILE testbenches/register_tb.v -section_id register
 set_global_assignment -name EDA_TEST_BENCH_FILE testbenches/Accumulator_tb.v -section_id Accumulator
 set_global_assignment -name EDA_TEST_BENCH_FILE Accumulator.v -section_id Accumulator
+set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -entity Accumulator -section_id Top
+set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -entity accumulator -section_id Top
+set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -entity accumulator -section_id Top
+set_global_assignment -name PARTITION_COLOR 16764057 -entity accumulator -section_id Top
+set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -entity accumulator -section_id Top
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
-=======
-set_global_assignment -name EDA_NATIVELINK_SIMULATION_TEST_BENCH bin11_to_bcd -section_id eda_simulation
-set_global_assignment -name EDA_TEST_BENCH_ENABLE_STATUS TEST_BENCH_MODE -section_id eda_simulation
-set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
-set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
-set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
-set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
-set_global_assignment -name VERILOG_FILE product2value.v
-set_global_assignment -name VERILOG_FILE espera_1s.v
-set_global_assignment -name VERILOG_FILE index2money.v
-set_global_assignment -name VERILOG_FILE multiplexer.v
-set_global_assignment -name VERILOG_FILE acumulador_modulo.v
-set_global_assignment -name VERILOG_FILE bin2hex.v
-set_global_assignment -name VERILOG_FILE Accumulator.v
-set_global_assignment -name VERILOG_FILE bin2decimal.v
-set_global_assignment -name VERILOG_FILE product_selection.v
-set_global_assignment -name VERILOG_FILE bin11_to_bcd4.v
-set_global_assignment -name VERILOG_FILE OutValue.v
-set_global_assignment -name EDA_TEST_BENCH_NAME product2value -section_id eda_simulation
-set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id product2value
-set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME product2value_tb -section_id product2value
-set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
-set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
-set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
-set_global_assignment -name EDA_TEST_BENCH_NAME bin2hex -section_id eda_simulation
-set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id bin2hex
-set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME bin2hex_tb -section_id bin2hex
-set_global_assignment -name EDA_TEST_BENCH_NAME index2money -section_id eda_simulation
-set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id index2money
-set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME index2money_tb -section_id index2money
-set_global_assignment -name EDA_TEST_BENCH_NAME espera_1s -section_id eda_simulation
-set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id espera_1s
-set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME espera_1s_tb -section_id espera_1s
-set_global_assignment -name VERILOG_FILE register.v
-set_global_assignment -name EDA_TEST_BENCH_NAME register -section_id eda_simulation
-set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id register
-set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME register_tb -section_id register
-set_global_assignment -name EDA_TEST_BENCH_FILE product2value.v -section_id product2value
-set_global_assignment -name EDA_TEST_BENCH_FILE testbenches/product2value_tb.v -section_id product2value
-set_global_assignment -name EDA_TEST_BENCH_FILE testbenches/bin2hex_tb.v -section_id bin2hex
-set_global_assignment -name EDA_TEST_BENCH_FILE bin2hex.v -section_id bin2hex
-set_global_assignment -name EDA_TEST_BENCH_FILE index2money.v -section_id index2money
-set_global_assignment -name EDA_TEST_BENCH_FILE testbenches/index2money_tb.v -section_id index2money
-set_global_assignment -name EDA_TEST_BENCH_FILE espera_1s.v -section_id espera_1s
-set_global_assignment -name EDA_TEST_BENCH_FILE testbenches/espera_1s_tb.v -section_id espera_1s
-set_global_assignment -name EDA_TEST_BENCH_FILE register.v -section_id register
-set_global_assignment -name EDA_TEST_BENCH_FILE testbenches/register_tb.v -section_id register
-set_global_assignment -name EDA_TEST_BENCH_NAME bin11_to_bcd -section_id eda_simulation
-set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id bin11_to_bcd
-set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME bin11_to_bcd_tb -section_id bin11_to_bcd
-set_global_assignment -name EDA_TEST_BENCH_FILE testbenches/bin11_to_bcd_tb.v -section_id bin11_to_bcd
-set_global_assignment -name EDA_TEST_BENCH_FILE bin11_to_bcd.v -section_id bin11_to_bcd
->>>>>>> a59ac2f8596d6a921b17b9cded9e31c7d35f697f
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
