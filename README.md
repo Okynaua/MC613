@@ -44,23 +44,3 @@ Repositório da disciplina **MC613A - Laboratório de Circuitos Digitais**.
 **Status:** Ainda não feito
 
 ---
-
-## ▶️ Simulação (ModelSim)
-
-1. No Quartus, configure e selecione os testbenches em:
-
-```
-Settings → EDA Tool Settings → Simulation → NativeLink settings → Compile test bench
-```
-
-2. Após abrir o ModelSim, execute no terminal:
-
-```tcl
-vsim -voptargs=+acc=n work.file_tb
-add wave -r *
-run -all
-```
-
-> Substitua `file` pelo nome do testbench que deseja rodar.
-
-Isso fará com que as entradas e saídas do testbench apareçam no formato de **ondas (waveform)**, facilitando a análise da simulação.
