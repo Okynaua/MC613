@@ -44,9 +44,9 @@ module stateMachine(
 
 	reg last_acc_enable;
 	always @(posedge clk) begin
-		last_acc_enable <= acc_enable
+		last_acc_enable <= acc_enable;
 	end
-	wire pulse_acc_enable = (acc_enable == 1'b1) && (last_acc_enable == 1'b0);
+	assign pulse_acc_enable = (acc_enable == 1'b1) && (last_acc_enable == 1'b0);
 
 
 	//L´ogica de pr´oximo estado
@@ -104,5 +104,6 @@ module stateMachine(
 					currentState = selection;
 				end
 			end
+		endcase
 	end
 endmodule
