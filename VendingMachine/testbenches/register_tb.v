@@ -41,45 +41,42 @@ module register_tb;
 		#2;
 		$display("\n[TESTE] Ativando reset");
 		syncReset = 1;
-		#10;
+		#20;
 		syncReset = 0;
-		$display("[TESTE] Reset desativado");
+		$display("\n[TESTE] Reset desativado");
 
 		// 2. Escrita no registrador
-		#10;
+		#20;
 		$display("\n[TESTE] Escrita: inValue = 25");
 		inValue = 11'd25;
 		write = 1;
-		#10;
-		write = 0;
-		$display("[TESTE] Write desativado");
 
 		// 3. Mudança sem write (não deve alterar)
-		#10;
+		#20;
 		$display("\n[TESTE] Mudando entrada sem write (inValue = 100)");
+		write = 0;
 		inValue = 11'd100;
-		#10;
+		#20;
 
 		// 4. Nova escrita
 		$display("\n[TESTE] Escrita: inValue = 100");
 		write = 1;
-		#10;
+		#20;
 		write = 0;
 
 		// 5. Reset durante operação
-		#10;
-		$display("\n[TESTE] Reset durante operação");
+		#20;
+		$display("\n[TESTE] Reset durante operacao");
 		syncReset = 1;
-		#10;
+		#20;
 		syncReset = 0;
 
 		// 6. Escrita após reset
-		#10;
-		$display("\n[TESTE] Escrita após reset: inValue = 7");
+		#20;
+		$display("\n[TESTE] Escrita apos reset: inValue = 7");
 		inValue = 11'd7;
 		write = 1;
-		#10;
-		write = 0;
+		#20;
 
 		#20;
 		$display("\n==== FIM DA SIMULACAO ====");
