@@ -23,9 +23,6 @@ module acumulador_modulo(
 		.outValue(acumulador_out)
 	);
 	
-	is_zero is0 (
-		.Value(acumulador_out),
-		.out(is_zero)	
-	);
+	assign is_zero = (acumulador_out == 12'd0);
 
 endmodule
