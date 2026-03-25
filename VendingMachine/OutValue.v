@@ -11,7 +11,7 @@ module outValue(
 	
 	assign twoComplement = -subtraction;
 	
-	Multiplexer mux(
+	multiplexer mux(
 		.selector(subtraction[11]),
 		.NegValue(twoComplement[10:0]),
 		.Value(subtraction[10:0]),
