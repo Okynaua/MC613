@@ -7,20 +7,20 @@ module VendingMachine(
 	output wire [6:0] HEX1,    // Display de 7 segmentos hex 1
 	output wire [6:0] HEX0,    // Display de 7 segmentos hex 0
 	output wire [6:0] HEX5,    // Display de 7 segmentos hex do produto
-	output wire [1:0] LEDR,	  //Led para troco pendente [1] Led para informar pagamento [0]
+	output wire [1:0] LEDR	  //Led para troco pendente [1] Led para informar pagamento [0]
 );
 
 
 wire acc_reset;
 wire acc_enable;
-wire product_value;
+wire [10:0] product_value;
 wire product_enable;
 wire product_reset;
 wire acc_is_zero;
-wire acc_value;
+wire [10:0] acc_value;
 wire sub_is_zero;
 wire sub_carry;
-wire sub_result;
+wire [10:0] sub_result;
 
 
 acumulador_modulo MODULO_ACUMULADOR(
