@@ -1,11 +1,11 @@
-module bin24hex(
+module bin2decimal(
 	input [10:0] bin,
 	output [6:0] hex3,
 	output [6:0] hex2,
 	output [6:0] hex1,
 	output [6:0] hex0
 );
-	wire [15:0] bcd;
+	wire [15:	0] bcd;
 	
 	bin11_to_bcd get4bcd(
 		.bin(bin),

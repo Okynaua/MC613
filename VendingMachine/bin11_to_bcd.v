@@ -1,4 +1,4 @@
-module bin11_to_bcd4 (
+module bin11_to_bcd (
     input  [10:0] bin,   // 0..2047
     output reg [15:0] bcd    // milhar | centena | dezena | unidade
 );
