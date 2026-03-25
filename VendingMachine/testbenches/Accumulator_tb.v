@@ -17,8 +17,8 @@ Accumulator uut (
 
 	// Geração de clock (50M)
 	initial begin
-		clk = 0;
-		forever #10 clk = ~clk;
+		clk_test = 0;
+		forever #10 clk_test = ~clk_test;
 	end
 	
 	initial begin
@@ -27,11 +27,68 @@ Accumulator uut (
 	end
 
 initial begin
-    $display("==== INICIO DA SIMULACAO ====");
+   $display("==== INICIO DA SIMULACAO ====");
     
+	// Inicializando variaveis que serao utilizadas
+	inValue_test = 0;
+	add_test = 0;
+	syncReset_test = 0;
+	 
+	// 1. Teste de reset
+	#20;
+	$display("\n[TESTE] Ativando reset");
+	syncReset_test = 1;
+	#20;
+	syncReset_test = 0;
+	$display("[TESTE] Reset desativado");
+	
+	// 2. Teste de soma no Acumulador
+	#20;
+	$display("\n[TESTE] Escrita: inValue = 25");
+	inValue_test = 11'd25;
+	add_test = 1;
+	#20;
+	add_test = 0;
+	$display("[TESTE] Write desativado");
+	
+	// 3. Mudança sem add (não deve alterar)
+	#20;
+	$display("\n[TESTE] Mudando entrada sem write (inValue = 100)");
+	inValue_test = 11'd100;
+	#20;
+	
+	// 4. Soma de um novo valor
+	$display("\n[TESTE] Escrita: inValue = 150");
+	inValue_test = 11'd150;
+	add_test = 1;
+	#20;
+	add_test = 0;
+	
+	// 5. Testando o reset
+	#20
+	$display("\n[TESTE] Ativando Reset");
+	syncReset_test = 1;
+	#20;
+	syncReset_test = 0;
+	$display("[TESTE] Reset desativado");
+	
+	// 6. Adicao de varios numeros sem destivar o add
+	#20;
+	$display("\n[TESTE] Escrita apos reset: inValue = 7");
+	inValue_test = 11'd7;
+	add_test = 1;
+	#20;
+	inValue_test = 11'd100;
+	#20;
+	inValue_test = 11'd360;
+	#20
+	inValue_test = 11'd29;
+	
+	#20;
+	$display("\n==== FIM DA SIMULACAO ====");
+	
+	$finish;
     
-    
-    $finish;
 end
 
 endmodule
