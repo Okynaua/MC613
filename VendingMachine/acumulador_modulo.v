@@ -17,7 +17,7 @@ module acumulador_modulo(
 	
 	Accumulator acumulador(
 		.clk(clk),
-		.inValue(money),
+		.inValue(money),=
 		.syncReset(reset),
 		.add(enable),
 		.outValue(acumulador_out)

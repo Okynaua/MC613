@@ -52,7 +52,7 @@ set_global_assignment -name EDA_GENERATE_FUNCTIONAL_NETLIST OFF -section_id eda_
 set_global_assignment -name EDA_GENERATE_FUNCTIONAL_NETLIST OFF -section_id eda_board_design_symbol
 set_global_assignment -name EDA_GENERATE_FUNCTIONAL_NETLIST OFF -section_id eda_board_design_signal_integrity
 set_global_assignment -name EDA_GENERATE_FUNCTIONAL_NETLIST OFF -section_id eda_board_design_boundary_scan
-set_global_assignment -name EDA_NATIVELINK_SIMULATION_TEST_BENCH espera_1s -section_id eda_simulation
+set_global_assignment -name EDA_NATIVELINK_SIMULATION_TEST_BENCH product2value -section_id eda_simulation
 set_global_assignment -name EDA_TEST_BENCH_ENABLE_STATUS TEST_BENCH_MODE -section_id eda_simulation
 set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
 set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
@@ -71,23 +71,23 @@ set_global_assignment -name VERILOG_FILE bin11_to_bcd4.v
 set_global_assignment -name VERILOG_FILE OutValue.v
 set_global_assignment -name EDA_TEST_BENCH_NAME product2value -section_id eda_simulation
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id product2value
-set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME product2value -section_id product2value
+set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME product2value_tb -section_id product2value
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
 set_global_assignment -name EDA_TEST_BENCH_NAME bin2hex -section_id eda_simulation
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id bin2hex
-set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME bin2hex -section_id bin2hex
+set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME bin2hex_tb -section_id bin2hex
 set_global_assignment -name EDA_TEST_BENCH_NAME index2money -section_id eda_simulation
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id index2money
-set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME index2money -section_id index2money
+set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME index2money_tb -section_id index2money
 set_global_assignment -name EDA_TEST_BENCH_NAME espera_1s -section_id eda_simulation
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id espera_1s
-set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME espera_1s -section_id espera_1s
+set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME espera_1s_tb -section_id espera_1s
 set_global_assignment -name VERILOG_FILE register.v
 set_global_assignment -name EDA_TEST_BENCH_NAME register -section_id eda_simulation
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id register
-set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME register -section_id register
+set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME register_tb -section_id register
 set_global_assignment -name EDA_TEST_BENCH_FILE product2value.v -section_id product2value
 set_global_assignment -name EDA_TEST_BENCH_FILE testbenches/product2value_tb.v -section_id product2value
 set_global_assignment -name EDA_TEST_BENCH_FILE testbenches/bin2hex_tb.v -section_id bin2hex

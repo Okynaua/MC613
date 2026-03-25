@@ -10,7 +10,7 @@ module product_selection(
 
 	wire [10:0] outValue;
 	
-	Register productBin(
+	register productBin(
 		.clk(clk),
 		.syncReset(syncReset),
 		.write(enable),
