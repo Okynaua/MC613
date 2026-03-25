@@ -1,6 +1,6 @@
 module outValue(
-	input [11:0] productValue,
-	input [11:0] moneyInserted,
+	input [10:0] productValue,
+	input [10:0] moneyInserted,
 	output subtractionCarry,
 	output subtractionZero,
 	output [10:0] muxOut         // Will go to hex displays
@@ -12,7 +12,7 @@ module outValue(
 	
 	assign twoComplement = -subtraction;
 	assign subtractionCarry = subtraction[11];
-	assign subtractionZero = (subtraction == 12'd0);
+	assign subtractionZero = (subtraction == 11'd0);
 	
 	multiplexer mux(
 		.selector(subtraction[11]),
@@ -21,5 +21,4 @@ module outValue(
 		.outValue(muxOut)
 	);
 	
-
 endmodule
