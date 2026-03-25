@@ -3,10 +3,11 @@ module bin11_to_bcd (
     output reg [15:0] bcd    // milhar | centena | dezena | unidade
 );
 
-    always @(*) begin
-        // Variáveis internas para processamento (equivalente ao variable do VHDL)
         integer i;
         reg [15:0] acc;
+
+    always @(*) begin
+        // Variáveis internas para processamento (equivalente ao variable do VHDL)
         
         acc = 16'b0;
 
