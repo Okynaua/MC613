@@ -37,7 +37,7 @@ product_selection MODULO_PRODUCT(
 	.clk(CLOCK_50),            // Clock
 	.product(SW[3:0]),  // Código binário do produto
 	.enable(product_enable),         // Máquina de estados vai determinar se pode escrever no registrador
-	.syncReset(product_reset),       // Reset síncrono do registrador
+	.reset(product_reset),       // Reset síncrono do registrador
 	.productValue(product_value),    // Valor do produto
 	.hexCode(HEX5)        // Código de 7 segmentos para o c´odigo bin´ario do produto
 );
