@@ -20,7 +20,7 @@ module stateMachine(
 
 
 	//Registrador do Estado atual instanciado
-	reg [1:0] currentState; 
+	reg [1:0] currentState = selection; 
 	
 	//Contador de tempo instanciado
 	wire secondElapsed;           //Define o sinal do segundo passado

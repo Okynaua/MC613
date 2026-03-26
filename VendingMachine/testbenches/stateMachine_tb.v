@@ -6,7 +6,6 @@ reg cancel_test;
 reg subtraction_carry_test;
 reg subtraction_zero_test;
 reg accumulator_zero_test;
-reg currentState_test;
 
 wire product_enable_test;
 wire product_reset_test;
@@ -28,8 +27,7 @@ stateMachine uut (
     .pulse_acc_enable(pulse_acc_enable_test),
     .acc_reset(acc_reset_test),
     .change_led(change_led_test),
-    .paid_led(paid_led_test),
-	 .currentStateOut(currentState_test)
+    .paid_led(paid_led_test)
 );
 
 // Clock 50 MHz
@@ -40,8 +38,8 @@ end
 
 // Monitor
 initial begin
-    $monitor("t=%0t | adv=%b | cancel=%b | subC=%b | subZ=%b | accZ=%b | prod_en=%b | prod_rst=%b | acc_en=%b | acc_rst=%b | change=%b | paid=%b",
-        $time, advance_test, cancel_test,
+    $monitor("t=%0t | state=%b | adv=%b | cancel=%b | subC=%b | subZ=%b | accZ=%b | prod_en=%b | prod_rst=%b | acc_en=%b | acc_rst=%b | change=%b | paid=%b",
+        $time, uut.currentState, advance_test, cancel_test,
         subtraction_carry_test, subtraction_zero_test, accumulator_zero_test,
         product_enable_test, product_reset_test,
         pulse_acc_enable_test, acc_reset_test,
