@@ -38,8 +38,8 @@ end
 
 // Monitor
 initial begin
-    $monitor("t=%0t | state=%b | adv=%b | cancel=%b | subC=%b | subZ=%b | accZ=%b | prod_en=%b | prod_rst=%b | acc_en=%b | acc_rst=%b | change=%b | paid=%b",
-        $time, uut.currentState, advance_test, cancel_test,
+    $monitor("t=%0t | clk=%b | state=%b | adv=%b | cancel=%b | subC=%b | subZ=%b | accZ=%b | prod_en=%b | prod_rst=%b | acc_en=%b | acc_rst=%b | change=%b | paid=%b",
+        $time, clk_test, uut.currentState, uut.pulse_advance, uut.pulse_cancel,
         subtraction_carry_test, subtraction_zero_test, accumulator_zero_test,
         product_enable_test, product_reset_test,
         pulse_acc_enable_test, acc_reset_test,
