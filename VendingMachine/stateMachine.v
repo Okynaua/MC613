@@ -21,6 +21,11 @@ module stateMachine(
 
 	//Registrador do Estado atual instanciado
 	reg [1:0] currentState = selection; 
+	reg [1:0] nextState;
+
+	always @(posedge clk) begin
+		currentState <= nextState;
+	end
 	
 	//Contador de tempo instanciado
 	wire secondElapsed;           //Define o sinal do segundo passado
@@ -60,23 +65,24 @@ module stateMachine(
 		resetTimer = 1'b0;
 		change_led = 1'b0;
 		paid_led = 1'b0;
+		nextState = currentState;
 
 		case (currentState)
 			selection: begin
 				product_enable = 1'b1;
 				if(pulse_advance) begin
-					currentState = insertion;
+					nextState = insertion;
 				end
 			end
 			insertion: begin
 				if(pulse_cancel) begin
-					currentState = canceled;
+					nextState = canceled;
 				end else if (pulse_advance) begin
 					acc_enable = 1'b1;
 				end
 
 				if(subtraction_carry || subtraction_zero) begin
-					currentState = sold;
+					nextState = sold;
 				end
 			end
 			sold: begin
@@ -88,14 +94,14 @@ module stateMachine(
 					product_reset = 1'b1;
 					change_led = 1'b0;
 					paid_led = 1'b0;
-					currentState = selection;
+					nextState = selection;
 				end
 			end
 			canceled: begin
 				if (accumulator_zero) begin
 					acc_reset = 1'b1;
 					product_reset = 1'b1;
-					currentState = selection;
+					nextState = selection;
 				end else begin
 					change_led = 1'b1;
 					resetTimer = 1'b1;
@@ -105,7 +111,7 @@ module stateMachine(
 					acc_reset = 1'b1;
 					product_reset = 1'b1;
 					change_led = 1'b0;
-					currentState = selection;
+					nextState = selection;
 				end
 			end
 		endcase
