@@ -59,13 +59,13 @@ end
 
 // Monitor
 initial begin
-    $monitor("t=%0t | clk=%b | state=%b | adv=%b | cancel=%b | subC=%b | subZ=%b | accZ=%b | credit=%0d | price=%0d | prod_en=%b | prod_rst=%b | acc_en=%b | acc_rst=%b | change=%b | paid=%b",
+    $monitor("t=%0t | clk=%b | state=%b | adv=%b | cancel=%b | subC=%b | subZ=%b | accZ=%b | credit=%0d | price=%0d | prod_en=%b | prod_rst=%b | acc_en=%b | acc_rst=%b | change=%b | paid=%b | nxt_st=%b",
         $time, clk_test, uut.currentState, uut.pulse_advance, uut.pulse_cancel,
         subtraction_carry_test, subtraction_zero_test, accumulator_zero_test,
         model_credit, model_price,
         product_enable_test, product_reset_test,
         pulse_acc_enable_test, acc_reset_test,
-        change_led_test, paid_led_test);
+        change_led_test, paid_led_test, uut.nextState);
 end
 
 task expect_state;
@@ -214,9 +214,12 @@ initial begin
     expect_state(2'b01, "selection -> insertion (ciclo 4)");
 
     press_cancel();
-    expect_state(2'b00, "canceled retorna imediato quando accumulator_zero=1");
+    expect_state(2'b11, "insertion -> canceled sem saldo");
     expect_signal(acc_reset_test, 1'b1, "acc_reset ativo no cancelamento sem saldo");
     expect_signal(product_reset_test, 1'b1, "product_reset ativo no cancelamento sem saldo");
+
+    @(posedge clk_test);
+    expect_state(2'b00, "canceled retorna imediato quando accumulator_zero=1");
 
     @(posedge clk_test);
 
