@@ -21,7 +21,7 @@ module stateMachine(
 
 	//Registrador do Estado atual instanciado
 	reg [1:0] currentState = selection; 
-	reg [1:0] nextState;
+	reg [1:0] nextState = selection;
 
 	always @(posedge clk) begin
 		currentState <= nextState;
@@ -29,7 +29,7 @@ module stateMachine(
 	
 	//Contador de tempo instanciado
 	wire secondElapsed;           //Define o sinal do segundo passado
-	reg resetTimer;             //Reseta o contador de tempo
+	reg resetTimer = 1'b1;             //Reseta o contador de tempo
 	espera_1s timer(
 		.clk(clk),
 		.reset(resetTimer),
@@ -38,15 +38,15 @@ module stateMachine(
 	
 	
 	//l´ogica para os bot~oes advance e cancel contarem como 1 pulso de ativaç~ao
-	reg last_pulse_advance;
-	reg last_pulse_cancel;
+	reg last_pulse_advance = 1'b1;
+	reg last_pulse_cancel = 1'b1;
 
 	always @(posedge clk) begin
 		last_pulse_advance <= advance;
 		last_pulse_cancel <= cancel;
 	end
-	wire pulse_advance = (advance == 1'b1) && (last_pulse_advance == 1'b0);
-	wire pulse_cancel = (cancel == 1'b1) && (last_pulse_cancel == 1'b0);
+	wire pulse_advance = (advance == 1'b0) && (last_pulse_advance == 1'b1);
+	wire pulse_cancel = (cancel == 1'b0) && (last_pulse_cancel == 1'b1);
 
 	reg acc_enable;
 	reg last_acc_enable;
@@ -62,7 +62,7 @@ module stateMachine(
 		acc_reset = 1'b0;
 		product_reset = 1'b0;
 		product_enable = 1'b0;
-		resetTimer = 1'b0;
+		resetTimer = 1'b1;
 		change_led = 1'b0;
 		paid_led = 1'b0;
 		nextState = currentState;
@@ -70,6 +70,7 @@ module stateMachine(
 		case (currentState)
 			selection: begin
 				product_enable = 1'b1;
+				resetTimer = 1'b1;
 				if(pulse_advance) begin
 					nextState = insertion;
 				end
@@ -88,7 +89,7 @@ module stateMachine(
 			sold: begin
 				change_led = subtraction_carry;
 				paid_led = 1'b1;
-				resetTimer = 1'b1;
+				resetTimer = 1'b0;
 				if (secondElapsed) begin
 					acc_reset = 1'b1;
 					product_reset = 1'b1;
@@ -104,7 +105,7 @@ module stateMachine(
 					nextState = selection;
 				end else begin
 					change_led = 1'b1;
-					resetTimer = 1'b1;
+					resetTimer = 1'b0;
 				end
 
 				if (secondElapsed) begin
