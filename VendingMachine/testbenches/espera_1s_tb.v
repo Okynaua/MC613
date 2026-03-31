@@ -30,9 +30,6 @@ initial begin
     #30;
     reset = 0;
 
-    // Força contador perto do fim → gera pulso rápido
-    uut.contador = 26'd49_999_990;
-
     #200;
 
     $display("\n=== Aplicando reset apos pulso ===");
@@ -43,11 +40,12 @@ initial begin
 
     // Verifica se reiniciou corretamente
     // força de novo perto do fim
-    uut.contador = 26'd49_999_995;
+    uut.contador = 26'd49_900_995;
+    // espera o pulso de 1 segundo
+    @(posedge pulse_out);
 
-    #200;
+    $display("\n=== Pulso detectado ===");
 
-    $display("\n=== Teste finalizado ===");
     $finish;
 end
 
