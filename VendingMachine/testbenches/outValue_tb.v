@@ -2,6 +2,8 @@ module outValue_tb;
 
 reg [10:0] productValue_test;
 reg [10:0] moneyInserted_test;
+reg returnInserted_test; // NOVO
+
 wire subtractionCarry_test;
 wire subtractionZero_test;
 wire [10:0] muxOut_test;
@@ -10,6 +12,7 @@ wire [10:0] muxOut_test;
 outValue uut (
     .productValue(productValue_test),
     .moneyInserted(moneyInserted_test),
+    .returnInserted(returnInserted_test), // NOVO
     .subtractionCarry(subtractionCarry_test),
     .subtractionZero(subtractionZero_test),
     .muxOut(muxOut_test)
@@ -17,8 +20,9 @@ outValue uut (
 
 // Monitoramento automático
 initial begin
-    $monitor("t=%0t | product=%d | money=%d | subCarry=%b | subZero=%b | muxOut=%d",
+    $monitor("t=%0t | product=%d | money=%d | return=%b | subCarry=%b | subZero=%b | muxOut=%d",
               $time, productValue_test, moneyInserted_test,
+              returnInserted_test,
               subtractionCarry_test, subtractionZero_test, muxOut_test);
 end
 
@@ -28,42 +32,56 @@ initial begin
     // Inicialização
     productValue_test = 0;
     moneyInserted_test = 0;
+    returnInserted_test = 0;
 
-    // 1. Caso: valores iguais → resultado zero
+    // 1. Valores iguais
     #10;
-    $display("\n[TESTE] Valores iguais (produto = 100, dinheiro = 100)");
-    productValue_test = 12'd100;
-    moneyInserted_test = 12'd100;
+    $display("\n[TESTE] Valores iguais (100, 100)");
+    productValue_test = 100;
+    moneyInserted_test = 100;
+    returnInserted_test = 0;
     #20;
 
-    // 2. Caso: dinheiro menor → resultado positivo
-    $display("\n[TESTE] Dinheiro menor que produto (100 - 30)");
-    productValue_test = 12'd100;
-    moneyInserted_test = 12'd30;
+    // 2. Dinheiro menor
+    $display("\n[TESTE] Dinheiro menor (100 - 30)");
+    productValue_test = 100;
+    moneyInserted_test = 30;
+    returnInserted_test = 0;
     #20;
 
-    // 3. Caso: dinheiro maior → resultado negativo (troco)
-    $display("\n[TESTE] Dinheiro maior que produto (50 - 120)");
-    productValue_test = 12'd50;
-    moneyInserted_test = 12'd120;
+    // 3. Dinheiro maior (troco)
+    $display("\n[TESTE] Dinheiro maior (50 - 120)");
+    productValue_test = 50;
+    moneyInserted_test = 120;
+    returnInserted_test = 0;
     #20;
 
-    // 4. Teste de borda: zero absoluto
+    // 4. Ambos zero
     $display("\n[TESTE] Ambos zero");
-    productValue_test = 12'd0;
-    moneyInserted_test = 12'd0;
+    productValue_test = 0;
+    moneyInserted_test = 0;
+    returnInserted_test = 0;
     #20;
 
     // 5. Overflow
     $display("\n[TESTE] Overflow");
-    productValue_test = 12'd2047;
-    moneyInserted_test = 12'd0;
+    productValue_test = 2047;
+    moneyInserted_test = 0;
+    returnInserted_test = 0;
     #20;
 
     // 6. Underflow
     $display("\n[TESTE] Underflow");
-    productValue_test = 12'd0;
-    moneyInserted_test = 12'd2047;
+    productValue_test = 0;
+    moneyInserted_test = 2047;
+    returnInserted_test = 0;
+    #20;
+
+    // 7. Retornar dinheiro inserido
+    $display("\n[TESTE] returnInserted = 1 (deve devolver money)");
+    productValue_test = 100;
+    moneyInserted_test = 80;
+    returnInserted_test = 1;
     #20;
 
     $display("\n==== FIM DA SIMULACAO ====");
