@@ -62,9 +62,9 @@ endtask
 task press_advance;
 begin
     @(negedge CLOCK_50);
-    KEY[0] = 0;
-    @(negedge CLOCK_50);
     KEY[0] = 1;
+    @(negedge CLOCK_50);
+    KEY[0] = 0;
 end
 endtask
 
@@ -72,7 +72,7 @@ endtask
 task press_cancel;
 begin
     @(negedge CLOCK_50);
-    KEY[1] = 0;
+    KEY[1] = 1;
     @(negedge CLOCK_50);
     KEY[1] = 0;
 end
@@ -85,7 +85,7 @@ initial begin
     // Inicialização
     SW = 0;
     KEY = 2'b11; // botões não pressionados (ativos em 0)
-	 error_count = 0;
+    error_count = 0;
 
     // ==================================================
     // 1. Seleção de produto

@@ -100,18 +100,18 @@ endtask
 task press_advance;
 begin
     @(negedge clk_test);
-    advance_test = 1'b1;
-    @(negedge clk_test);
     advance_test = 1'b0;
+    @(negedge clk_test);
+    advance_test = 1'b1;
 end
 endtask
 
 task press_cancel;
 begin
     @(negedge clk_test);
-    cancel_test = 1'b1;
-    @(negedge clk_test);
     cancel_test = 1'b0;
+    @(negedge clk_test);
+    cancel_test = 1'b1;
 end
 endtask
 
@@ -147,8 +147,8 @@ initial begin
     $display("==== INICIO DA SIMULACAO ====");
 
     // Inicialização
-    advance_test = 0;
-    cancel_test = 0;
+    advance_test = 1;
+    cancel_test = 1;
     model_credit = 8'd0;
     model_price = 8'd0;
     model_next_coin = 8'd0;
