@@ -167,6 +167,7 @@ initial begin
 	 // R$3,00
 	
     #20;
+	 $display("Insere R$1,00");
     SW[9:4] = 6'b010000;
     press_advance(); // R$2,00
 	 expect_signal(HEX0, 7'b1000000, "HEX0 com 0");
@@ -175,6 +176,7 @@ initial begin
 	 expect_signal(HEX3, 7'b1000000, "HEX3 com 0");
 
     #20;
+	 $display("Insere R$1,00");
     press_advance(); // R$1,00
 	 expect_signal(HEX0, 7'b1000000, "HEX0 com 0");
 	 expect_signal(HEX1, 7'b1000000, "HEX1 com 0");
@@ -182,6 +184,7 @@ initial begin
 	 expect_signal(HEX3, 7'b1000000, "HEX3 com 0");
 	 
     #20;
+	 $display("Insere R$1,00");
     press_advance();
 	 pulse_timeout();
 	 expect_signal(HEX0, 7'b1000000, "HEX0 com 0");
@@ -210,6 +213,7 @@ initial begin
 	 // R$4,50
 	
     #20;
+	 $display("Insere R$2,00");
     SW[9:4] = 6'b100000; // R$2,00
     press_advance(); // R$2,50
 	 expect_signal(HEX0, 7'b1000000, "HEX0 com 0");
@@ -218,6 +222,7 @@ initial begin
 	 expect_signal(HEX3, 7'b1000000, "HEX3 com 0");
 
     #20;
+	 $display("Insere R$2,00");
     press_advance(); // R$0,50
 	 expect_signal(HEX0, 7'b1000000, "HEX0 com 0");
 	 expect_signal(HEX1, 7'b0010010, "HEX1 com 5");
@@ -225,6 +230,7 @@ initial begin
 	 expect_signal(HEX3, 7'b1000000, "HEX3 com 0");
 	 
     #20;
+	 $display("Insere R$2,00");
     press_advance();
 	 pulse_timeout(); // R$1,50 de troco
 	 expect_signal(HEX0, 7'b1000000, "HEX0 com 0");
@@ -250,6 +256,7 @@ initial begin
 	 press_advance();
 	 
     #20;
+	 $display("Insere R$2,00");
     SW[9:4] = 6'b100000; // R$2,00
     press_advance(); // R$4,00
 	 expect_signal(HEX0, 7'b1000000, "HEX0 com 0");
@@ -258,6 +265,7 @@ initial begin
 	 expect_signal(HEX3, 7'b1000000, "HEX3 com 0");
 
     #20;
+	 $display("Insere R$0,25");
 	 SW[9:4] = 6'b000100; // R$0,25
     press_advance(); // R$3,75
 	 expect_signal(HEX0, 7'b0010010, "HEX0 com 5");
@@ -266,6 +274,7 @@ initial begin
 	 expect_signal(HEX3, 7'b1000000, "HEX3 com 0");
 	 
 	 #20;
+	 $display("Insere R$0,25");
     press_advance(); // R$3,50
 	 expect_signal(HEX0, 7'b1000000, "HEX0 com 0");
 	 expect_signal(HEX1, 7'b0010010, "HEX1 com 5");
@@ -273,6 +282,7 @@ initial begin
 	 expect_signal(HEX3, 7'b1000000, "HEX3 com 0");
 	 
 	 #20;
+	 $display("Cancela");
 	 press_cancel(); // R$2,50
 	 expect_signal(HEX0, 7'b1000000, "HEX0 com 0");
 	 expect_signal(HEX1, 7'b0010010, "HEX1 com 5");
@@ -295,6 +305,41 @@ initial begin
 	 $display("Pressiona avancar para registrar produto");
 	 press_advance();
 	 
+	 // Produto nao deve mudar
+    $display("Selecionando produto (SW[3:0] = 1)");
+    SW[3:0] = 4'b0001;
+	 #40;
+	 expect_signal(HEX5, 7'b0011001, "HEX5 com produto 4");
+	 
+    $display("Selecionando produto (SW[3:0] = B)");
+    SW[3:0] = 4'b1011;
+	 #40;
+	 expect_signal(HEX5, 7'b0011001, "HEX5 com produto 4");
+	 
+    #20;
+	 $display("Insere R$2,00 e R$0,50 (invalido)");
+    SW[9:4] = 6'b101000; // R$2,00 e R$0,50 (invalido)
+    press_advance(); // R$2,25
+	 expect_signal(HEX0, 7'b0010010, "HEX0 com 5");
+	 expect_signal(HEX1, 7'b0100100, "HEX1 com 2");
+	 expect_signal(HEX2, 7'b0100100, "HEX2 com 2");
+	 expect_signal(HEX3, 7'b1000000, "HEX3 com 0");
+	 
+	 
+    #20;
+	 $display("Insere R$2,00 e R$0,50 (invalido)");
+    SW[9:4] = 6'b010001; // R$1,00 e R$0,05 (invalido)
+    press_advance(); // R$2,25
+	 expect_signal(HEX0, 7'b0010010, "HEX0 com 5");
+	 expect_signal(HEX1, 7'b0100100, "HEX1 com 2");
+	 expect_signal(HEX2, 7'b0100100, "HEX2 com 2");
+	 expect_signal(HEX3, 7'b1000000, "HEX3 com 0");
+	 
+	 
+	 #20;
+	 $display("Cancela");
+	 press_cancel();
+	 expect_signal(LEDR, 2'b00, "LED LIBERACAO com 0 e LED TROCO COM 0");
 	 
 
 
