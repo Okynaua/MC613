@@ -10,7 +10,7 @@ wire [6:0] HEX3;
 wire [6:0] HEX2;
 wire [6:0] HEX1;
 wire [6:0] HEX0;
-wire [6:0] HEX5;
+wire [6:0] HEX5; 
 wire [1:0] LEDR;
 
 // Instância do DUT
@@ -54,6 +54,7 @@ initial begin
     KEY[1] = 0; // cancelar pressionado
     #20;
     KEY[1] = 1;
+	 #50000000;
 
     // ==================================================
     // 2. Seleção de produto
@@ -71,6 +72,7 @@ initial begin
     // ==================================================
     // 3. Inserindo dinheiro
     // ==================================================
+    #20;
     $display("\n[TESTE] Inserindo dinheiro");
 
     // Exemplo: 100000 (nota maior)
@@ -90,6 +92,7 @@ initial begin
     // ==================================================
     // 4. Teste de pagamento completo
     // ==================================================
+    #20;
     $display("\n[TESTE] Continuando insercao ate pagamento");
 
     #20;
@@ -106,11 +109,11 @@ initial begin
     KEY[1] = 0;
     #20;
     KEY[1] = 1;
+	 #50000000
 
     // ==================================================
     // 6. Teste com múltiplos valores seguidos
     // ==================================================
-    #20;
     $display("\n[TESTE] Inserindo varios valores seguidos");
 
     SW[9:4] = 6'b010000;
@@ -146,6 +149,136 @@ initial begin
     KEY[0] = 0;
     #20;
     KEY[0] = 1;
+
+    // ==================================================
+    // 8. Pagamento exato do produto 1(R$3) em 3xR$1
+    // ==================================================
+
+	 #20;
+	 KEY[1] = 0;
+	 #20;
+	 KEY[1] = 1;
+	 #50000000
+    #20;
+    $display("\nPagamento exato produto 1");
+
+    //Seleção
+    SW[3:0] = 4'b0001;
+    KEY[0] = 0;
+    #20;
+    KEY[1] = 1;
+
+    //Pagamento
+    #20;
+    SW[9:4] = 6'b010000;
+    #20;
+    KEY[0] = 0;
+    #20;
+    KEY[0] = 1;
+    #20;
+    KEY[0] = 0;
+    #20;
+    KEY[0] = 1;
+    #20;
+    KEY[0] = 0;
+    #20;
+    KEY[0] = 1;
+
+    // ==================================================
+    // 9. Pagamento com troco do produto 3(R$4,50) em 3xR$2,00
+    // ==================================================
+
+    #20;
+    $display("\nPagamento com troco produto 3");
+
+    //Seleção
+    SW[3:0] = 4'b0011;
+    KEY[0] = 0;
+    #20;
+    KEY[1] = 1;
+
+    //Pagamento
+    #20;
+    SW[9:4] = 6'b100000;
+    #20;
+    KEY[0] = 0;
+    #20;
+    KEY[0] = 1;
+    #20;
+    KEY[0] = 0;
+    #20;
+    KEY[0] = 1;
+    #20;
+    KEY[0] = 0;
+    #20;
+    KEY[0] = 1;
+
+    // ==================================================
+    // 10. Cancelamento do produto A
+    // ==================================================
+
+    #20;
+    $display("\nCancelamento do produto A");
+
+    //Seleção
+    SW[3:0] = 4'b1010;
+    KEY[0] = 0;
+    #20;
+    KEY[1] = 1;
+
+    //Cancelamento com um troquinho
+    #20;
+    SW[9:4] = 6'b000001;
+    #20;
+    KEY[0] = 0;
+    #20;
+    KEY[0] = 1;
+    #20;
+    KEY[1] = 0;
+    #20;
+    KEY[1] = 1;
+
+    // ==================================================
+    // 11. aleterar produto e inserções simultâneas
+    // ==================================================
+
+    #20;
+    $display("\nConfesso que não entendi o que é pra fazer aqui");
+
+    //Seleção
+    SW[3:0] = 4'b1010;
+    #20;
+    SW[3:0] = 4'b1001;
+    #20;
+    SW[3:0] = 4'b1000;
+    #20;
+    SW[3:0] = 4'b0111;
+    #20;
+    SW[3:0] = 4'b0110;
+    #20;
+    SW[3:0] = 4'b0101;
+    #20;
+    SW[3:0] = 4'b0100;
+    KEY[0] = 0;
+    #20;
+    KEY[1] = 1;
+
+    //inserções
+    #20;
+    SW[9:4] = 6'b000001;
+    SW[9:4] = 6'b000010;
+    SW[9:4] = 6'b000100;
+    SW[9:4] = 6'b001000;
+    SW[9:4] = 6'b010000;
+    SW[9:4] = 6'b100000;
+    #20;
+    KEY[0] = 0;
+    #20;
+    KEY[0] = 1;
+    #20;
+    KEY[1] = 0;
+    #20;
+    KEY[1] = 1;
 
     // ==================================================
     $display("\n==== FIM DA SIMULACAO ====");
