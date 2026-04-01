@@ -1,21 +1,28 @@
 # Testes por simulação:
 
 ## VGA
-- [ ] Imprimir um pixel
-- [ ] Imprimir um pixel da borda
-
-
+- [ ] Testar todas as cores
+- [ ] Testar Sincronismo de HS
+- [ ] Testar Sincronismo de VS
+- [ ] Testar Mudança de VS após 640 HS
+- [ ] Testar Reset do Counter_H após 640
+- [ ] Testar Reset do Counter_V após 480
+- [ ] Background sólido
+- [ ] Baground Listras Horizontais
+- [ ] Background Listras Verticais
+- [ ] Testar Reset da VGA
 
 
 ## PPU
-- [ ] Background sólido
-- [ ] Background repetido listras horizontais verticais e diagonais
 - [ ] Background tiles iguais
 - [ ] Sprite em background alinhado e não alinhado com tile
 - [ ] Sprite com parte fora da área
 - [ ] Modificar a posição do sprite
 
-### 
+### POS_BG
+- [ ] Testar saída para posições dentro do tile
+- [ ] Testar saída para posições na borda do tile
+- [ ] Testar saída para posições fora do tile
 
 ### PPU_OAM
 - [ ] Verificar saída de pixel com sprite
