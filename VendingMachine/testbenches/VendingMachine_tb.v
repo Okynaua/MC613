@@ -188,7 +188,7 @@ initial begin
 	 expect_signal(HEX1, 7'b1000000, "HEX1 com 0");
 	 expect_signal(HEX2, 7'b1000000, "HEX2 com 0");
 	 expect_signal(HEX3, 7'b1000000, "HEX3 com 0");
-	 expect_signal(LEDR, 2'b01, "LED FINAL com 1 e LED TROCO COM 0");
+	 expect_signal(LEDR, 2'b01, "LED LIBERACAO com 1 e LED TROCO COM 0");
 
     // ==================================================
     // 3. Produto 3, pagamento com troco (3x R$2,00)
@@ -231,7 +231,7 @@ initial begin
 	 expect_signal(HEX1, 7'b0010010, "HEX1 com 5");
 	 expect_signal(HEX2, 7'b1111001, "HEX2 com 1");
 	 expect_signal(HEX3, 7'b1000000, "HEX3 com 0");
-	 expect_signal(LEDR, 2'b11, "LED FINAL com 1 e LED TROCO COM 1");
+	 expect_signal(LEDR, 2'b11, "LED LIBERACAO com 1 e LED TROCO COM 1");
 	 
 
     // ==================================================
@@ -272,7 +272,30 @@ initial begin
 	 expect_signal(HEX2, 7'b0110000, "HEX2 com 3");
 	 expect_signal(HEX3, 7'b1000000, "HEX3 com 0");
 	 
-	 press_cancel();
+	 #20;
+	 press_cancel(); // R$2,50
+	 expect_signal(HEX0, 7'b1000000, "HEX0 com 0");
+	 expect_signal(HEX1, 7'b0010010, "HEX1 com 5");
+	 expect_signal(HEX2, 7'b0100100, "HEX2 com 2");
+	 expect_signal(HEX3, 7'b1000000, "HEX3 com 0");
+	 expect_signal(LEDR, 2'b10, "LED LIBERACAO com 0 e LED TROCO COM 1");
+
+    // ========================================================
+    // 5. Produto 4, alterar produto e inserções simultaneas
+    // ========================================================
+   
+    $display("\n[TESTE] Produto 4, alterar produto e inserções simultaneas");
+	 pulse_timeout();
+	 
+    $display("Selecionando produto (SW[3:0] = 4)");
+    SW[3:0] = 4'b0100;
+	 #40;
+	 expect_signal(HEX5, 7'b0011001, "HEX5 com produto 4");
+	 
+	 $display("Pressiona avancar para registrar produto");
+	 press_advance();
+	 
+	 
 
 
     // ==================================================
