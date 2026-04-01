@@ -13,6 +13,9 @@ wire [6:0] HEX0;
 wire [6:0] HEX5; 
 wire [1:0] LEDR;
 
+integer error_count;
+localparam integer LABEL_W = 8*96;
+
 // Instância do DUT
 VendingMachine uut (
     .CLOCK_50(CLOCK_50),
@@ -34,9 +37,46 @@ end
 
 // Monitoramento
 initial begin
-    $monitor("t=%0t | SW=%b | KEY=%b | LEDR=%b | HEX5=%b",
-              $time, SW, KEY, LEDR, HEX5);
+    $monitor("t=%0t | SW=%b | KEY=%b | LEDR=%b | HEX5=%b | HEX0=%b | HEX1=%b | HEX2=%b | HEX3=%b",
+              $time, SW, KEY, LEDR, HEX5, HEX0, HEX1, HEX2, HEX3);
 end
+
+
+// Task para observar se o sinal é o esperado
+task expect_signal;
+    input [6:0] observed;
+    input [6:0] expected;
+    input [LABEL_W-1:0] label;
+begin
+    #1;
+    if (observed !== expected) begin
+        error_count = error_count + 1;
+        $display("[ERRO] %0s | esperado=%b obtido=%b (t=%0t)", label, expected, observed, $time);
+    end else begin
+        $display("[OK] %0s | valor=%b", label, observed);
+    end
+end
+endtask
+
+// Task para pressionar avançar
+task press_advance;
+begin
+    @(negedge CLOCK_50);
+    KEY[0] = 0;
+    @(negedge CLOCK_50);
+    KEY[0] = 1;
+end
+endtask
+
+// Task para pressionar cancelar
+task press_cancel;
+begin
+    @(negedge CLOCK_50);
+    KEY[1] = 0;
+    @(negedge CLOCK_50);
+    KEY[1] = 0;
+end
+endtask
 
 // Testes
 initial begin
@@ -44,33 +84,70 @@ initial begin
 
     // Inicialização
     SW = 0;
-    KEY = 2'b11; // botões não pressionados (ativo em 0 normalmente)
+    KEY = 2'b11; // botões não pressionados (ativos em 0)
+	 error_count = 0;
 
     // ==================================================
-    // 1. Reset inicial (via cancel)
+    // 1. Seleção de produto
     // ==================================================
     #20;
-    $display("\n[TESTE] Reset via botao cancelar");
-    KEY[1] = 0; // cancelar pressionado
-    #20;
-    KEY[1] = 1;
-	 #50000000;
-
-    // ==================================================
-    // 2. Seleção de produto
-    // ==================================================
-    #20;
+	 
+    $display("\n[TESTE] Selecionando produto (SW[3:0] = 5)");
+    SW[3:0] = 4'b0101;
+	 #40;
+	 expect_signal(HEX5, 7'b0010010, "HEX5 com produto 5");
+	 
+    $display("\n[TESTE] Selecionando produto (SW[3:0] = 8)");
+    SW[3:0] = 4'b1000;
+	 #40;
+	 expect_signal(HEX5, 7'b0000000, "HEX5 com produto 8");
+	 
+    $display("\n[TESTE] Selecionando produto (SW[3:0] = B)");
+    SW[3:0] = 4'b1011;
+	 #40;
+	 expect_signal(HEX5, 7'b0000011, "HEX5 com produto B");
+	 
+    $display("\n[TESTE] Selecionando produto (SW[3:0] = F)");
+    SW[3:0] = 4'b1111;
+	 #40;
+	 expect_signal(HEX5, 7'b0001110, "HEX5 com produto F");
+	 
     $display("\n[TESTE] Selecionando produto (SW[3:0] = 3)");
     SW[3:0] = 4'b0011;
+	 #40;
+	 expect_signal(HEX5, 7'b0110000, "HEX5 com produto 3");
 
-    // Pressiona avançar para registrar produto
-    #20;
-    KEY[0] = 0;
-    #20;
-    KEY[0] = 1;
+	 $display("\n[TESTE] Pressiona avancar para registrar produto");
+	 press_advance();
+
+    $display("Selecionando outro produto (SW[3:0] = B)");
+    SW[3:0] = 4'b1011;
+	 #40;
+	 expect_signal(HEX5, 7'b0110000, "HEX5 com produto 3");
+	 
+	 $display("\n[TESTE] Pressiona cancelar para registrar outro produto");
+	 press_cancel();
+	 
+    $display("Selecionando outro produto (SW[3:0] = B)");
+    SW[3:0] = 4'b1011;
+	 #40;
+	 expect_signal(HEX5, 7'b0000011, "HEX5 com produto B");
+	 
+    $display("\n[TESTE] Selecionando produto (SW[3:0] = 3)");
+    SW[3:0] = 4'b0011;
+	 #40;
+	 expect_signal(HEX5, 7'b0110000, "HEX5 com produto 3");
+	 
+    $display("\n[TESTE] Selecionando produto (SW[3:0] = F)");
+    SW[3:0] = 4'b1111;
+	 #40;
+	 expect_signal(HEX5, 7'b0001110, "HEX5 com produto F");
+	 
+	 $display("\n[TESTE] Pressiona avancar para registrar produto");
+	 press_advance();
 
     // ==================================================
-    // 3. Inserindo dinheiro
+    // 2. Inserindo dinheiro
     // ==================================================
     #20;
     $display("\n[TESTE] Inserindo dinheiro");
@@ -78,16 +155,14 @@ initial begin
     // Exemplo: 100000 (nota maior)
     #20;
     SW[9:4] = 6'b100000;
-    KEY[0] = 0;
-    #20;
-    KEY[0] = 1;
+    press_advance();
 
     // Mais dinheiro
     #20;
-    SW[9:4] = 6'b000001;
-    KEY[0] = 0;
+    press_advance();
+	 
     #20;
-    KEY[0] = 1;
+    press_advance();
 
     // ==================================================
     // 4. Teste de pagamento completo
@@ -281,7 +356,15 @@ initial begin
     KEY[1] = 1;
 
     // ==================================================
-    $display("\n==== FIM DA SIMULACAO ====");
+    
+	 
+    // Resultado final
+    if (error_count == 0) begin
+        $display("\n==== FIM DA SIMULACAO: TODOS OS TESTES PASSARAM ====");
+    end else begin
+        $display("\n==== FIM DA SIMULACAO: %0d FALHAS ====", error_count);
+    end
+	
     $finish;
 end
 
