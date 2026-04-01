@@ -1,12 +1,12 @@
 module VendingMachine(
-	input wire CLOCK_50,            // Clock
-    input wire [9:0] SW,       // Switches do produto [3:0] Switches do index do dinheiro [9:4]
-    input wire [1:0] KEY,        // Bot~ao avançar [0] Bot~ao cancelar [1]
-	output wire [6:0] HEX3,    // Display de 7 segmentos hex 3
-	output wire [6:0] HEX2,    // Display de 7 segmentos hex 2
-	output wire [6:0] HEX1,    // Display de 7 segmentos hex 1
-	output wire [6:0] HEX0,    // Display de 7 segmentos hex 0
-	output wire [6:0] HEX5,    // Display de 7 segmentos hex do produto
+	input wire CLOCK_50,      // Clock
+    input wire [9:0] SW,     // Switches do produto [3:0] Switches do index do dinheiro [9:4]
+    input wire [1:0] KEY,    // Bot~ao avançar [0] Bot~ao cancelar [1]
+	output wire [6:0] HEX3,   // Display de 7 segmentos hex 3
+	output wire [6:0] HEX2,   // Display de 7 segmentos hex 2
+	output wire [6:0] HEX1,   // Display de 7 segmentos hex 1
+	output wire [6:0] HEX0,   // Display de 7 segmentos hex 0
+	output wire [6:0] HEX5,   // Display de 7 segmentos hex do produto
 	output wire [1:0] LEDR	  //Led para troco pendente [1] Led para informar pagamento [0]
 );
 

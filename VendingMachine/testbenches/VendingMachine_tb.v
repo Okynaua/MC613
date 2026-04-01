@@ -78,6 +78,17 @@ begin
 end
 endtask
 
+// Task para pular o tempo de espera
+task pulse_timeout;
+begin
+    force uut.MODULO_STATEMACHINE.secondElapsed = 1'b1;
+    @(posedge CLOCK_50);
+    release uut.MODULO_STATEMACHINE.secondElapsed;
+    @(posedge CLOCK_50);
+end
+endtask
+
+
 // Testes
 initial begin
     $display("==== INICIO DA SIMULACAO ====");
@@ -127,6 +138,7 @@ initial begin
 	 
 	 $display("\n[TESTE] Pressiona cancelar para registrar outro produto");
 	 press_cancel();
+	 pulse_timeout();
 	 
     $display("Selecionando outro produto (SW[3:0] = B)");
     SW[3:0] = 4'b1011;

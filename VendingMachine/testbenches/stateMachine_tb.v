@@ -74,7 +74,7 @@ task expect_state;
 begin
     #1;
     if (uut.currentState !== expected) begin
-        error_count =  + 1;
+        error_count = error_count + 1;
         $display("[ERRO] %0s | estado esperado=%b obtido=%b (t=%0t)", label, expected, uut.currentState, $time);
     end else begin
         $display("[OK] %0s | estado=%b", label, uut.currentState);
