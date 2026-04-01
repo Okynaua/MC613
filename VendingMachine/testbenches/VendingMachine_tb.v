@@ -62,9 +62,9 @@ endtask
 task press_advance;
 begin
     @(negedge CLOCK_50);
-    KEY[0] = 1;
-    @(negedge CLOCK_50);
     KEY[0] = 0;
+    @(negedge CLOCK_50);
+    KEY[0] = 1;
 end
 endtask
 
@@ -72,9 +72,9 @@ endtask
 task press_cancel;
 begin
     @(negedge CLOCK_50);
-    KEY[1] = 1;
-    @(negedge CLOCK_50);
     KEY[1] = 0;
+    @(negedge CLOCK_50);
+    KEY[1] = 1;
 end
 endtask
 
@@ -145,227 +145,135 @@ initial begin
 	 #40;
 	 expect_signal(HEX5, 7'b0000011, "HEX5 com produto B");
 	 
-    $display("\n[TESTE] Selecionando produto (SW[3:0] = 3)");
-    SW[3:0] = 4'b0011;
-	 #40;
-	 expect_signal(HEX5, 7'b0110000, "HEX5 com produto 3");
-	 
     $display("\n[TESTE] Selecionando produto (SW[3:0] = F)");
     SW[3:0] = 4'b1111;
 	 #40;
 	 expect_signal(HEX5, 7'b0001110, "HEX5 com produto F");
 	 
+    $display("\n[TESTE] Selecionando produto (SW[3:0] = 1)");
+    SW[3:0] = 4'b0001;
+	 #40;
+	 expect_signal(HEX5, 7'b1111001, "HEX5 com produto 1");
+	 
 	 $display("\n[TESTE] Pressiona avancar para registrar produto");
 	 press_advance();
 
     // ==================================================
-    // 2. Inserindo dinheiro
+    // 2. Produto 1, pagamento exato (3x R$1,00)
     // ==================================================
     #20;
-    $display("\n[TESTE] Inserindo dinheiro");
-
-    // Exemplo: 100000 (nota maior)
+    $display("\n[TESTE] Produto 1, pagamento exato (3x R$1,00)");
+	
+	 // R$3,00
+	
     #20;
-    SW[9:4] = 6'b100000;
-    press_advance();
+    SW[9:4] = 6'b010000;
+    press_advance(); // R$2,00
+	 expect_signal(HEX0, 7'b1000000, "HEX0 com 0");
+	 expect_signal(HEX1, 7'b1000000, "HEX1 com 0");
+	 expect_signal(HEX2, 7'b0100100, "HEX2 com 2");
+	 expect_signal(HEX3, 7'b1000000, "HEX3 com 0");
 
-    // Mais dinheiro
     #20;
-    press_advance();
+    press_advance(); // R$1,00
+	 expect_signal(HEX0, 7'b1000000, "HEX0 com 0");
+	 expect_signal(HEX1, 7'b1000000, "HEX1 com 0");
+	 expect_signal(HEX2, 7'b1111001, "HEX2 com 1");
+	 expect_signal(HEX3, 7'b1000000, "HEX3 com 0");
 	 
     #20;
     press_advance();
+	 pulse_timeout();
+	 expect_signal(HEX0, 7'b1000000, "HEX0 com 0");
+	 expect_signal(HEX1, 7'b1000000, "HEX1 com 0");
+	 expect_signal(HEX2, 7'b1000000, "HEX2 com 0");
+	 expect_signal(HEX3, 7'b1000000, "HEX3 com 0");
+	 expect_signal(LEDR, 2'b01, "LED FINAL com 1 e LED TROCO COM 0");
 
     // ==================================================
-    // 4. Teste de pagamento completo
+    // 3. Produto 3, pagamento com troco (3x R$2,00)
     // ==================================================
-    #20;
-    $display("\n[TESTE] Continuando insercao ate pagamento");
-
-    #20;
-    SW[9:4] = 6'b000010;
-    KEY[0] = 0;
-    #20;
-    KEY[0] = 1;
-
-    // ==================================================
-    // 5. Cancelamento no meio da operacao
-    // ==================================================
-    #40;
-    $display("\n[TESTE] Cancelando operacao");
-    KEY[1] = 0;
-    #20;
-    KEY[1] = 1;
-	 #50000000
-
-    // ==================================================
-    // 6. Teste com múltiplos valores seguidos
-    // ==================================================
-    $display("\n[TESTE] Inserindo varios valores seguidos");
-
-    SW[9:4] = 6'b010000;
-    KEY[0] = 0;
-    #20;
-    KEY[0] = 1;
-
-    #20;
-    SW[9:4] = 6'b001000;
-    KEY[0] = 0;
-    #20;
-    KEY[0] = 1;
-
-    #20;
-    SW[9:4] = 6'b000100;
-    KEY[0] = 0;
-    #20;
-    KEY[0] = 1;
-
-    // ==================================================
-    // 7. Teste de erro (index inválido)
-    // ==================================================
-    #20;
-    $display("\n[TESTE] Index invalido");
-
-    SW[9:4] = 6'b000000;
-    KEY[0] = 0;
-    #20;
-    KEY[0] = 1;
-
-    #20;
-    SW[9:4] = 6'b110000;
-    KEY[0] = 0;
-    #20;
-    KEY[0] = 1;
-
-    // ==================================================
-    // 8. Pagamento exato do produto 1(R$3) em 3xR$1
-    // ==================================================
-
-	 #20;
-	 KEY[1] = 0;
-	 #20;
-	 KEY[1] = 1;
-	 #50000000
-    #20;
-    $display("\nPagamento exato produto 1");
-
-    //Seleção
-    SW[3:0] = 4'b0001;
-    KEY[0] = 0;
-    #20;
-    KEY[1] = 1;
-
-    //Pagamento
-    #20;
-    SW[9:4] = 6'b010000;
-    #20;
-    KEY[0] = 0;
-    #20;
-    KEY[0] = 1;
-    #20;
-    KEY[0] = 0;
-    #20;
-    KEY[0] = 1;
-    #20;
-    KEY[0] = 0;
-    #20;
-    KEY[0] = 1;
-
-    // ==================================================
-    // 9. Pagamento com troco do produto 3(R$4,50) em 3xR$2,00
-    // ==================================================
-
-    #20;
-    $display("\nPagamento com troco produto 3");
-
-    //Seleção
+   
+    $display("\n[TESTE] Produto 3, pagamento com troco (3x R$2,00)");
+	 pulse_timeout();
+	 
+    $display("Selecionando produto (SW[3:0] = 3)");
     SW[3:0] = 4'b0011;
-    KEY[0] = 0;
+	 #40;
+	 expect_signal(HEX5, 7'b0110000, "HEX5 com produto 3");
+	 
+	 $display("Pressiona avancar para registrar produto");
+	 press_advance();
+	 
+	 // Inserir dinheiro
+	 
+	 // R$4,50
+	
     #20;
-    KEY[1] = 1;
+    SW[9:4] = 6'b100000; // R$2,00
+    press_advance(); // R$2,50
+	 expect_signal(HEX0, 7'b1000000, "HEX0 com 0");
+	 expect_signal(HEX1, 7'b0010010, "HEX1 com 5");
+	 expect_signal(HEX2, 7'b0100100, "HEX2 com 2");
+	 expect_signal(HEX3, 7'b1000000, "HEX3 com 0");
 
-    //Pagamento
     #20;
-    SW[9:4] = 6'b100000;
+    press_advance(); // R$0,50
+	 expect_signal(HEX0, 7'b1000000, "HEX0 com 0");
+	 expect_signal(HEX1, 7'b0010010, "HEX1 com 5");
+	 expect_signal(HEX2, 7'b1000000, "HEX2 com 0");
+	 expect_signal(HEX3, 7'b1000000, "HEX3 com 0");
+	 
     #20;
-    KEY[0] = 0;
-    #20;
-    KEY[0] = 1;
-    #20;
-    KEY[0] = 0;
-    #20;
-    KEY[0] = 1;
-    #20;
-    KEY[0] = 0;
-    #20;
-    KEY[0] = 1;
+    press_advance();
+	 pulse_timeout(); // R$1,50 de troco
+	 expect_signal(HEX0, 7'b1000000, "HEX0 com 0");
+	 expect_signal(HEX1, 7'b0010010, "HEX1 com 5");
+	 expect_signal(HEX2, 7'b1111001, "HEX2 com 1");
+	 expect_signal(HEX3, 7'b1000000, "HEX3 com 0");
+	 expect_signal(LEDR, 2'b11, "LED FINAL com 1 e LED TROCO COM 1");
+	 
 
     // ==================================================
-    // 10. Cancelamento do produto A
+    // 4. Produto A, cancelamento
     // ==================================================
-
-    #20;
-    $display("\nCancelamento do produto A");
-
-    //Seleção
+   
+    $display("\n[TESTE] Produto A, cancelamento");
+	 pulse_timeout();
+	 
+    $display("Selecionando produto (SW[3:0] = A)");
     SW[3:0] = 4'b1010;
-    KEY[0] = 0;
+	 #40;
+	 expect_signal(HEX5, 7'b0001000, "HEX5 com produto A");
+	 
+	 $display("Pressiona avancar para registrar produto");
+	 press_advance();
+	 
     #20;
-    KEY[1] = 1;
-
-    //Cancelamento com um troquinho
-    #20;
-    SW[9:4] = 6'b000001;
-    #20;
-    KEY[0] = 0;
-    #20;
-    KEY[0] = 1;
-    #20;
-    KEY[1] = 0;
-    #20;
-    KEY[1] = 1;
-
-    // ==================================================
-    // 11. aleterar produto e inserções simultâneas
-    // ==================================================
+    SW[9:4] = 6'b100000; // R$2,00
+    press_advance(); // R$4,00
+	 expect_signal(HEX0, 7'b1000000, "HEX0 com 0");
+	 expect_signal(HEX1, 7'b1000000, "HEX1 com 0");
+	 expect_signal(HEX2, 7'b0011001, "HEX2 com 4");
+	 expect_signal(HEX3, 7'b1000000, "HEX3 com 0");
 
     #20;
-    $display("\nConfesso que não entendi o que é pra fazer aqui");
+	 SW[9:4] = 6'b000100; // R$0,25
+    press_advance(); // R$3,75
+	 expect_signal(HEX0, 7'b0010010, "HEX0 com 5");
+	 expect_signal(HEX1, 7'b1111000, "HEX1 com 7");
+	 expect_signal(HEX2, 7'b0110000, "HEX2 com 3");
+	 expect_signal(HEX3, 7'b1000000, "HEX3 com 0");
+	 
+	 #20;
+    press_advance(); // R$3,50
+	 expect_signal(HEX0, 7'b1000000, "HEX0 com 0");
+	 expect_signal(HEX1, 7'b0010010, "HEX1 com 5");
+	 expect_signal(HEX2, 7'b0110000, "HEX2 com 3");
+	 expect_signal(HEX3, 7'b1000000, "HEX3 com 0");
+	 
+	 press_cancel();
 
-    //Seleção
-    SW[3:0] = 4'b1010;
-    #20;
-    SW[3:0] = 4'b1001;
-    #20;
-    SW[3:0] = 4'b1000;
-    #20;
-    SW[3:0] = 4'b0111;
-    #20;
-    SW[3:0] = 4'b0110;
-    #20;
-    SW[3:0] = 4'b0101;
-    #20;
-    SW[3:0] = 4'b0100;
-    KEY[0] = 0;
-    #20;
-    KEY[1] = 1;
-
-    //inserções
-    #20;
-    SW[9:4] = 6'b000001;
-    SW[9:4] = 6'b000010;
-    SW[9:4] = 6'b000100;
-    SW[9:4] = 6'b001000;
-    SW[9:4] = 6'b010000;
-    SW[9:4] = 6'b100000;
-    #20;
-    KEY[0] = 0;
-    #20;
-    KEY[0] = 1;
-    #20;
-    KEY[1] = 0;
-    #20;
-    KEY[1] = 1;
 
     // ==================================================
     
