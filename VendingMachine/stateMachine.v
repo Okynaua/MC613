@@ -10,7 +10,8 @@ module stateMachine(
 	output pulse_acc_enable,    //Ativa a escrita no acumulador
 	output reg acc_reset,          	//Reseta o acumuladro
 	output reg change_led,			//Led para troco pendente
-	output reg paid_led				//Led para informar pagamento
+	output reg paid_led,			//Led para informar pagamento
+	output reg return_inserted
 );
 	//definiç~ao dos 4 estados poss´iveis
 	localparam selection = 2'b00;
@@ -66,6 +67,7 @@ module stateMachine(
 		change_led = 1'b0;
 		paid_led = 1'b0;
 		nextState = currentState;
+		return_inserted = 1'b0;
 
 		case (currentState)
 			selection: begin
@@ -105,6 +107,7 @@ module stateMachine(
 					nextState = selection;
 				end else begin
 					change_led = 1'b1;
+					return_inserted = 1'b1;
 					resetTimer = 1'b0;
 				end
 

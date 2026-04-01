@@ -21,6 +21,7 @@ wire [10:0] acc_value;
 wire sub_is_zero;
 wire sub_carry;
 wire [10:0] sub_result;
+wire return_inserted;
 
 
 acumulador_modulo MODULO_ACUMULADOR(
@@ -55,7 +56,8 @@ stateMachine MODULO_STATEMACHINE(
 	.pulse_acc_enable(acc_enable),    //Ativa a escrita no acumulador
 	.acc_reset(acc_reset),          	//Reseta o acumuladro
 	.change_led(LEDR[1]),			//Led para troco pendente
-	.paid_led(LEDR[0])				//Led para informar pagamento
+	.paid_led(LEDR[0]),				//Led para informar pagamento
+	.return_inserted(return_inserted)
 );
 
 
@@ -71,6 +73,7 @@ bin2decimal MODULO_BINTODECIMAL(
 outValue MODULO_SAIDA(
 	.productValue(product_value),
 	.moneyInserted(acc_value),
+	.returnInserted(return_inserted),
 	.subtractionCarry(sub_carry),
 	.subtractionZero(sub_is_zero),  
 	.muxOut(sub_result)         // Will go to hex displays

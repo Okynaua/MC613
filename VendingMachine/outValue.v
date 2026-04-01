@@ -1,6 +1,7 @@
 module outValue(
 	input [10:0] productValue,
 	input [10:0] moneyInserted,
+	input returnInserted,
 	output subtractionCarry,
 	output subtractionZero,
 	output [10:0] muxOut         // Will go to hex displays
@@ -14,10 +15,19 @@ module outValue(
 	assign subtractionCarry = subtraction[11];
 	assign subtractionZero = (subtraction == 11'd0);
 	
+	wire [10:0] mux1Out;
+
 	multiplexer mux(
 		.selector(subtraction[11]),
 		.NegValue(twoComplement[10:0]),
 		.Value(subtraction[10:0]),
+		.outValue(mux1Out)
+	);
+
+	multiplexer mux2(
+		.selector(returnInserted),
+		.Value(mux1Out),
+		.NegValue(moneyInserted),
 		.outValue(muxOut)
 	);
 	
