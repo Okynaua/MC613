@@ -12,7 +12,7 @@ product_selection uut (
     .clk(clk_test),
     .product(product_test),
     .enable(enable_test),
-    .Reset(reset_test),
+    .reset(reset_test),
     .productValue(productValue_test),
     .hexCode(hexCode_test)
 );
