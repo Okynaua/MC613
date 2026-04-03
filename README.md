@@ -18,18 +18,16 @@ Repositório da disciplina **MC613A - Laboratório de Circuitos Digitais**.
 
 ### 🧪 P1: Vending Machine
 
-**Status:** Em desenvolvimento
-
-**A fazer:**
-
-* Máquina de Controle
-* Testbenches
+**Status:** Concluído
 
 ---
 
 ### 🧪 P2: Controlador VGA
 
-**Status:** Ainda não feito
+**Status:** Em desenvolvimento
+
+**Progresso:**
+* Planejamento concluído
 
 ---
 
