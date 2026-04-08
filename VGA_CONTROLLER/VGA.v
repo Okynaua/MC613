@@ -24,131 +24,61 @@ module VGA (
     output wire        VGA_CLK        // Clock do pixel
 );
 
-    // Valores constantes
-    assign VGA_R = r_ch;
-    assign VGA_G = g_ch;
-    assign VGA_B = b_ch;
-    assign VGA_SYNC_N = 1'b1;
+    localparam [9:0] H_VISIBLE = 10'd640;
+    localparam [9:0] H_FRONT   = 10'd16;
+    localparam [9:0] H_SYNC    = 10'd96;
+    localparam [9:0] H_BACK    = 10'd48;
+    localparam [9:0] H_TOTAL   = H_VISIBLE + H_FRONT + H_SYNC + H_BACK; // 800
 
-    // Horizontal timing: 640 active + 16 front porch + 96 sync + 48 back porch
-    wire [9:0] h_video_count;
-    wire [4:0] h_front_count;
-    wire [6:0] h_sync_count;
-    wire [5:0] h_back_count;
-    wire h_video_overflow;
-    wire h_front_overflow;
-    wire h_sync_overflow;
-    wire h_back_overflow;
+    localparam [9:0] V_VISIBLE = 10'd480;
+    localparam [9:0] V_FRONT   = 10'd11;
+    localparam [9:0] V_SYNC    = 10'd2;
+    localparam [9:0] V_BACK    = 10'd31;
+    localparam [9:0] V_TOTAL   = V_VISIBLE + V_FRONT + V_SYNC + V_BACK; // 524
 
-    wire h_front_phase = h_video_overflow || (h_front_count != 0);
-    wire h_sync_phase  = h_front_overflow || (h_sync_count != 0);
-    wire h_back_phase  = h_sync_overflow || (h_back_count != 0);
-    wire h_video_phase = ~(h_front_phase || h_sync_phase || h_back_phase);
+    wire [9:0] h_count;
+    wire [9:0] v_count;
+    wire h_line_overflow;
+    wire v_frame_overflow;
 
+    // Horizontal pixel counter: 0..799
     COUNTER #(
         .COUNTER_SIZE(10),
-        .COUNTER_COMPARE_V(639)
-    ) video_active_h_counter (
+        .COUNTER_COMPARE_V(H_TOTAL - 1)
+    ) h_counter (
         .clk(pixel_clk),
-        .rst(~reset_n || ~h_video_phase),
-        .counter_value(h_video_count),
-        .overflow(h_video_overflow)
+        .rst(~reset_n),
+        .counter_value(h_count),
+        .overflow(h_line_overflow)
     );
 
+    // Vertical line counter: 0..523, increments once per completed line.
     COUNTER #(
-        .COUNTER_SIZE(5),
-        .COUNTER_COMPARE_V(15)
-    ) front_porch_h_counter (
-        .clk(pixel_clk),
-        .rst(~reset_n || ~h_front_phase),
-        .counter_value(h_front_count),
-        .overflow(h_front_overflow)
+        .COUNTER_SIZE(10),
+        .COUNTER_COMPARE_V(V_TOTAL - 1)
+    ) v_counter (
+        .clk(h_line_overflow),
+        .rst(~reset_n),
+        .counter_value(v_count),
+        .overflow(v_frame_overflow)
     );
 
-    COUNTER #(
-        .COUNTER_SIZE(7),
-        .COUNTER_COMPARE_V(95)
-    ) sync_pulse_h_counter (
-        .clk(pixel_clk),
-        .rst(~reset_n || ~h_sync_phase),
-        .counter_value(h_sync_count),
-        .overflow(h_sync_overflow)
-    );
-
-    COUNTER #(
-        .COUNTER_SIZE(6),
-        .COUNTER_COMPARE_V(47)
-    ) back_porch_h_counter (
-        .clk(pixel_clk),
-        .rst(~reset_n || ~h_back_phase),
-        .counter_value(h_back_count),
-        .overflow(h_back_overflow)
-    );
-
-    // Vertical timing: 480 active + 11 front porch + 2 sync + 31 back porch
-    wire [8:0] v_video_count;
-    wire [3:0] v_front_count;
-    wire [1:0] v_sync_count;
-    wire [4:0] v_back_count;
-    wire v_video_overflow;
-    wire v_front_overflow;
-    wire v_sync_overflow;
-    wire v_back_overflow;
-
-    wire v_front_phase = v_video_overflow || (v_front_count != 0);
-    wire v_sync_phase  = v_front_overflow || (v_sync_count != 0);
-    wire v_back_phase  = v_sync_overflow || (v_back_count != 0);
-    wire v_video_phase = ~(v_front_phase || v_sync_phase || v_back_phase);
-
-    COUNTER #(
-        .COUNTER_SIZE(9),
-        .COUNTER_COMPARE_V(479)
-    ) video_active_v_counter (
-        .clk(h_back_overflow),
-        .rst(~reset_n || ~v_video_phase),
-        .counter_value(v_video_count),
-        .overflow(v_video_overflow)
-    );
-
-    COUNTER #(
-        .COUNTER_SIZE(4),
-        .COUNTER_COMPARE_V(10)
-    ) front_porch_v_counter (
-        .clk(h_back_overflow),
-        .rst(~reset_n || ~v_front_phase),
-        .counter_value(v_front_count),
-        .overflow(v_front_overflow)
-    );
-
-    COUNTER #(
-        .COUNTER_SIZE(2),
-        .COUNTER_COMPARE_V(1)
-    ) sync_pulse_v_counter (
-        .clk(h_back_overflow),
-        .rst(~reset_n || ~v_sync_phase),
-        .counter_value(v_sync_count),
-        .overflow(v_sync_overflow)
-    );
-
-    COUNTER #(
-        .COUNTER_SIZE(5),
-        .COUNTER_COMPARE_V(30)
-    ) back_porch_v_counter (
-        .clk(h_back_overflow),
-        .rst(~reset_n || ~v_back_phase),
-        .counter_value(v_back_count),
-        .overflow(v_back_overflow)
-    );
+    wire h_active = (h_count < H_VISIBLE);
+    wire v_active = (v_count < V_VISIBLE);
+    wire h_sync_active = (h_count >= (H_VISIBLE + H_FRONT)) && (h_count < (H_VISIBLE + H_FRONT + H_SYNC));
+    wire v_sync_active = (v_count >= (V_VISIBLE + V_FRONT)) && (v_count < (V_VISIBLE + V_FRONT + V_SYNC));
 
     // Output positions
-    assign x_pos = h_video_count;
-    assign y_pos = v_video_count;
+    assign x_pos = h_active ? h_count : 10'd0;
+    assign y_pos = v_active ? v_count[8:0] : 9'd0;
 
     // Visible area and sync outputs
-    assign video_active = h_video_phase && v_video_phase;
+    assign video_active = h_active && v_active;
     assign VGA_BLANK_N = video_active;
-    assign VGA_HS = ~h_sync_phase;
-    assign VGA_VS = ~v_sync_phase;
+    assign VGA_HS = ~h_sync_active;
+    assign VGA_VS = ~v_sync_active;
+
+    assign VGA_SYNC_N = 1'b1;
 
     // Pixel clock output
     assign VGA_CLK = pixel_clk;
