@@ -14,7 +14,6 @@ always @(posedge clk) begin
         current_value <= 0;
         overflow <= 0;
     end else if (current_value == COUNTER_COMPARE_V) begin
-        current_value <= 0;
         overflow <= 1;
     end else begin
         current_value <= current_value + 1;
