@@ -1,4 +1,4 @@
-`timescale 1ns/1ps
+`timescale 1ns/1ns
 
 module VGA_tb;
 
@@ -24,8 +24,14 @@ module VGA_tb;
     reg [7:0] r_ch;
     reg [7:0] g_ch;
     reg [7:0] b_ch;
+    reg [7:0] r_top;
+    reg [7:0] g_top;
+    reg [7:0] b_top;
 
     integer row_count;
+    integer vs_pulse_count;
+    reg prev_vga_hs;
+    reg prev_vga_vs;
 
     PLL pll_inst (
         .refclk(CLOCK_50),
@@ -61,44 +67,34 @@ module VGA_tb;
     end
 
     always @* begin
-        r_ch = horizontal_red(x_pos, y_pos);
-        g_ch = horizontal_green(x_pos, y_pos);
-        b_ch = horizontal_blue(x_pos, y_pos);
+        if (x_pos < 10'd80) begin
+            r_top = 8'hff; g_top = 8'h00; b_top = 8'h00;
+        end else if (x_pos < 10'd160) begin
+            r_top = 8'hff; g_top = 8'hff; b_top = 8'h00;
+        end else if (x_pos < 10'd240) begin
+            r_top = 8'h00; g_top = 8'hff; b_top = 8'h00;
+        end else if (x_pos < 10'd320) begin
+            r_top = 8'h00; g_top = 8'hff; b_top = 8'hff;
+        end else if (x_pos < 10'd400) begin
+            r_top = 8'h00; g_top = 8'h00; b_top = 8'hff;
+        end else if (x_pos < 10'd480) begin
+            r_top = 8'hff; g_top = 8'h00; b_top = 8'hff;
+        end else if (x_pos < 10'd560) begin
+            r_top = 8'hff; g_top = 8'hff; b_top = 8'hff;
+        end else begin
+            r_top = 8'h20; g_top = 8'h20; b_top = 8'h20;
+        end
+
+        if (y_pos < 9'd240) begin
+            r_ch = r_top;
+            g_ch = g_top;
+            b_ch = b_top;
+        end else begin
+            r_ch = ~r_top;
+            g_ch = ~g_top;
+            b_ch = ~b_top;
+        end
     end
-
-    function [7:0] horizontal_red;
-        input [9:0] x;
-        input [8:0] y;
-        reg [7:0] hue_red;
-        reg [7:0] desaturation;
-        begin
-            hue_red = 8'd255 - ((x * 8'd255) / 10'd639);
-            desaturation = (y * 8'd255) / 9'd479;
-            horizontal_red = hue_red + (((8'd255 - hue_red) * desaturation) / 8'd255);
-        end
-    endfunction
-
-    function [7:0] horizontal_green;
-        input [9:0] x;
-        input [8:0] y;
-        reg [7:0] desaturation;
-        begin
-            desaturation = (y * 8'd255) / 9'd479;
-            horizontal_green = desaturation;
-        end
-    endfunction
-
-    function [7:0] horizontal_blue;
-        input [9:0] x;
-        input [8:0] y;
-        reg [7:0] hue_blue;
-        reg [7:0] desaturation;
-        begin
-            hue_blue = (x * 8'd255) / 10'd639;
-            desaturation = (y * 8'd255) / 9'd479;
-            horizontal_blue = hue_blue + (((8'd255 - hue_blue) * desaturation) / 8'd255);
-        end
-    endfunction
 
     initial begin
         $display("==== VGA TB START ====\n");
@@ -106,6 +102,9 @@ module VGA_tb;
         CLOCK_50 = 1'b0;
         reset_n = 1'b0;
         row_count = 0;
+        vs_pulse_count = 0;
+        prev_vga_hs = 1'b1;
+        prev_vga_vs = 1'b1;
 
         #200;
         reset_n = 1'b1;
@@ -123,11 +122,25 @@ module VGA_tb;
                 row_count = row_count + 1;
             end
 
-            if (video_active && (x_pos[3:0] == 4'd0) && (y_pos[2:0] == 3'd0)) begin
+            if (video_active && (x_pos[6:0] == 7'd0)) begin
                 $display("x=%0d y=%0d rgb=(%0d,%0d,%0d)", x_pos, y_pos, r_ch, g_ch, b_ch);
             end
 
-            if (row_count >= 24 && x_pos == 10'd0 && y_pos == 9'd0) begin
+            if (VGA_HS !== prev_vga_hs) begin
+                $display("HS -> %b at t=%0t x=%0d y=%0d", VGA_HS, $time, x_pos, y_pos);
+                prev_vga_hs = VGA_HS;
+            end
+
+            if (VGA_VS !== prev_vga_vs) begin
+                $display("VS -> %b at t=%0t x=%0d y=%0d", VGA_VS, $time, x_pos, y_pos);
+                if (VGA_VS == 1'b0) begin
+                    vs_pulse_count = vs_pulse_count + 1;
+                end
+                prev_vga_vs = VGA_VS;
+            end
+
+            if (vs_pulse_count >= 4 && x_pos == 10'd0 && y_pos == 9'd0) begin
+                #1000
                 $display("\n==== VGA TB END ====\n");
                 $finish;
             end
