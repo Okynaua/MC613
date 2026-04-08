@@ -78,6 +78,10 @@ module VGA (
     assign VGA_HS = ~h_sync_active;
     assign VGA_VS = ~v_sync_active;
 
+    // During blanking, force RGB to black.
+    assign VGA_R = video_active ? r_ch : 8'd0;
+    assign VGA_G = video_active ? g_ch : 8'd0;
+    assign VGA_B = video_active ? b_ch : 8'd0;
     assign VGA_SYNC_N = 1'b1;
 
     // Pixel clock output
