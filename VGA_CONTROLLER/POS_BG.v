@@ -1,8 +1,8 @@
 module POS_BG(
-	input x_pos,
-	input y_pos,
-	output bg_x_pos,
-	output bg_y_pos
+	input [9:0] x_pos,
+	input [8:0] y_pos,
+	output [4:0] bg_x_pos,
+	output [3:0] bg_y_pos
 );
 
     assign bg_x_pos = x_pos >> 5;
