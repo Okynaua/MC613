@@ -5,10 +5,10 @@ module BG_DATA(
     output [3:0] bg_val
 );
 
-reg [3:0] bg0 [0:511];
-reg [3:0] bg1 [0:511];
-reg [3:0] bg2 [0:511];
-reg [3:0] bg3 [0:511];
+reg [3:0] bg0 [0:299];
+reg [3:0] bg1 [0:299];
+reg [3:0] bg2 [0:299];
+reg [3:0] bg3 [0:299];
 wire [8:0] bg_y_x_pos;
 
 initial begin
