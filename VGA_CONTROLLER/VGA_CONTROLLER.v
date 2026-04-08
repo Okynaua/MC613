@@ -24,4 +24,11 @@ module VGA_CONTROLLER (
     output wire        VGA_CLK        // Clock do pixel
 );
 
+    // Valores constantes
+    assign VGA_R = r_ch;
+    assign VGA_G = g_ch;
+    assign VGA_B = b_ch;
+    assign VGA_BLANK_N = video_active;
+    assign VGA_SYNC_N = 1;
+
 endmodule
