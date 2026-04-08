@@ -4,7 +4,8 @@ module COUNTER #(
 ) (
     input clk,
     input rst,
-    output reg overflow
+    output reg overflow,
+    output counter_value
 );
 
 reg [COUNTER_SIZE - 1:0] current_value;
