@@ -43,7 +43,7 @@ initial begin
 end
 
 // {Y_resto, X_resto} cria o índice: (Y % 32) * 32 + (X % 32)
-wire [9:0] internal_addr = {pos_y[4:0], pos_x[4:0]};
+wire [9:0] internal_addr = {y_pos[4:0], x_pos[4:0]};
 
 //assign result
 always @(*) begin
