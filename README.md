@@ -26,6 +26,9 @@ Repositório da disciplina **MC613A - Laboratório de Circuitos Digitais**.
 
 **Status:** Em desenvolvimento
 
+**Progresso:**
+* Planejamento concluído
+
 ---
 
 ### 🧪 P3: Controlador DRAM
