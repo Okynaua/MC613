@@ -5,7 +5,7 @@ module PPU_COLOR_LUT(
     output [7:0] b_ch
 );
 
-reg [23:0] colors [0:32];
+reg [23:0] colors [0:31];
 
 
 initial begin
