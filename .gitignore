@@ -19,6 +19,7 @@ simulation/
 
 *.qws
 *.qdf
+*.qsf
 *.rpt
 
 # ModelSim
