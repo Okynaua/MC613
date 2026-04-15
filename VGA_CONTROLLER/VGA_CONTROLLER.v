@@ -36,6 +36,7 @@ module VGA_CONTROLLER (
 	wire [9:0] ppu_oam_sx;
 	wire [8:0] ppu_oam_sy;
 	wire [5:0] ppu_oam_val;
+	wire debug_sprite_mode;
 
 	// Keep video path in reset until PLL lock is stable.
 	wire video_reset_n = reset_n & pll_locked;
@@ -72,6 +73,7 @@ module VGA_CONTROLLER (
 	assign ppu_oam_sx = 10'd0;
 	assign ppu_oam_sy = 9'd0;
 	assign ppu_oam_val = 6'd0;
+	assign debug_sprite_mode = SW[9];
 
 	BG_DATA bg_data_inst (
 		.bgdata_sel(SW[1:0]),
@@ -85,6 +87,7 @@ module VGA_CONTROLLER (
 		.y_pos(y_pos),
 		.video_active(video_active),
 		.bg_val(bg_val),
+		.debug_sprite_mode(debug_sprite_mode),
 		.pixel_clk(pixel_clk),
 		.ppu_oam_write_en(ppu_oam_write_en),
 		.ppu_oam_sel(ppu_oam_sel),
@@ -102,6 +105,7 @@ module VGA_CONTROLLER (
 	assign LEDR[0] = pll_locked;
 	assign LEDR[1] = video_active;
 	assign LEDR[3:2] = SW[1:0];
-	assign LEDR[9:4] = 6'd0;
+	assign LEDR[4] = debug_sprite_mode;
+	assign LEDR[9:5] = 5'd0;
 
 endmodule
