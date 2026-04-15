@@ -3,6 +3,7 @@ module PPU(
 	input [8:0] y_pos,
 	input video_active,
 	input [3:0] bg_val,
+    input debug_sprite_mode,
     input pixel_clk,
     input ppu_oam_write_en,
     input [3:0] ppu_oam_sel,
@@ -10,7 +11,7 @@ module PPU(
     input [8:0] ppu_oam_sy,
     input [5:0] ppu_oam_val,
 	output [4:0] bg_x_pos,
-    output [3:0] bg_7_pos,
+    output [3:0] bg_y_pos,
 	output [7:0] r_ch,
 	output [7:0] g_ch,
 	output [7:0] b_ch
@@ -52,11 +53,12 @@ module PPU(
         .sprite_y_pos(sprite_y_pos),
         .x_pos(x_pos),
         .y_pos(y_pos),
+        .debug_mode(debug_sprite_mode),
         .sprite_color_idx(sprite_color_idx)
     );
 
     PPU_TILE PPU_TILE(
-        .bg_value(bg_value),
+        .bg_value(bg_val),
         .x_pos(x_pos),
         .y_pos(y_pos),
         .bg_color_idx(bg_color_idx)
