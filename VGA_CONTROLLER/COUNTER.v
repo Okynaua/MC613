@@ -4,20 +4,23 @@ module COUNTER #(
 ) (
     input clk,
     input rst,
-    output reg overflow
+    output reg overflow,
+    output reg [COUNTER_SIZE - 1:0] counter_value
 );
 
-reg [COUNTER_SIZE - 1:0] current_value;
+initial begin
+    counter_value <= 0;
+end
 
 always @(posedge clk) begin
     if (rst) begin
-        current_value <= 0;
+        counter_value <= 0;
         overflow <= 0;
-    end else if (current_value == COUNTER_COMPARE_V) begin
-        current_value <= 0;
+    end else if (counter_value == COUNTER_COMPARE_V) begin
+        counter_value <= 0;
         overflow <= 1;
     end else begin
-        current_value <= current_value + 1;
+        counter_value <= counter_value + 1;
         overflow <= 0;
     end
 end
