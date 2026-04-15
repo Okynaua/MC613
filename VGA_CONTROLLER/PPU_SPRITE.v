@@ -2,8 +2,8 @@ module PPU_SPRITE(
 	input [5:0] sprite_idx,
     input [4:0] sprite_x_pos,
 	input [3:0] sprite_y_pos,
-    input [4:0] x_pos,
-	input [3:0] y_pos,
+    input [9:0] x_pos,
+	input [8:0] y_pos,
     output [4:0] sprite_color_idx
 );
 
