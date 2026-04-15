@@ -1,7 +1,7 @@
 module PPU_TILE(
     input [3:0] bg_value,
-    input [9:0] pos_x,
-    input [8:0] pos_y,
+    input [9:0] x_pos,
+    input [8:0] y_pos,
     output reg [4:0] bg_color_idx
 );
 
