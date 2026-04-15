@@ -2,7 +2,9 @@ module PPU_OAM_IDENTIFIER(
 	input logic [9:0] x,
 	input logic [8:0] y,
 	input logic [24:0] reg_bank [0:15],
-	output logic [5:0] sprite_idx
+	output logic [5:0] sprite_idx,
+	output logic [9:0] sprite_x_pos,
+	output logic [8:0] sprite_y_pos
 );
 
 	integer i;
@@ -22,6 +24,8 @@ module PPU_OAM_IDENTIFIER(
 			if ((x >= s_x && x < s_x + 10'd32) && 
             (y >= s_y && y < s_y + 9'd32)) begin
 				sprite_idx = temp[24:19];
+				sprite_x_pos = s_x;
+				sprite_y_pos = s_y;
 			end
 		end
 	end
