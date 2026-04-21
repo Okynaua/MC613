@@ -1,9 +1,10 @@
 module PPU_SPRITE(
 	input [5:0] sprite_idx,
-    input [4:0] sprite_x_pos,
-	input [3:0] sprite_y_pos,
+    input [9:0] sprite_x_pos,
+	input [8:0] sprite_y_pos,
     input [9:0] x_pos,
 	input [8:0] y_pos,
+    input debug_mode,
     output [4:0] sprite_color_idx
 );
 
@@ -45,9 +46,32 @@ initial begin
 end
 
 
+wire [9:0] x_sub;
+wire [8:0] y_sub;
+wire in_bounds;
 wire [9:0] sprite_y_x_pos;
-assign sprite_y_x_pos = ((y_pos - sprite_y_pos) << 5) + (x_pos - sprite_x_pos);
+wire [14:0] sprite_addr;
+wire [4:0] sprite_mem_color;
+wire [4:0] debug_color;
 
-assign sprite_color_idx = sprites[(sprite_idx << 10) + sprite_y_x_pos];
+assign x_sub = x_pos - sprite_x_pos;
+assign y_sub = y_pos - sprite_y_pos;
+
+assign in_bounds = (x_pos >= sprite_x_pos) &&
+                   (y_pos >= sprite_y_pos) &&
+                   (x_sub < 10'd32) &&
+                   (y_sub < 9'd32);
+
+assign sprite_y_x_pos = {y_sub[4:0], x_sub[4:0]};
+assign sprite_addr = (sprite_idx[4:0] << 10) + sprite_y_x_pos;
+assign sprite_mem_color = sprites[sprite_addr];
+
+assign debug_color = (x_sub[4:0] == 5'd0 || x_sub[4:0] == 5'd31 ||
+                      y_sub[4:0] == 5'd0 || y_sub[4:0] == 5'd31) ? 5'd3 :
+                     (x_sub[3] ^ y_sub[3]) ? 5'd12 : 5'd9;
+
+assign sprite_color_idx = !in_bounds         ? 5'd0 :
+                          debug_mode          ? debug_color :
+                          (sprite_idx < 6'd32) ? sprite_mem_color : 5'd0;
 
 endmodule

@@ -2,7 +2,7 @@ module PPU_OAM (
     input pixel_clk,
     input ppu_oam_write_en,
     input [3:0] ppu_oam_sel,
-    input [8:0] ppu_oam_sx,
+    input [9:0] ppu_oam_sx,
     input [8:0] ppu_oam_sy,
     input [5:0] ppu_oam_val,
     input [9:0] x_pos,
@@ -16,8 +16,8 @@ reg [24:0] reg_bank [0:15];
 integer i;
 
 initial begin 
-    reg_bank[0] = 25'b0000010111100000101000000;
-    for (i = 1; i < 16; i++) begin
+    // reg_bank[0] = 25'b0000010111100000101000000;
+    for (i = 0; i < 16; i++) begin
         reg_bank[i] = 25'd0;
     end
 end
@@ -30,4 +30,17 @@ PPU_OAM_IDENTIFIER identifier(
     .sprite_x_pos(sprite_x_pos),
     .sprite_y_pos(sprite_y_pos)
 );
+
+reg [24:0] current_reg; 
+
+always @(posedge pixel_clk) begin
+    if (ppu_oam_write_en) begin
+        current_reg = reg_bank[ppu_oam_sel];
+        current_reg[9:0] = ppu_oam_sx;
+        current_reg[18:10] = ppu_oam_sy;
+        current_reg[24:19] = ppu_oam_val;
+        reg_bank[ppu_oam_sel] <= current_reg;
+    end
+
+end
 endmodule
