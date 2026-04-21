@@ -10,7 +10,7 @@ module PPU(
     input [8:0] ppu_oam_sy,
     input [5:0] ppu_oam_val,
 	output [4:0] bg_x_pos,
-    output [3:0] bg_7_pos,
+    output [3:0] bg_y_pos,
 	output [7:0] r_ch,
 	output [7:0] g_ch,
 	output [7:0] b_ch
