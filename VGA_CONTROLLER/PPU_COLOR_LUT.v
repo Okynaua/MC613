@@ -14,8 +14,8 @@ end
 
 wire [23:0] rgb = colors[color_idx];
 
-assign r_ch = rgb[7:0];
+assign b_ch = rgb[7:0];
 assign g_ch = rgb[15:8];
-assign b_ch = rgb[23:16];
+assign r_ch = rgb[23:16];
 	
 endmodule
