@@ -68,7 +68,7 @@ module VGA_CONTROLLER (
 	);
 
 	CONTROLLER controller_inst (
-		.CLOCK_50(CLOCK_50),
+		.clk(pixel_clk),
 		.KEY(KEY),
 		.SW(SW),
 		.ppu_oam_write_en(ppu_oam_write_en),
