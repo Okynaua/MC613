@@ -14,7 +14,7 @@ module VGA_CONTROLLER (
 );
 
 	// DE1-SoC keys are active-low.
-	wire reset_n = KEY[0];
+	wire reset_n;
 
 	wire pixel_clk;
 	wire pll_locked;
@@ -37,15 +37,6 @@ module VGA_CONTROLLER (
 	wire [8:0] ppu_oam_sy;
 	wire [5:0] ppu_oam_val;
 	wire debug_sprite_mode;
-	reg [9:0] oam_sx_reg;
-	reg [24:0] oam_move_counter;
-	reg init_write_pending;
-	reg [2:0] init_write_counter;
-
-	localparam [24:0] HALF_SEC_TICKS = 2_500_000;
-	wire key_right_pressed = ~KEY[1];
-	wire key_left_pressed = ~KEY[2];
-	wire one_dir_pressed = key_right_pressed ^ key_left_pressed;
 
 	// Keep video path in reset until PLL lock is stable.
 	wire video_reset_n = reset_n & pll_locked;
@@ -76,39 +67,18 @@ module VGA_CONTROLLER (
 		.VGA_CLK(VGA_CLK)
 	);
 
-	always @(posedge CLOCK_50 or negedge reset_n) begin
-		if (!reset_n) begin
-			oam_sx_reg <= 10'd320;
-			oam_move_counter <= 25'd0;
-			init_write_pending <= 1'b1;
-			init_write_counter <= 3'd0;
-		end else if (init_write_pending) begin
-			if (init_write_counter == 3'd7)
-				init_write_pending <= 1'b0;
-			else
-				init_write_counter <= init_write_counter + 3'd1;
-		end else if (one_dir_pressed) begin
-			if (oam_move_counter == (HALF_SEC_TICKS - 1'b1)) begin
-				oam_move_counter <= 25'd0;
-				if (key_right_pressed && (oam_sx_reg < 10'd639))
-					oam_sx_reg <= oam_sx_reg + 10'd1;
-				else if (key_left_pressed && (oam_sx_reg > 10'd0))
-					oam_sx_reg <= oam_sx_reg - 10'd1;
-			end else begin
-				oam_move_counter <= oam_move_counter + 25'd1;
-			end
-		end else begin
-			oam_move_counter <= 25'd0;
-		end
-	end
-
-	// OAM write controls.
-	assign ppu_oam_write_en = init_write_pending || key_right_pressed || key_left_pressed;
-	assign ppu_oam_sel = 4'd1;
-	assign ppu_oam_sx = oam_sx_reg;
-	assign ppu_oam_sy = 9'd240;
-	assign ppu_oam_val = 6'd1;
-	assign debug_sprite_mode = SW[9];
+	CONTROLLER controller_inst (
+		.CLOCK_50(CLOCK_50),
+		.KEY(KEY),
+		.SW(SW),
+		.ppu_oam_write_en(ppu_oam_write_en),
+		.ppu_oam_sel(ppu_oam_sel),
+		.ppu_oam_sx(ppu_oam_sx),
+		.ppu_oam_sy(ppu_oam_sy),
+		.ppu_oam_val(ppu_oam_val),
+		.debug_sprite_mode(debug_sprite_mode),
+		.reset_n(reset_n)
+	);
 
 	BG_DATA bg_data_inst (
 		.bgdata_sel(SW[1:0]),
