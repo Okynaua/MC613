@@ -879,7 +879,7 @@ set_global_assignment -name SIP_FILE PLL.sip
 
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id BG_DATA
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id PPU_OAM_IDENTIFIER
-set_global_assignment -name EDA_NATIVELINK_SIMULATION_TEST_BENCH PPU -section_id eda_simulation
+set_global_assignment -name EDA_NATIVELINK_SIMULATION_TEST_BENCH BG_DATA -section_id eda_simulation
 set_global_assignment -name EDA_OUTPUT_DATA_FORMAT "VERILOG HDL" -section_id eda_simulation
 set_global_assignment -name EDA_SIMULATION_TOOL "ModelSim-Altera (Verilog)"
 set_global_assignment -name EDA_TEST_BENCH_ENABLE_STATUS TEST_BENCH_MODE -section_id eda_simulation
@@ -903,6 +903,15 @@ set_global_assignment -name VERILOG_FILE testbenches/PPU_tb.v
 set_global_assignment -name EDA_TEST_BENCH_NAME PPU -section_id eda_simulation
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id PPU
 set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME PPU_tb -section_id PPU
+set_global_assignment -name VERILOG_FILE BG_DATA.v
+set_global_assignment -name VERILOG_FILE COUNTER.v
+set_global_assignment -name BSF_FILE PLL.bsf
+set_global_assignment -name VERILOG_FILE VGA_CONTROLLER.v
+set_global_assignment -name VERILOG_FILE POS_BG.v
+set_global_assignment -name SOURCE_FILE PLL_sim.f
+set_global_assignment -name SOURCE_FILE PLL.spd
+set_global_assignment -name SOURCE_FILE PLL.ppf
+set_global_assignment -name SOURCE_FILE PLL.cmp
 set_global_assignment -name EDA_TEST_BENCH_FILE testbenches/BG_DATA_tb.v -section_id BG_DATA
 set_global_assignment -name EDA_TEST_BENCH_FILE BG_DATA.v -section_id BG_DATA
 set_global_assignment -name EDA_TEST_BENCH_FILE testbenches/PPU_OAM_IDENTIFIER_tb.sv -section_id PPU_OAM_IDENTIFIER
