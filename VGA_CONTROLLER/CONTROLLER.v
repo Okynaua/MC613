@@ -37,13 +37,14 @@ module CONTROLLER (
 			oam_sx_reg <= 10'd320;
 			oam_move_counter <= 25'd0;
             move_write_req <= 1'b0;
-            update_write_pending <= 1'b0;
-            update_write_counter <= 3'd0;
-            sprite_base_val <= 5'd1;
+            // Start with a full title-card write burst right after init writes.
+            update_write_pending <= 1'b1;
+            update_write_counter <= 4'd0;
+            sprite_base_val <= ({3'b000, SW[1:0]} << 3) + 5'd1;
 			init_write_pending <= 1'b1;
 			init_write_counter <= 3'd0;
-            last_sw_0 <= 1'b0;
-            last_sw_1 <= 1'b0;
+            last_sw_0 <= SW[0];
+            last_sw_1 <= SW[1];
 
             ppu_oam_write_en <= 1'b0;
             ppu_oam_sel <= 4'd1;
