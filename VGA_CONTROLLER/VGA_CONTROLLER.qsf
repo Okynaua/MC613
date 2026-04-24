@@ -877,7 +877,7 @@ set_instance_assignment -name PACKAGE_SKEW_COMPENSATION OFF -to HPS_DDR3_CK_N -e
 
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id BG_DATA
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id PPU_OAM_IDENTIFIER
-set_global_assignment -name EDA_NATIVELINK_SIMULATION_TEST_BENCH PPU_SPRITE -section_id eda_simulation
+set_global_assignment -name EDA_NATIVELINK_SIMULATION_TEST_BENCH PPU_COMPOSITOR -section_id eda_simulation
 set_global_assignment -name EDA_OUTPUT_DATA_FORMAT "VERILOG HDL" -section_id eda_simulation
 set_global_assignment -name EDA_SIMULATION_TOOL "ModelSim-Altera (Verilog)"
 set_global_assignment -name EDA_TEST_BENCH_ENABLE_STATUS TEST_BENCH_MODE -section_id eda_simulation
@@ -919,6 +919,12 @@ set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME POS_BG_tb -section_id POS
 set_global_assignment -name EDA_TEST_BENCH_NAME PPU_OAM -section_id eda_simulation
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id PPU_OAM
 set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME PPU_OAM_tb -section_id PPU_OAM
+set_global_assignment -name EDA_TEST_BENCH_NAME PPU_SPRITE -section_id eda_simulation
+set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id PPU_SPRITE
+set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME PPU_SPRITE_tb -section_id PPU_SPRITE
+set_global_assignment -name EDA_TEST_BENCH_NAME PPU_COMPOSITOR -section_id eda_simulation
+set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id PPU_COMPOSITOR
+set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME PPU_COMPOSITOR_tb -section_id PPU_COMPOSITOR
 set_global_assignment -name EDA_TEST_BENCH_FILE testbenches/BG_DATA_tb.v -section_id BG_DATA
 set_global_assignment -name EDA_TEST_BENCH_FILE BG_DATA.v -section_id BG_DATA
 set_global_assignment -name EDA_TEST_BENCH_FILE bg0.hex -section_id BG_DATA
@@ -1014,9 +1020,8 @@ set_global_assignment -name EDA_TEST_BENCH_FILE POS_BG.v -section_id POS_BG
 set_global_assignment -name EDA_TEST_BENCH_FILE testbenches/PPU_OAM_tb.sv -section_id PPU_OAM
 set_global_assignment -name EDA_TEST_BENCH_FILE PPU_OAM.sv -section_id PPU_OAM
 set_global_assignment -name EDA_TEST_BENCH_FILE PPU_OAM_IDENTIFIER.sv -section_id PPU_OAM
-set_global_assignment -name EDA_TEST_BENCH_NAME PPU_SPRITE -section_id eda_simulation
-set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id PPU_SPRITE
-set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME PPU_SPRITE_tb -section_id PPU_SPRITE
 set_global_assignment -name EDA_TEST_BENCH_FILE testbenches/PPU_SPRITE_tb.v -section_id PPU_SPRITE
 set_global_assignment -name EDA_TEST_BENCH_FILE PPU_SPRITE.v -section_id PPU_SPRITE
+set_global_assignment -name EDA_TEST_BENCH_FILE testbenches/PPU_COMPOSITOR_tb.v -section_id PPU_COMPOSITOR
+set_global_assignment -name EDA_TEST_BENCH_FILE PPU_COMPOSITOR.v -section_id PPU_COMPOSITOR
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
