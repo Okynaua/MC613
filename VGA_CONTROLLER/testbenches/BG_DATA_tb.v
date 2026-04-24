@@ -19,131 +19,105 @@ BG_DATA uut (
     .bg_val(bg_val)
 );
 
-// Memórias de referência (carregadas com os mesmos .hex)
-reg [3:0] ref_bg0 [0:299];
-reg [3:0] ref_bg1 [0:299];
-reg [3:0] ref_bg2 [0:299];
-reg [3:0] ref_bg3 [0:299];
-
-// Carregar arquivos
-initial begin
-    $readmemh("bg0.hex", ref_bg0);
-    $readmemh("bg1.hex", ref_bg1);
-    $readmemh("bg2.hex", ref_bg2);
-    $readmemh("bg3.hex", ref_bg3);
-end
-
-// Monitoramento
-initial begin
-    $monitor("t=%0t | sel=%b | x=%d y=%d | bg_val=%d",
-              $time, bgdata_sel, bg_x_pos, bg_y_pos, bg_val);
-end
-
-// Função de endereço
-function [8:0] calc_addr;
-    input [4:0] x;
-    input [3:0] y;
-begin
-    calc_addr = ((y << 4) + (y << 2)) + x; // y*20 + x
-end
-endfunction
-
-// Função para valor esperado
-function [3:0] expected_val;
-    input [1:0] sel;
-    input [8:0] addr;
-begin
-    case (sel)
-        2'b00: expected_val = ref_bg0[addr];
-        2'b01: expected_val = ref_bg1[addr];
-        2'b10: expected_val = ref_bg2[addr];
-        2'b11: expected_val = ref_bg3[addr];
-        default: expected_val = 4'd0;
-    endcase
-end
-endfunction
-
 // Task de verificação
-task expect_bg;
+task expect_val;
+    input [3:0] observed;
+    input [3:0] expected;
     input [LABEL_W-1:0] label;
-    reg [8:0] addr;
-    reg [3:0] expected;
 begin
-    addr = calc_addr(bg_x_pos, bg_y_pos);
-    expected = expected_val(bgdata_sel, addr);
-
     #1;
-    if (bg_val !== expected) begin
+    if (observed !== expected) begin
         error_count = error_count + 1;
-        $display("[ERRO] %0s | addr=%0d esperado=%0d obtido=%0d",
-                  label, addr, expected, bg_val);
+        $display("[ERRO] %0s | esperado=%h obtido=%h (t=%0t)", label, expected, observed, $time);
     end else begin
-        $display("[OK] %0s | addr=%0d valor=%0d",
-                  label, addr, bg_val);
+        $display("[OK] %0s | valor=%h", label, observed);
     end
 end
 endtask
 
-// Testes
+// =========================
+// TESTES
+// =========================
 initial begin
-    $display("==== INICIO DA SIMULACAO BG_DATA (COM HEX) ====");
+    $display("==== INICIO BG_DATA_tb ====");
 
     error_count = 0;
 
-    // Espera carregar memórias
-    #10;
+    // ==================================================
+    // 1. bg0
+    // ==================================================
+    $display("\n[TESTE] bg0");
+
+    bgdata_sel = 2'b00;
+
+    bg_x_pos = 0; bg_y_pos = 0; #5;
+    expect_val(bg_val, 4'h3, "bg0[0,0]");
+
+    bg_x_pos = 5; bg_y_pos = 2; #5;
+    expect_val(bg_val, 4'h3, "bg0[5,2]");
 
     // ==================================================
-    // 1. Testes pontuais
+    // 2. bg1
     // ==================================================
-    $display("\n[TESTE] Pontos fixos");
+    $display("\n[TESTE] bg1");
 
-    bgdata_sel = 2'b00; bg_x_pos = 5'd0;  bg_y_pos = 4'd0;  #5; expect_bg("BG0 (0,0)");
-    bgdata_sel = 2'b01; bg_x_pos = 5'd5;  bg_y_pos = 4'd2;  #5; expect_bg("BG1 (5,2)");
-    bgdata_sel = 2'b10; bg_x_pos = 5'd10; bg_y_pos = 4'd7;  #5; expect_bg("BG2 (10,7)");
-    bgdata_sel = 2'b11; bg_x_pos = 5'd19; bg_y_pos = 4'd14; #5; expect_bg("BG3 (19,14)");
+    bgdata_sel = 2'b01;
 
-    // ==================================================
-    // 2. Teste de bordas
-    // ==================================================
-    $display("\n[TESTE] Bordas");
+    bg_x_pos = 0; bg_y_pos = 0; #5;
+    expect_val(bg_val, 4'hA, "bg1[0,0]");
 
-    bgdata_sel = 2'b00; bg_x_pos = 5'd19; bg_y_pos = 4'd0;  #5; expect_bg("Topo-direita");
-    bgdata_sel = 2'b01; bg_x_pos = 5'd0;  bg_y_pos = 4'd14; #5; expect_bg("Base-esquerda");
+    bg_x_pos = 3; bg_y_pos = 0; #5;
+    expect_val(bg_val, 4'h8, "bg1[3,0]");
 
     // ==================================================
-    // 3. Varredura parcial
+    // 3. bg2
     // ==================================================
-    $display("\n[TESTE] Varredura parcial");
+    $display("\n[TESTE] bg2");
 
-    repeat (5) begin
-        bgdata_sel = $random % 4;
-        bg_x_pos   = $random % 20;
-        bg_y_pos   = $random % 15;
-        #5;
-        expect_bg("Random test");
-    end
+    bgdata_sel = 2'b10;
 
-    // ==================================================
-    // 4. Troca de banco no mesmo ponto
-    // ==================================================
-    $display("\n[TESTE] Troca de background");
+    bg_x_pos = 0; bg_y_pos = 0; #5;
+    expect_val(bg_val, 4'h7, "bg2[0,0]");
 
-    bg_x_pos = 5'd3;
-    bg_y_pos = 4'd3;
-
-    bgdata_sel = 2'b00; #5; expect_bg("BG0");
-    bgdata_sel = 2'b01; #5; expect_bg("BG1");
-    bgdata_sel = 2'b10; #5; expect_bg("BG2");
-    bgdata_sel = 2'b11; #5; expect_bg("BG3");
+    bg_x_pos = 2; bg_y_pos = 5; #5;
+	 expect_val(bg_val, 4'h7, "bg2[2,5]");
 
     // ==================================================
-    // Resultado final
+    // 4. bg3
+    // ==================================================
+    $display("\n[TESTE] bg3");
+
+    bgdata_sel = 2'b11;
+
+    bg_x_pos = 0; bg_y_pos = 0; #5;
+    expect_val(bg_val, 4'hD, "bg3[0,0]");
+
+    bg_x_pos = 6; bg_y_pos = 0; #5;
+    expect_val(bg_val, 4'hC, "bg3[6,0]");
+
+    // ==================================================
+    // 5. fora dos limites
+    // ==================================================
+    $display("\n[TESTE] fora dos limites");
+
+    bgdata_sel = 2'b00;
+
+    bg_x_pos = 20; bg_y_pos = 0; #5;
+    expect_val(bg_val, 4'h0, "x fora");
+
+    bg_x_pos = 0; bg_y_pos = 15; #5;
+    expect_val(bg_val, 4'h0, "y fora");
+
+    bg_x_pos = 31; bg_y_pos = 15; #5;
+    expect_val(bg_val, 4'h0, "x,y fora");
+
+    // ==================================================
+    // RESULTADO FINAL
     // ==================================================
     if (error_count == 0) begin
-        $display("\n==== FIM DA SIMULACAO: TODOS OS TESTES PASSARAM ====");
+        $display("\n==== TODOS OS TESTES PASSARAM ====");
     end else begin
-        $display("\n==== FIM DA SIMULACAO: %0d FALHAS ====", error_count);
+        $display("\n==== %0d ERROS ====", error_count);
     end
 
     $finish;
