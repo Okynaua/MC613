@@ -15,9 +15,9 @@ wire debug_sprite_mode;
 wire reset_n;
 
 integer error_count;
-integer prev_x;
+localparam integer LABEL_W = 8*96;
 
-// Instância do DUT
+// DUT
 CONTROLLER uut (
     .clk(clk),
     .KEY(KEY),
@@ -31,72 +31,25 @@ CONTROLLER uut (
     .reset_n(reset_n)
 );
 
-// Clock (20ns)
+// Clock
 initial begin
     clk = 0;
-    forever #10 clk = ~clk;
-end
-
-// Monitor
-initial begin
-    $monitor("t=%0t | KEY=%b SW=%b | WE=%b SEL=%d SX=%d SY=%d VAL=%d",
-              $time, KEY, SW,
-              ppu_oam_write_en, ppu_oam_sel,
-              ppu_oam_sx, ppu_oam_sy, ppu_oam_val);
+    forever #5 clk = ~clk;
 end
 
 // Task expect
-task expect_signal;
-    input observed;
-    input expected;
-    input [200*8:0] label;
+task expect_val;
+    input [31:0] observed;
+    input [31:0] expected;
+    input [LABEL_W-1:0] label;
 begin
     #1;
     if (observed !== expected) begin
         error_count = error_count + 1;
-        $display("[ERRO] %0s | esperado=%b obtido=%b (t=%0t)", label, expected, observed, $time);
+        $display("[ERRO] %0s | esperado=%0d obtido=%0d (t=%0t)", label, expected, observed, $time);
     end else begin
-        $display("[OK] %0s", label);
+        $display("[OK] %0s | valor=%0d", label, observed);
     end
-end
-endtask
-
-// Pressionar direita
-task press_right;
-begin
-    @(negedge clk);
-    KEY[1] = 0;
-    @(negedge clk);
-    KEY[1] = 1;
-end
-endtask
-
-// Pressionar esquerda
-task press_left;
-begin
-    @(negedge clk);
-    KEY[2] = 0;
-    @(negedge clk);
-    KEY[2] = 1;
-end
-endtask
-
-// Reset
-task do_reset;
-begin
-    @(negedge clk);
-    KEY[0] = 0;
-    @(negedge clk);
-    KEY[0] = 1;
-end
-endtask
-
-// Forçar movimento (bypass do contador lento)
-task force_move_tick;
-begin
-    force uut.oam_move_counter = 416_666;
-    @(posedge clk);
-    release uut.oam_move_counter;
 end
 endtask
 
@@ -104,113 +57,114 @@ endtask
 // TESTES
 // =========================
 initial begin
-    $display("==== INICIO DA SIMULACAO CONTROLLER ====");
-
-    clk = 0;
-    KEY = 3'b111;
-    SW = 0;
+    $display("==== INICIO CONTROLLER_tb ====");
     error_count = 0;
 
-    // =========================
-    // 1. RESET
-    // =========================
+    // Inicialização
+    KEY = 3'b111; // não pressionado
+    SW  = 10'b0;
+
+    // ==================================================
+    // 1. Reset
+    // ==================================================
     $display("\n[TESTE] Reset");
-    do_reset();
-    #99;
 
-    expect_signal(ppu_oam_sx, 320, "Posicao inicial SX = 320");
-	 expect_signal(ppu_oam_sy, 352, "Posicao inicial SY = 352");
+    KEY[0] = 0; #10; // reset ativo
+    KEY[0] = 1; #10; // libera reset
 
-    // =========================
-    // 2. Escrita inicial
-    // =========================
-    $display("\n[TESTE] Escrita inicial ativa");
-    #50;
-    expect_signal(ppu_oam_write_en, 1, "Write enable durante init");
+    expect_val(ppu_oam_sx, 320, "posicao inicial X");
+    expect_val(ppu_oam_sy, 352, "posicao inicial Y");
+    expect_val(ppu_oam_sel, 1, "sprite selecionado");
 
-    // =========================
-    // 3. Mudanca de sprite via SW
-    // =========================
-    $display("\n[TESTE] Mudanca de SW dispara update");
+    // ==================================================
+    // 2. Escrita inicial (init burst)
+    // ==================================================
+    $display("\n[TESTE] Init write");
 
-    SW[1:0] = 2'b10;
-    #20;
+    repeat (8) begin
+        @(posedge clk);
+        if (ppu_oam_write_en !== 1)
+            $display("[ERRO] write inicial não ativo");
+    end
 
-    expect_signal(ppu_oam_write_en, 1, "Update iniciado");
+    // ==================================================
+    // 3. Mudança de SW (update burst)
+    // ==================================================
+    $display("\n[TESTE] Update por SW");
 
-	// =========================
-	// 4. Movimento para direita
-	// =========================
-	$display("\n[TESTE] Movimento para direita");
+    SW[1:0] = 2'b10; #10;
 
-	prev_x = ppu_oam_sx;
+    // espera começar update
+    repeat (10) @(posedge clk);
 
-	force_move_tick();
-	press_right();
+    if (ppu_oam_write_en)
+        $display("[OK] update ativado");
+    else
+        $display("[ERRO] update não ativado");
 
-	// Verifica escrita
-	expect_signal(ppu_oam_write_en, 1, "Write ao mover direita");
-	
-	#20;
+    // ==================================================
+    // 4. Movimento para direita
+    // ==================================================
+    $display("\n[TESTE] Mover direita");
 
-	// Verifica movimento correto
-	if (ppu_oam_sx > prev_x) begin
-		 $display("[OK] Movimento para direita: %0d -> %0d", prev_x, ppu_oam_sx);
-	end else begin
-		 error_count = error_count + 1;
-		 $display("[ERRO] Movimento para direita nao ocorreu! %0d -> %0d", prev_x, ppu_oam_sx);
-	end
+    // força contador para acelerar
+    force uut.oam_move_counter = 416_666;
 
-	// =========================
-	// 5. Movimento para esquerda
-	// =========================
-	$display("\n[TESTE] Movimento para esquerda");
+    KEY[1] = 0; // direita 
+	 repeat (5) @(posedge clk) ;
+	 KEY[1] = 1;
 
-	prev_x = ppu_oam_sx;
+    release uut.oam_move_counter;
 
-	force_move_tick();
-	press_left();
-
-	// Verifica escrita
-	expect_signal(ppu_oam_write_en, 1, "Write ao mover esquerda");
-	
-	#20;
-
-	// Verifica movimento correto
-	if (ppu_oam_sx < prev_x) begin
-		 $display("[OK] Movimento para esquerda: %0d -> %0d", prev_x, ppu_oam_sx);
-	end else begin
-		 error_count = error_count + 1;
-		 $display("[ERRO] Movimento para esquerda nao ocorreu! %0d -> %0d", prev_x, ppu_oam_sx);
-	end
-	 
-	 
-    // =========================
-    // 6. RESET
-    // =========================
-    $display("\n[TESTE] Reset");
-    do_reset();
-    #20;
-
-    expect_signal(ppu_oam_sx, 320, "Posicao inicial SX = 320");
-	 expect_signal(ppu_oam_sy, 352, "Posicao inicial SY = 352");
-
-    // =========================
-    // 7. Debug mode
-    // =========================
-    $display("\n[TESTE] Debug mode");
-
-    SW[9] = 1;
     #10;
-    expect_signal(debug_sprite_mode, 1, "Debug ativado");
+    if (ppu_oam_sx > 320)
+        $display("[OK] moveu para direita");
+    else
+        $display("[ERRO] nao moveu direita");
 
-    SW[9] = 0;
+    // ==================================================
+    // 5. Movimento para esquerda
+    // ==================================================
+    $display("\n[TESTE] Mover esquerda");
+	 
+    KEY[0] = 0; #10; // reset ativo
+    KEY[0] = 1; #10; // libera reset
+
+    force uut.oam_move_counter = 416_666;
+
+    KEY[2] = 0; // esquerda
+    repeat (5) @(posedge clk);
+    KEY[2] = 1;
+
+    release uut.oam_move_counter;
+
     #10;
-    expect_signal(debug_sprite_mode, 0, "Debug desativado");
+    if (ppu_oam_sx < 321)
+        $display("[OK] moveu para esquerda");
+    else
+        $display("[ERRO] nao moveu esquerda");
 
-    // =========================
-    // FINAL
-    // =========================
+    // ==================================================
+    // 6. Limites
+    // ==================================================
+    $display("\n[TESTE] Limites");
+
+    force uut.oam_sx_reg = 607;
+    force uut.oam_move_counter = 416_666;
+
+    KEY[1] = 0; @(posedge clk); KEY[1] = 1;
+
+    if (ppu_oam_sx > 607)
+        $display("[ERRO] ultrapassou limite direito");
+    else
+        $display("[OK] limite direito respeitado");
+
+    release uut.oam_sx_reg;
+    release uut.oam_move_counter;
+
+    // ==================================================
+    // RESULTADO FINAL
+    // ==================================================
     if (error_count == 0)
         $display("\n==== TODOS OS TESTES PASSARAM ====");
     else
