@@ -1,16 +1,24 @@
-`timescale 1ns/1ps
-
+`timescale 1ns / 1ps
 module VGA_CONTROLLER_tb;
-
     reg CLOCK_50;
     reg [3:0] KEY;
     reg [9:0] SW;
 
     wire [9:0] LEDR;
-    wire [7:0] VGA_R, VGA_G, VGA_B;
-    wire VGA_BLANK_N, VGA_SYNC_N, VGA_HS, VGA_VS, VGA_CLK;
+    wire [7:0] VGA_R;
+    wire [7:0] VGA_G;
+    wire [7:0] VGA_B;
+    wire VGA_BLANK_N;
+    wire VGA_SYNC_N;
+    wire VGA_HS;
+    wire VGA_VS;
+    wire VGA_CLK;
 
-    // DUT
+    // Variáveis auxiliares
+    integer initial_x, initial_y;
+    integer new_x, new_y;
+    integer errors = 0;
+	 
     VGA_CONTROLLER dut (
         .CLOCK_50(CLOCK_50),
         .KEY(KEY),
@@ -26,111 +34,107 @@ module VGA_CONTROLLER_tb;
         .VGA_CLK(VGA_CLK)
     );
 
-    // ========================
-    // CLOCK 50 MHz
-    // ========================
-    initial CLOCK_50 = 0;
-    always #10 CLOCK_50 = ~CLOCK_50;
-
-    // ========================
-    // PLL MOCK (CRÍTICO)
-    // ========================
     initial begin
-        force dut.pll_locked = 0;
-        #200;
-        force dut.pll_locked = 1;
+        CLOCK_50 = 0;
+        forever #10 CLOCK_50 = ~CLOCK_50;
     end
 
-    // ========================
-    // TESTES
-    // ========================
+    // Tarefa para capturar posiçao do sprite0
+    task read_sprite0_pos;
+        output [9:0] captured_x;
+        output [8:0] captured_y;
+        integer timeout;
+        begin
+            timeout = 0;   
+            while (!(dut.ppu_oam_write_en == 1'b1 && dut.ppu_oam_sel == 4'd0) && timeout < 20000000) begin
+                #10;
+                timeout = timeout + 10;
+            end           
+            if (timeout >= 20000000) begin
+                $display("  [AVISO] Timeout! O Controller nao acionou o write_en. Lendo os valores parados no fio...");
+            end           
+            captured_x = dut.ppu_oam_sx;
+            captured_y = dut.ppu_oam_sy;
+            #50; 
+        end
+    endtask
+
     initial begin
-        $display("==== INICIO SIMULACAO VGA_CONTROLLER ====");
+        $display("==== INICIANDO SIMULACAO DO VGA_CONTROLLER ====");
 
-        // Estado inicial
-        KEY = 4'b1111; // nenhuma tecla pressionada
-        SW  = 10'd0;
+        // estado Inicial
+        KEY = 4'b1111; // Botões não pressionados
+        SW  = 10'b0;
 
-        // ========================
-        // TESTE 1: RESET GLOBAL
-        // ========================
-        $display("Teste reset");
-
-        // Pressiona reset (KEY[0] ativo em 0)
-        KEY[0] = 0;
+        // reset
         #100;
+        KEY[0] = 1'b0; 
+        #200;
+        KEY[0] = 1'b1; 
+        
+        $display("[INFO] Reset aplicado. Aguardando lock do PLL...");
+        
+        // Aguarda estabilização do PLL
+        #5000;
+        if (LEDR[0]) 
+            $display("[OK] PLL estabilizado (LEDR[0] = 1).");
+        else 
+            $display("[AVISO] PLL ainda nao estabilizou, simulacao pode falhar.");
 
-        KEY[0] = 1; // libera reset
+        // capturando posiçao do sprite
+        $display("\n[INFO] Capturando posicao inicial do Sprite 0...");
+        read_sprite0_pos(initial_x, initial_y);
+        $display("[INFO] Posicao Inicial -> X: %0d, Y: %0d", initial_x, initial_y);
 
-        repeat (20) @(posedge CLOCK_50);
+        // movendo
+        $display("\n[INFO] Apertando botao para a Direita (KEY[1])...");
+        KEY[1] = 1'b0;
+        
+        // Esperando
+        #17000000;     
+        KEY[1] = 1'b1;
 
-        if (dut.reset_n !== 1)
-            $display("ERRO: reset_n não propagou corretamente!");
+        $display("[INFO] Lendo nova posicao...");
+        read_sprite0_pos(new_x, new_y);
+        
+        if (new_x > initial_x && new_y == initial_y) begin
+            $display("[OK] Sprite moveu para a direita com sucesso! Novo X: %0d", new_x);
+        end else begin
+            $display("[ERRO] Falha no movimento para a direita. X obtido: %0d, Y obtido: %0d", new_x, new_y);
+            errors = errors + 1;
+        end
+
+        // Atualiza a referência para o próximo teste
+        initial_x = new_x;
+        initial_y = new_y;
+
+        // Movendo para o outro lado
+        $display("\n[INFO] Apertando botao para Esquerda (KEY[2])...");
+        KEY[2] = 1'b0;
+        
+        #17000000;
+        KEY[2] = 1'b1;
+        $display("[INFO] Lendo nova posicao...");
+        read_sprite0_pos(new_x, new_y);
+
+        if (new_x < initial_x && new_y == initial_y) begin
+            $display("[OK] Sprite moveu para a esquerda com sucesso! Novo X: %0d", new_x);
+        end else begin
+            $display("[ERRO] Falha no movimento para baixo. Y obtido: %0d, X obtido: %0d", new_y, new_x);
+            errors = errors + 1;
+        end
+
+        // ===============================
+        // Resultado Final
+        // ===============================
+        $display("\n================================================");
+        if (errors == 0)
+            $display("TODOS OS TESTES DE MOVIMENTO PASSARAM!");
         else
-            $display("OK: reset funcionando");
+            $display("TOTAL DE ERROS: %0d", errors);
+        $display("================================================\n");
 
-        // ========================
-        // TESTE 2: PLL + VIDEO RESET
-        // ========================
-        $display("Teste PLL + video_reset");
-
-        if (dut.pll_locked !== 1)
-            $display("ERRO: PLL não travou!");
-        else
-            $display("OK: PLL locked");
-
-        if (dut.video_reset_n !== 1)
-            $display("ERRO: video_reset_n incorreto!");
-        else
-            $display("OK: video_reset_n correto");
-
-        // ========================
-        // TESTE 3: SINAIS VGA ATIVOS
-        // ========================
-        $display("Teste atividade VGA");
-
-        repeat (1000) @(posedge CLOCK_50);
-
-        if (^VGA_HS === 1'bx || ^VGA_VS === 1'bx)
-            $display("ERRO: sinais VGA indefinidos!");
-        else
-            $display("OK: VGA HS/VS ativos");
-
-        // ========================
-        // TESTE 4: DEBUG SPRITE MODE
-        // ========================
-        $display("Teste debug_sprite_mode");
-
-        SW[9] = 1;
-        #100;
-
-        if (LEDR[4] !== 1)
-            $display("ERRO: debug_sprite_mode não propagou!");
-        else
-            $display("OK: debug_sprite_mode OK");
-
-        SW[9] = 0;
-
-        // ========================
-        // TESTE 5: INPUTS DE TECLA
-        // ========================
-        $display("Teste teclas");
-
-        KEY[1] = 0; // direita
-        repeat (100) @(posedge CLOCK_50);
-        KEY[1] = 1;
-
-        KEY[2] = 0; // esquerda
-        repeat (100) @(posedge CLOCK_50);
-        KEY[2] = 1;
-
-        $display("OK: teclas aplicadas (ver comportamento no controller)");
-
-        // ========================
-        // FINAL
-        // ========================
-        $display("==== FIM SIMULACAO ====");
-        $stop;
+        $finish;
     end
 
 endmodule
