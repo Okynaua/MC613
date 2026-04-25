@@ -877,7 +877,7 @@ set_instance_assignment -name PACKAGE_SKEW_COMPENSATION OFF -to HPS_DDR3_CK_N -e
 
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id BG_DATA
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id PPU_OAM_IDENTIFIER
-set_global_assignment -name EDA_NATIVELINK_SIMULATION_TEST_BENCH PPU_SPRITE -section_id eda_simulation
+set_global_assignment -name EDA_NATIVELINK_SIMULATION_TEST_BENCH PPU_TILE -section_id eda_simulation
 set_global_assignment -name EDA_OUTPUT_DATA_FORMAT "VERILOG HDL" -section_id eda_simulation
 set_global_assignment -name EDA_SIMULATION_TOOL "ModelSim-Altera (Verilog)"
 set_global_assignment -name EDA_TEST_BENCH_ENABLE_STATUS TEST_BENCH_MODE -section_id eda_simulation
@@ -910,6 +910,10 @@ set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
 set_global_assignment -name EDA_TEST_BENCH_NAME PPU_SPRITE -section_id eda_simulation
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id PPU_SPRITE
 set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME PPU_SPRITE_tb -section_id PPU_SPRITE
+set_global_assignment -name VERILOG_FILE testbenches/PPU_TILE_tb.v
+set_global_assignment -name EDA_TEST_BENCH_NAME PPU_TILE -section_id eda_simulation
+set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id PPU_TILE
+set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME PPU_TILE_tb -section_id PPU_TILE
 set_global_assignment -name EDA_TEST_BENCH_FILE testbenches/BG_DATA_tb.v -section_id BG_DATA
 set_global_assignment -name EDA_TEST_BENCH_FILE BG_DATA.v -section_id BG_DATA
 set_global_assignment -name EDA_TEST_BENCH_FILE bg0.hex -section_id BG_DATA
@@ -1041,4 +1045,22 @@ set_global_assignment -name EDA_TEST_BENCH_FILE sprites/png2hex.py -section_id P
 set_global_assignment -name EDA_TEST_BENCH_FILE sprites/mario_32.png -section_id PPU_SPRITE
 set_global_assignment -name EDA_TEST_BENCH_FILE sprites/kris_32.png -section_id PPU_SPRITE
 set_global_assignment -name EDA_TEST_BENCH_FILE sprites/knight_32.png -section_id PPU_SPRITE
+set_global_assignment -name EDA_TEST_BENCH_FILE testbenches/PPU_TILE_tb.v -section_id PPU_TILE
+set_global_assignment -name EDA_TEST_BENCH_FILE PPU_TILE.v -section_id PPU_TILE
+set_global_assignment -name EDA_TEST_BENCH_FILE tiles/tile0.hex -section_id PPU_TILE
+set_global_assignment -name EDA_TEST_BENCH_FILE tiles/tile1.hex -section_id PPU_TILE
+set_global_assignment -name EDA_TEST_BENCH_FILE tiles/tile2.hex -section_id PPU_TILE
+set_global_assignment -name EDA_TEST_BENCH_FILE tiles/tile3.hex -section_id PPU_TILE
+set_global_assignment -name EDA_TEST_BENCH_FILE tiles/tile4.hex -section_id PPU_TILE
+set_global_assignment -name EDA_TEST_BENCH_FILE tiles/tile5.hex -section_id PPU_TILE
+set_global_assignment -name EDA_TEST_BENCH_FILE tiles/tile6.hex -section_id PPU_TILE
+set_global_assignment -name EDA_TEST_BENCH_FILE tiles/tile7.hex -section_id PPU_TILE
+set_global_assignment -name EDA_TEST_BENCH_FILE tiles/tile8.hex -section_id PPU_TILE
+set_global_assignment -name EDA_TEST_BENCH_FILE tiles/tile9.hex -section_id PPU_TILE
+set_global_assignment -name EDA_TEST_BENCH_FILE tiles/tileA.hex -section_id PPU_TILE
+set_global_assignment -name EDA_TEST_BENCH_FILE tiles/tileB.hex -section_id PPU_TILE
+set_global_assignment -name EDA_TEST_BENCH_FILE tiles/tileC.hex -section_id PPU_TILE
+set_global_assignment -name EDA_TEST_BENCH_FILE tiles/tileD.hex -section_id PPU_TILE
+set_global_assignment -name EDA_TEST_BENCH_FILE tiles/tileE.hex -section_id PPU_TILE
+set_global_assignment -name EDA_TEST_BENCH_FILE tiles/tileF.hex -section_id PPU_TILE
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
