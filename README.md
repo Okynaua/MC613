@@ -24,10 +24,7 @@ Repositório da disciplina **MC613A - Laboratório de Circuitos Digitais**.
 
 ### 🧪 P2: Controlador VGA
 
-**Status:** Em desenvolvimento
-
-**Progresso:**
-* Planejamento concluído
+**Status:** Concluído
 
 ---
 
