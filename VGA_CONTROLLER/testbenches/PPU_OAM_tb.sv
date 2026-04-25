@@ -89,7 +89,7 @@ module PPU_OAM_tb;
         $display("\nTESTE 4: Pixel fora do sprite");
         check_pixel(10, 10, 0);
 
-        $display("\nTESTE 5: Mudar posição do sprite");
+        $display("\nTESTE 5: Mudar posicao do sprite");
         write_sprite(0, 100, 100, 5);
 
         // antiga posição não deve mais ter sprite

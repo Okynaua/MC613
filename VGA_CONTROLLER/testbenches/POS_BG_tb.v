@@ -21,14 +21,14 @@ module POS_BG_tb;
             #1;
 
             if (bg_x_pos !== (x >> 5))
-                $display("[ERRO] em x: x=%d esperado=%d obtido=%d", x, (x>>5), bg_x_pos);
+                $display("[ERRO] em x=%d esperado=%d obtido=%d", x, (x>>5), bg_x_pos);
             else
-                $display("[OK] x: x=%d -> %d", x, bg_x_pos);
+                $display("[OK] x=%d -> %d", x, bg_x_pos);
 
             if (bg_y_pos !== (y >> 5))
-                $display("[ERRO] em y: y=%d esperado=%d obtido=%d", y, (y>>5), bg_y_pos);
+                $display("[ERRO] em y=%d esperado=%d obtido=%d", y, (y>>5), bg_y_pos);
             else
-                $display("[OK] y: y=%d -> %d", y, bg_y_pos);
+                $display("[OK] y=%d -> %d", y, bg_y_pos);
 
             $display("-------------------------");
         end
