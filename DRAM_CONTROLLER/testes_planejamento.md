@@ -77,9 +77,18 @@ Os testes para a interfa1ce DRAM têm como objetivo garantir que a máquina de e
 - [ ] Verificar definição de saída wEn = 1 no estado REQ_WRITE
 - [ ] Verificar definição de saída req = 1 no estado REQ_WRITE
 - [ ] Verificar que estado muda de REQ_WRITE para WAIT_WRITE após definir req = 1
-- [ ] Verificar que estado não sai de WAIT_READ enquanto ready != 1
+- [ ] Verificar que estado não sai de WAITREAD enquanto ready != 1
 - [ ] Verificar que estado vai para REQ_READ após ready = 1
 - [ ] Verificar que dado salvo condiz com dado escrito
+
+## Testes na Placa (mockado)
+- [ ] Modificar SW[9:4] e verificar mudança nas saídas
+- [ ] Pressionar KEY[3] e verificar leitura após escrita
+- [ ] Alterar SW[9:4] para outro valor e voltar para o escrito previamente
+
+## **top level**
+
+Os testes no top level do controlador DRAM verificam o funcionamento final do projeto
 
 ## Testes na Placa
 - [ ] Modificar SW[9:4] e verificar mudança nas saídas
