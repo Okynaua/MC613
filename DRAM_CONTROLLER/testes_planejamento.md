@@ -20,7 +20,7 @@ Os testes para a interface DRAM têm como objetivo garantir que a máquina de es
 - [ ] Verificar que estado muda de REQ_WRITE para WAIT_WRITE após definir req = 1
 - [ ] Verificar que estado não sai de WAIT_READ enquanto ready != 1
 - [ ] Verificar que estado vai para REQ_READ após ready = 1
-- [ ] Verificar que estado salvo condiz com estado escrito
+- [ ] Verificar que dado salvo condiz com dado escrito
 
 ## Testes na Placa
 - [ ] Modificar SW[9:4] e verificar mudança nas saídas
