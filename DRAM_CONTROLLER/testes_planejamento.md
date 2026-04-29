@@ -23,7 +23,6 @@ Os testes para a interface DRAM têm como objetivo garantir que a máquina de es
 - [ ] Verificar que estado salvo condiz com estado escrito
 
 ## Testes na Placa
-
 - [ ] Modificar SW[9:4] e verificar mudança nas saídas
 - [ ] Pressionar KEY[3] e verificar leitura após escrita
 - [ ] Alterar SW[9:4] para outro valor e voltar para o escrito previamente
