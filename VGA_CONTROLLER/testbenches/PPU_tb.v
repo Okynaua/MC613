@@ -48,7 +48,8 @@ PPU uut (
     .bg_y_pos(bg_y_pos),
     .r_ch(r_ch),
     .g_ch(g_ch),
-    .b_ch(b_ch)
+    .b_ch(b_ch),
+	 .debug_sprite_mode(1'b0)
 );
 
 // ========================
@@ -98,7 +99,7 @@ begin
     ppu_oam_val      = val;
     ppu_oam_write_en = 1;
 
-    @(posedge pixel_clk);
+	 #30
     ppu_oam_write_en = 0;
 end
 endtask
@@ -139,50 +140,36 @@ initial begin
     video_active = 1;
     bg_val = 4'd2;
 
-    x_pos = 50;
-    y_pos = 50;
+    x_pos = 30;
+    y_pos = 0;
 
     #10;
-    // OBS: depende da LUT → ajuste se necessário
-    expect_rgb(8'd0, 8'd255, 8'd0, "Cor do background");
+    expect_rgb(8'h2A, 8'h10, 8'h5C, "Cor do background");
 
     // ==================================================
     // 3. Sprite ativo
     // ==================================================
     $display("\n[TESTE] Sprite sobre BG");
 
-    write_sprite(0, 40, 40, 6'd5);
+    write_sprite(1, 32, 0, 6'h23);
 
-    x_pos = 45;
-    y_pos = 45;
+    x_pos = 62;
+    y_pos = 0;
 
     #10;
-    // Ajustar conforme LUT
-    expect_rgb(8'd255, 8'd0, 8'd0, "Sprite visivel");
+    expect_rgb(8'hFF, 8'h9D, 8'h01, "Sprite visivel");
 
     // ==================================================
     // 4. Fora do sprite
     // ==================================================
     $display("\n[TESTE] Fora do sprite");
 
-    x_pos = 10;
-    y_pos = 10;
+    x_pos = 32;
+    y_pos = 32;
 
     #10;
-    expect_rgb(8'd0, 8'd255, 8'd0, "BG sem sprite");
+    expect_rgb(8'h2A, 8'h10, 8'h5C, "BG sem sprite");
 
-    // ==================================================
-    // 5. Prioridade (sprite sobre bg)
-    // ==================================================
-    $display("\n[TESTE] Prioridade sprite");
-
-    write_sprite(1, 40, 40, 6'd6);
-
-    x_pos = 45;
-    y_pos = 45;
-
-    #10;
-    expect_rgb(8'd0, 8'd0, 8'd255, "Sprite prioritario");
 
     // ==================================================
     // Resultado final

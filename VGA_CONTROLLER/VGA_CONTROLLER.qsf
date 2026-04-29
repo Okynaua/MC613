@@ -42,7 +42,7 @@ set_global_assignment -name DEVICE 5CSEMA5F31C6
 set_global_assignment -name TOP_LEVEL_ENTITY VGA
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 20.1.1
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "14:22:58  APRIL 08, 2026"
-set_global_assignment -name LAST_QUARTUS_VERSION "20.1.1 Lite Edition"
+set_global_assignment -name LAST_QUARTUS_VERSION "25.1std.0 Lite Edition"
 set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
 set_global_assignment -name BOARD "DE1-SoC Board"
 set_location_assignment PIN_AJ4 -to ADC_CS_N
@@ -881,7 +881,7 @@ set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id BG_DATA
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id PPU_OAM_IDENTIFIER
 set_global_assignment -name EDA_NATIVELINK_SIMULATION_TEST_BENCH BG_DATA -section_id eda_simulation
 set_global_assignment -name EDA_OUTPUT_DATA_FORMAT "VERILOG HDL" -section_id eda_simulation
-set_global_assignment -name EDA_SIMULATION_TOOL "ModelSim-Altera (Verilog)"
+set_global_assignment -name EDA_SIMULATION_TOOL "Questa Altera FPGA (Verilog)"
 set_global_assignment -name EDA_TEST_BENCH_ENABLE_STATUS TEST_BENCH_MODE -section_id eda_simulation
 set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME BG_DATA_tb -section_id BG_DATA
 set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME PPU_OAM_IDENTIFIER_tb -section_id PPU_OAM_IDENTIFIER
