@@ -16,7 +16,7 @@ Os testes para a interface DRAM têm como objetivo garantir que a máquina de es
 ### Escrita
 - [ ] Verificar mudança de estado para REQ_WRITE a partir de sinal em KEY[3]
 - [ ] Verificar definição de saída wEn = 1 no estado REQ_WRITE
-- [ ] Verificar definição de saída req = 1 no estado REQ_READ
+- [ ] Verificar definição de saída req = 1 no estado REQ_WRITE
 - [ ] Verificar que estado muda de REQ_WRITE para WAIT_WRITE após definir req = 1
 - [ ] Verificar que estado não sai de WAIT_READ enquanto ready != 1
 - [ ] Verificar que estado vai para REQ_READ após ready = 1
