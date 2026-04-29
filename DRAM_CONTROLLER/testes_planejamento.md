@@ -77,7 +77,7 @@ Os testes para a interfa1ce DRAM têm como objetivo garantir que a máquina de e
 - [ ] Verificar definição de saída wEn = 1 no estado REQ_WRITE
 - [ ] Verificar definição de saída req = 1 no estado REQ_WRITE
 - [ ] Verificar que estado muda de REQ_WRITE para WAIT_WRITE após definir req = 1
-- [ ] Verificar que estado não sai de WAITREAD enquanto ready != 1
+- [ ] Verificar que estado não sai de WAIT_READ enquanto ready != 1
 - [ ] Verificar que estado vai para REQ_READ após ready = 1
 - [ ] Verificar que dado salvo condiz com dado escrito
 
