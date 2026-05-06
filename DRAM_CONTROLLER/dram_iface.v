@@ -10,6 +10,7 @@ module dram_iface(
     output [6:0] HEX5,
     output [25:0] address,
     inout [7:0] data,
+    input data_valid,
     output reg req,
     output reg wEn,
     output ready_led
@@ -20,6 +21,9 @@ parameter READY      = 3'b100,
           WAIT_READ  = 3'b010,
           REQ_WRITE  = 3'b001,
           WAIT_WRITE = 3'b011;
+
+// Internal registers for captured data
+reg [7:0] captured_data_in;
 
 //Logic to use data as inout
 wire [7:0] data_out;
@@ -34,7 +38,7 @@ bin2hex getHex0(
     .HEX(hex0)
 );
 bin2hex getHex1(
-    .BIN(data_out[3:0]),
+    .BIN(captured_data_in[3:0]),
     .HEX(hex1)
 );
 bin2hex getHex4(
@@ -72,9 +76,15 @@ always @(posedge clk) begin
         req <= 0;
         wEn <= 0;
         previousSW <= SW;
+        captured_data_in <= 8'b0;
 
     end else begin
         
+        // Capture data when valid
+        if (data_valid) begin
+            captured_data_in <= data_in;
+        end
+
         case(current_state)
 
             READY: begin
@@ -91,14 +101,16 @@ always @(posedge clk) begin
             REQ_READ: begin
                 wEn <= 0;
                 req <= 1;
-                current_state <= WAIT_READ;
+                if (!ready)begin
+                    current_state <= WAIT_READ;
+                end
             end
 
             WAIT_READ: begin
                 wEn <= 0;
                 req <= 0;
 
-                if (ready)begin
+                if (ready && data_valid)begin
                     current_state <= READY;
                 end
                 

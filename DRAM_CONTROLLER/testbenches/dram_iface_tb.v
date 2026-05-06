@@ -23,6 +23,7 @@ module dram_iface_tb;
 	reg tb_driving;
 	reg [7:0] tb_data_out;
 	assign data = tb_driving ? tb_data_out : 8'bz;
+    reg data_valid = 0;
 
 	// Test helper variables
 	integer cycles;
@@ -49,6 +50,7 @@ module dram_iface_tb;
 		.data(data),
 		.req(req),
 		.wEn(wEn),
+        .data_valid(data_valid),
         .ready_led(ready_led)
 	);
 
@@ -116,23 +118,27 @@ module dram_iface_tb;
 	// and for read operations the TB will drive the data bus with `resp_data` before raising ready back.
 	task controller_respond(input [7:0] resp_data, input integer busy_cycles, input drive_data_on_read);
 	begin
-		// Wait until DUT asserts req
-		wait (req == 1);
-		@(posedge clk);
-		// Controller grabs request: indicate busy
-		ready = 1'b0;
-		if (drive_data_on_read) begin
-			// allow DUT to release bus, then drive read data
-			#1;
-			tb_driving = 1;
-			tb_data_out = resp_data;
-		end
-		repeat (busy_cycles) @(posedge clk);
-		if (drive_data_on_read) begin
-			tb_driving = 0; // release bus when done
-		end
-		ready = 1'b1; // signal completion
-		@(posedge clk);
+        @(posedge clk)
+        if (req)begin
+            // Controller grabs request: indicate busy
+            ready = 1'b0;
+            
+            if (drive_data_on_read) begin
+                // allow DUT to release bus, then drive read data
+                tb_driving = 1;
+                tb_data_out = resp_data;
+                data_valid = 0;
+            end
+            repeat (busy_cycles) @(posedge clk);
+            data_valid = drive_data_on_read;
+            @(posedge clk);
+            if (drive_data_on_read) begin
+                tb_driving = 0; // release bus when done
+            end
+            ready = 1'b1; // signal completion
+            data_valid = 1'b0;
+            @(posedge clk);
+        end
 	end
 	endtask
 
