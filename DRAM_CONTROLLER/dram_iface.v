@@ -59,14 +59,16 @@ reg current_state;
 reg previousSW;
 
 always @(posedge clk) begin
+    if (ready) begin
+        previousSW <= SW
+    end
+
     if (reset) begin
         current_state <= READY;
         req <= 0;
         wEn <= 0;
-        previousSW <= SW;
 
     end else begin
-        previousSW <= SW
         
         case(current_state)
 
@@ -80,7 +82,6 @@ always @(posedge clk) begin
                     current_state <= REQ_WRITE;
                 end
             end
-reg previousSW;
 
             REQ_READ: begin
                 wEn <= 0;
