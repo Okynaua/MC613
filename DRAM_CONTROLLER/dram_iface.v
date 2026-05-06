@@ -51,7 +51,8 @@ assign HEX0 = hex0;
 assign HEX1 = hex1;
 assign HEX4 = hex4;
 assign HEX5 = hex5;
-assign data_out = {4'b0, SW[3:0]}; 
+assign data_out = {4'b0, SW[3:0]};
+assign ready_led = ready;
 
 
 reg current_state;
