@@ -55,18 +55,23 @@ assign data_out = {4'b0, SW[3:0]};
 assign ready_led = ready;
 
 
-reg current_state;
-reg previousSW;
+reg [2:0] current_state = READY;
+reg [9:0] previousSW;
+
+initial begin
+    previousSW <= SW;
+end
 
 always @(posedge clk) begin
     if (ready) begin
-        previousSW <= SW
+        previousSW <= SW;
     end
 
     if (reset) begin
         current_state <= READY;
         req <= 0;
         wEn <= 0;
+        previousSW <= SW;
 
     end else begin
         
