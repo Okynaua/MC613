@@ -36,7 +36,7 @@ module dram_iface_tb();
         .address(address),
         .req(req),
         .wEn(wEn),
-		  .CS(iface_state)
+		  .current_state(iface_state)
     );
 	 
 	 wire [3:0] bin0, bin1, bin4, bin5;

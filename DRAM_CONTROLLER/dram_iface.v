@@ -13,7 +13,7 @@ module dram_iface(
     output [25:0] address, //{SW[9], 1'b0, SW[8], SW[7], SW[6], 19'b0, SW[5], SW[4]} as specified
     output reg req,        //states if the iface is sending a request
     output reg wEn,         //especifies writing request
-    output [2:0] CS
+    output reg [2:0] current_state
 );
 
 //Internal states
@@ -36,8 +36,6 @@ assign data_out = {4'b0, SW[3:0]};                                        //it n
 reg [7:0] captured_data_in;       //Register to keep previouscvalid data_in values
 reg [2:0] current_state = READY;  //Current state  
 reg [9:0] previousSW;             //Register to keep previous values from the switches
-
-assign CS = current_state; //just to go to LEDR
 
 //Converts 4 bit values to 7 segment display logic
 wire [6:0] hex0, hex1, hex4, hex5;
@@ -64,6 +62,7 @@ assign HEX5 = hex5;
 
 initial begin
     previousSW <= SW;
+	 current_state <= 3'b100;
 end
 
 always @(posedge clk) begin
