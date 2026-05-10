@@ -34,7 +34,6 @@ assign address = {SW[9], 1'b0, SW[8], SW[7], SW[6], 19'b0, SW[5], SW[4]}; //as s
 assign data_out = {4'b0, SW[3:0]};                                        //it needs to be 8 bits but only will be controlled by 4 switches
 
 reg [7:0] captured_data_in;       //Register to keep previouscvalid data_in values
-reg [2:0] current_state = READY;  //Current state  
 reg [9:0] previousSW;             //Register to keep previous values from the switches
 
 //Converts 4 bit values to 7 segment display logic
