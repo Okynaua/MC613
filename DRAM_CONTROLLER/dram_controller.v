@@ -54,7 +54,7 @@ initial begin
     current_state <= INIT;
     wait_reset <= 1;
     refresh_reset <= 1;
-    refresh_compare <= 8;
+    refresh_compare <= 1020;  //refresh needs to happen 8192 times in 60ms, that is, it needs to happen every 60*10^-3/8192 = 7.3242 micros, 143 Mhz * 7,3242 micros = clock cycles needed = 1047.3606
     cs <= 0;
     ras <= 1;
     cas <= 1;
@@ -77,6 +77,7 @@ always @(posedge clk)begin
         ras <= 1;
         cas <= 1;
         we <= 1;
+        refresh_reset <= 1;
 
         after_refresh_state <= current_state;
         current_state <= REFRESH;
@@ -106,8 +107,76 @@ always @(posedge clk)begin
                 end 
             end
 
+            READ: begin
+            end
+
+            WRITE: begin
+            end
+
             REFRESH: begin
-                
+                //Precharge All Banks(PALL)
+                cs <= 0;
+                ras <= 0;
+                cas <= 1;
+                we <= 0;
+                a[10] <= 1; //indicates that all the banks will be precharged
+
+                current_state <= REFRESH1;
+            end
+            REFRESH1: begin
+                //No Operation (NOP)
+                cs <= 0;
+                ras <= 1;
+                cas <= 1;
+                we <= 1;
+
+                wait_compare <= 16'd3; //tRP
+                after_wait_state <= INIT4;
+                current_state <= WAIT;
+
+            end
+            REFRESH2: begin
+                //Auto Refresh (REF) 1
+                cs <= 0;
+                ras <= 0;
+                cas <= 0;
+                we <= 1;
+
+                current_state <= REFRESH3;
+            end
+            REFRESH3: begin
+                //No Operation (NOP)
+                cs <= 0;
+                ras <= 1;
+                cas <= 1;
+                we <= 1;
+
+                wait_compare <= 16'd9; //tRC
+                after_wait_state <= REFRESH4;
+                current_state <= WAIT;
+            end
+            REFRESH4: begin
+                //Auto Refresh (REF) 1
+                cs <= 0;
+                ras <= 0;
+                cas <= 0;
+                we <= 1;
+
+                current_state <= REFRESH5;
+            end
+            REFRESH5: begin
+                //No Operation (NOP)
+                cs <= 0;
+                ras <= 1;
+                cas <= 1;
+                we <= 1;
+
+                wait_compare <= 16'd9; //tRC
+                after_wait_state <= REFRESH6;
+                current_state <= WAIT;
+            end
+            REFRESH6: begin
+
             end
 
             INIT: begin 
@@ -152,7 +221,6 @@ always @(posedge clk)begin
                 wait_compare <= 16'd9; //tRC
                 after_wait_state <= INIT4;
                 current_state <= WAIT;
-
             end
             INIT4: begin
                 //Auto Refresh (REF) 2
@@ -173,7 +241,6 @@ always @(posedge clk)begin
                 wait_compare <= 16'd9; //tRC
                 after_wait_state <= INIT6;
                 current_state <= WAIT;
-
             end
             INIT6: begin
                 //Auto Refresh (REF) 3
@@ -236,7 +303,6 @@ always @(posedge clk)begin
                 wait_compare <= 16'd9; //tRC
                 after_wait_state <= INIT12;
                 current_state <= WAIT;
-
             end
             INIT12: begin
                 //Auto Refresh (REF) 6
@@ -257,7 +323,6 @@ always @(posedge clk)begin
                 wait_compare <= 16'd9; //tRC
                 after_wait_state <= INIT14;
                 current_state <= WAIT;
-
             end
             INIT14: begin
                 //Auto Refresh (REF) 7
@@ -278,7 +343,6 @@ always @(posedge clk)begin
                 wait_compare <= 16'd9; //tRC
                 after_wait_state <= INIT16;
                 current_state <= WAIT;
-
             end
             INIT16: begin
                 //Auto Refresh (REF) 8
@@ -299,7 +363,6 @@ always @(posedge clk)begin
                 wait_compare <= 16'd9; //tRC
                 after_wait_state <= INIT18;
                 current_state <= WAIT;
-
             end
             INIT18: begin
                 //Auto Refresh (REF) 9
@@ -347,19 +410,6 @@ always @(posedge clk)begin
                 we <= 1;
 
                 wait_compare <= 16'd3; //tRC
-                after_wait_state <= INIT23;
-                current_state <= WAIT;
-            end
-            INIT23: begin
-                //Bank Active(ACT)
-                cs <= 0;
-                ras <= 0;
-                cas <= 1;
-                we <= 1;
-                ba <= 2'b0;      //actives row 0 from bank 0
-                a[12:0] = 13'b0;
-
-                wait_compare <= 16'd50;   //Just a long wait before it all
                 after_wait_state <= READY;
                 current_state <= WAIT;
             end
