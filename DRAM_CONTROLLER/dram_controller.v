@@ -7,14 +7,16 @@ module dram_controler(
     input wEn, 
     output reg data_valid,
 	output reg ready,
+    output reg [4:0] current_state;
+    //Memory pins
     output reg cs,
     output reg ras,
     output reg cas,
-    output reg we
-    output reg [1:0] ba;
-    output reg [12:0] a;
-    output reg [1:0] dqm;
-    output reg [4:0] current_state;
+    output reg we          
+    output reg [1:0] ba;   //bank selector
+    output reg [12:0] a;   //memory address
+    output reg [1:0] dqm;  //byte disable
+    output cke;
 );
 
 parameter   WAIT    = 5'd0,
@@ -24,9 +26,11 @@ parameter   WAIT    = 5'd0,
             REFRESH
             READY   = 5'b11111;
 
+assign cke = 1;
+
 wire [7:0] data_out;
 wire [7:0] data_in;
-assign data = (!wEn) ? data_out : 8'bz;
+assign data = (!wEn && ready) ? data_out : 8'bz;
 assign data_in = data;
 
 reg [4:0] after_wait_state, after_refresh_state;     //When exiting wait state, the controller will go to after_wait_state
@@ -61,7 +65,7 @@ initial begin
     current_state <= INIT;
     wait_reset <= 1;
     refresh_reset <= 1;
-    refresh_compare <= 1020;  //refresh needs to happen 8192 times in 60ms, that is, it needs to happen every 60*10^-3/8192 = 7.3242 micros, with that, 143 Mhz * 7,3242 micros = clock cycles needed = 1047.3606
+    refresh_compare <= 1017;  //refresh needs to happen 8192 times in 60ms, that is, it needs to happen every 60*10^-3/8192 = 7.3242 micros, with that, 143 Mhz * 7,3242 micros = clock cycles needed = 1047.3606
     //No Operation
     cs <= 0;
     ras <= 1;
@@ -122,7 +126,70 @@ always @(posedge clk)begin
             end
 
             READ: begin
-                
+                //Bank Activate (ACT)
+                cs <= 0;
+                ras <= 0;
+                cas <= 1;
+                we <= 1;
+                ba[1:0] <= address[24:23];
+                a[12:0] <= address[22:10];
+
+                current_state <= READ1;
+            end
+            READ1: begin
+                //No Operation (NOP)
+                cs <= 0;
+                ras <= 1;
+                cas <= 1;
+                we <= 1;
+
+                wait_compare <= 16'd3; //tRCD
+                after_wait_state <= READ2;
+                current_state <= WAIT;
+            end
+            READ2: begin
+                //READ
+                cs <= 0;
+                ras <= 1;
+                cas <= 0;
+                we <= 1;
+                a[12:0] <= {3'b0, address[9:0]};
+
+                current_state <= READ3;
+            end
+            READ3: begin
+                //No Operation (NOP)
+                cs <= 0;
+                ras <= 1;
+                cas <= 1;
+                we <= 1;
+
+                data_out <= data_in;
+                wait_compare <= 16'd4; //tRAS-tRCD
+                after_wait_state <= READ4;
+                current_state <= WAIT;
+            end
+            READ4: begin
+                //Precharge
+                cs <= 0;
+                ras <= 0;
+                cas <= 1;
+                we <= 0;
+                a[10] <= 1;
+
+                current_state <= READ5;
+            end
+            READ5: begin
+                //No Operation (NOP)
+                cs <= 0;
+                ras <= 1;
+                cas <= 1;
+                we <= 1;
+
+                data_out <= data_in;
+                wait_compare <= 16'd3; //tRP
+                after_wait_state <= READY;
+                current_state <= WAIT;
             end
 
             WRITE: begin
@@ -148,7 +215,6 @@ always @(posedge clk)begin
                 wait_compare <= 16'd3; //tRP
                 after_wait_state <= INIT4;
                 current_state <= WAIT;
-
             end
             REFRESH2: begin
                 //Auto Refresh (REF) 1
