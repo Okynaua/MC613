@@ -14,6 +14,7 @@ module dram_controler(
     output reg [1:0] ba;
     output reg [12:0] a;
     output reg [1:0] dqm;
+    output reg [4:0] current_state;
 );
 
 parameter   WAIT    = 5'd0,
@@ -22,9 +23,15 @@ parameter   WAIT    = 5'd0,
             WRITE
             REFRESH
             READY   = 5'b11111;
-            
 
-reg [4:0] current_state, after_wait_state, after_refresh_state;     //When exiting wait state, the controller will go to after_wait_state
+wire [7:0] data_out;
+wire [7:0] data_in;
+assign data = (!wEn) ? data_out : 8'bz;
+assign data_in = data;
+
+reg [4:0] after_wait_state, after_refresh_state;     //When exiting wait state, the controller will go to after_wait_state
+
+reg [7:0] data_register  // This will keep the value sent to be written by the dram_iface
 
 reg wait_reset;
 reg wait_compare;
@@ -54,25 +61,30 @@ initial begin
     current_state <= INIT;
     wait_reset <= 1;
     refresh_reset <= 1;
-    refresh_compare <= 1020;  //refresh needs to happen 8192 times in 60ms, that is, it needs to happen every 60*10^-3/8192 = 7.3242 micros, 143 Mhz * 7,3242 micros = clock cycles needed = 1047.3606
+    refresh_compare <= 1020;  //refresh needs to happen 8192 times in 60ms, that is, it needs to happen every 60*10^-3/8192 = 7.3242 micros, with that, 143 Mhz * 7,3242 micros = clock cycles needed = 1047.3606
+    //No Operation
     cs <= 0;
     ras <= 1;
     cas <= 1;
     we <= 1;
+    //Sets initial values as 0
     a <= 13'b0;
     dqm <= 2'b0;
     ba <= 2'b0;
+    //
+    ready = 0;
+    data_valid = 0;
 end
 
 always @(posedge clk)begin
     if(reset)begin
         wait_reset <= 1;
-        refresh_reset <= 0;
+        refresh_reset <= 1;
         data_valid <= 0;
         ready <= 0;
         current_state <= INIT;
     
-    end else if(refresh_overflow)begin
+    end else if(refresh_overflow && ready)begin
         cs <= 0;
         ras <= 1;
         cas <= 1;
@@ -94,6 +106,7 @@ always @(posedge clk)begin
             end
 
             READY: begin
+                refresh_reset <= 0;
                 ready <= 1;
                 data_valid <= 1;
                 if(req && !wEn)begin
@@ -103,11 +116,13 @@ always @(posedge clk)begin
                 end else if(req && wEn)begin
                     ready <= 0;
                     data_valid <= 0;
+                    data_register <= data_in;
                     current_state <= WRITE;
                 end 
             end
 
             READ: begin
+                
             end
 
             WRITE: begin
@@ -172,11 +187,8 @@ always @(posedge clk)begin
                 we <= 1;
 
                 wait_compare <= 16'd9; //tRC
-                after_wait_state <= REFRESH6;
+                after_wait_state <= READY;
                 current_state <= WAIT;
-            end
-            REFRESH6: begin
-
             end
 
             INIT: begin 
@@ -186,7 +198,7 @@ always @(posedge clk)begin
                 cas <= 1;
                 we <= 1;
 
-                wait_compare <= 16'd100;  //Just a good number to secure good initialization
+                wait_compare <= 16'd30000;  //Just a pretty number that is more than 28600
                 after_wait_state <= INIT1;
                 current_state <= WAIT;
             end
@@ -385,7 +397,7 @@ always @(posedge clk)begin
                 current_state <= WAIT;
             end
             
-            INIT21: begin
+            INIT20: begin
                 //Mode Register Set (MRS)
                 cs <= 0;
                 ras <= 0;
@@ -400,16 +412,16 @@ always @(posedge clk)begin
                 a[2:0] <= 3'b0;
 
 
-                current_state <= INIT23;
+                current_state <= INIT21;
             end
-            INIT22: begin
+            INIT21: begin
                 //No Operation (NOP)
                 cs <= 0;
                 ras <= 1;
                 cas <= 1;
                 we <= 1;
 
-                wait_compare <= 16'd3; //tRC
+                wait_compare <= 16'd2; //tRC
                 after_wait_state <= READY;
                 current_state <= WAIT;
             end
