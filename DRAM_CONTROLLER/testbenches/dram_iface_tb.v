@@ -204,7 +204,7 @@ module dram_iface_tb;
 			errors_final = errors_final + 1;
 		end else $display("[OK] DUT transitioned to REQ_READ");
 
-		@(posedge clk);
+		repeat (3) @(posedge clk);
 		if (dut.current_state !== WAIT_READ_STATE) begin
 			$display("[FAIL] DUT did not transition to WAIT_READ (state=%s)", state_display_name(dut.current_state));
 			errors_final = errors_final + 1;
@@ -280,9 +280,10 @@ module dram_iface_tb;
 			errors_final = errors_final + 1;
 		end else $display("[OK] DUT transitioned to REQ_WRITE");
 
-        ready = 1'b0;
-
 		@(posedge clk);
+		// release KEY[3] so we don't trigger multiple writes if ready is 1
+		KEY = 4'b1111;
+
 		if (dut.current_state !== WAIT_WRITE_STATE) begin
 			$display("[FAIL] DUT did not transition to WAIT_WRITE (state=%s)", state_display_name(dut.current_state));
 			errors_final = errors_final + 1;
