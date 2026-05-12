@@ -193,6 +193,70 @@ always @(posedge clk)begin
             end
 
             WRITE: begin
+                //Bank Activate (ACT)
+                cs <= 0;
+                ras <= 0;
+                cas <= 1;
+                we <= 1;
+                ba[1:0] <= address[24:23];
+                a[12:0] <= address[22:10];
+
+                current_state <= WRITE;
+            end
+            WRITE1: begin
+                //No Operation (NOP)
+                cs <= 0;
+                ras <= 1;
+                cas <= 1;
+                we <= 1;
+
+                wait_compare <= 16'd3; //tRCD
+                after_wait_state <= WRITE2;
+                current_state <= WAIT;
+            end
+            WRITE2: begin
+                //WRITE
+                cs <= 0;
+                ras <= 1;
+                cas <= 0;
+                we <= 0;
+                a[12:0] <= {3'b0, address[9:0]};
+
+                current_state <= WRITE3;
+            end
+            WRITE3: begin
+                //No Operation (NOP)
+                cs <= 0;
+                ras <= 1;
+                cas <= 1;
+                we <= 1;
+
+                data_out <= data_in;
+                wait_compare <= 16'd4; //tRAS-tRCD
+                after_wait_state <= WRITE4;
+                current_state <= WAIT;
+            end
+            WRITE4: begin
+                //Precharge
+                cs <= 0;
+                ras <= 0;
+                cas <= 1;
+                we <= 0;
+                a[10] <= 1;
+
+                current_state <= WRITE5;
+            end
+            WRITE5: begin
+                //No Operation (NOP)
+                cs <= 0;
+                ras <= 1;
+                cas <= 1;
+                we <= 1;
+
+                data_out <= data_in;
+                wait_compare <= 16'd3; //tRP
+                after_wait_state <= READY;
+                current_state <= WAIT;
             end
 
             REFRESH: begin
