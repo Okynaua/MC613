@@ -85,7 +85,7 @@ module dram_iface_tb;
 	// Helper tasks
 	task reset_dut();
 	begin
-		$display("[%0t] TB: Applying reset", $time);
+		$display("[%0t] TB: Aplicando reset", $time);
 		rst = 1'b0;
 		KEY = 4'b1111; // assume unpressed buttons default high
 		tb_driving = 0;
@@ -170,7 +170,7 @@ module dram_iface_tb;
 	initial begin
 		errors_final = 0;
 
-		$display("==== START dram_iface_tb ====");
+		$display("==== INICIO dram_iface_tb ====");
 
 		// initial conditions
 		clk = 0;
@@ -182,9 +182,9 @@ module dram_iface_tb;
 		// Reset
 		reset_dut();
 		if (dut.current_state !== READY_STATE) begin
-			$display("[FAIL] DUT not in READY state after reset (state=%s)", state_display_name(dut.current_state));
+			$display("[ERRO] DUT nao esta no estado READY apos reset (estado=%s)", state_display_name(dut.current_state));
 			errors_final = errors_final + 1;
-		end else $display("[OK] DUT in READY state after reset");
+		end else $display("[OK] DUT esta no estado READY apos reset");
 
 		// Bring controller ready for operations
 		ready = 1'b1;
@@ -194,34 +194,34 @@ module dram_iface_tb;
 		// Assumptions: Changing SW (address switches) while ready==1 should cause a read request.
 		// The dram_iface should assert `req` and `wEn` should be low for reads.
 		// ----------------------
-		$display("\n[TEST] Read request flow");
+		$display("\n[TESTE] Fluxo de requisicao de leitura");
 		// set an address via SW
 		SW = 10'b00_0010_0000; // partial addr
 		KEY = 4'b1111; // ensure write button not pressed
         repeat (2) @(posedge clk);
 		if (dut.current_state !== REQ_READ_STATE) begin
-			$display("[FAIL] DUT did not transition to REQ_READ on SW change (state=%s)", state_display_name(dut.current_state));
+			$display("[ERRO] DUT nao transitou para REQ_READ apos mudança em SW (estado=%s)", state_display_name(dut.current_state));
 			errors_final = errors_final + 1;
-		end else $display("[OK] DUT transitioned to REQ_READ");
+		end else $display("[OK] DUT transitou para REQ_READ");
 
 		repeat (3) @(posedge clk);
 		if (dut.current_state !== WAIT_READ_STATE) begin
-			$display("[FAIL] DUT did not transition to WAIT_READ (state=%s)", state_display_name(dut.current_state));
+			$display("[ERRO] DUT nao transitou para WAIT_READ (estado=%s)", state_display_name(dut.current_state));
 			errors_final = errors_final + 1;
-		end else $display("[OK] DUT transitioned to WAIT_READ");
+		end else $display("[OK] DUT transitou para WAIT_READ");
 
 		// Wait for DUT to assert req (with timeout)
 		cycles = 0;
 		while (!req && cycles < 200) begin @(posedge clk); cycles = cycles + 1; end
 		if (!req) begin
-			$display("[FAIL] DUT did not assert req for read (timeout)");
+			$display("[ERRO] DUT nao ativou req para leitura (timeout)");
 			errors_final = errors_final + 1;
 		end else begin
 			if (wEn !== 1'b0) begin
-				$display("[FAIL] DUT asserted req but wEn is not 0 for read (wEn=%b)", wEn);
+				$display("[ERRO] DUT ativou req mas wEn nao é 0 para leitura (wEn=%b)", wEn);
 				errors_final = errors_final + 1;
 			end else begin
-				$display("[OK] DUT asserted req for read, wEn=%b, address=%h", wEn, address[9:0]);
+				$display("[OK] DUT ativou req para leitura, wEn=%b, endereco=%h", wEn, address[9:0]);
 			end
 			// Sample address when request asserted
 			sampled_addr_int = address;
@@ -235,26 +235,26 @@ module dram_iface_tb;
 			// after ready returns, ensure req deasserts
 			@(posedge clk);
 			if (req) begin
-				$display("[WARN] req still asserted after controller ready (expected deassert)");
+				$display("[ERRO] req ainda está ativo apos ready do controlador (esperava desativado)");
 			end else begin
-				$display("[OK] Read completed, req deasserted");
+				$display("[OK] Leitura concluida, req desativado");
 			end
 
 			// Validate HEX outputs: HEX1 should show low nibble of read data; HEX4/HEX5 show parts of address (lower byte nibbles)
 			if (HEX1 !== nibble_to_7seg(expected_read[3:0])) begin
-				$display("[FAIL] HEX1 mismatch: expected %b got %b", nibble_to_7seg(expected_read[3:0]), HEX1);
+				$display("[ERRO] HEX1 incorreto: esperado %b obtido %b", nibble_to_7seg(expected_read[3:0]), HEX1);
 				errors_final = errors_final + 1;
-			end else $display("[OK] HEX1 shows read low nibble %h", expected_read[3:0]);
+			end else $display("[OK] HEX1 mostra nibble baixo lido %h", expected_read[3:0]);
 
 			if (HEX4 !== nibble_to_7seg(sampled_addr_int[3:0])) begin
-				$display("[FAIL] HEX4 mismatch (addr [3:0]): expected %b got %b", nibble_to_7seg(sampled_addr_int[7:4]), HEX4);
+				$display("[ERRO] HEX4 incorreto (addr [3:0]): esperado %b obtido %b", nibble_to_7seg(sampled_addr_int[7:4]), HEX4);
 				errors_final = errors_final + 1;
-			end else $display("[OK] HEX4 shows address nibble %h", sampled_addr_int[7:4]);
+			end else $display("[OK] HEX4 mostra nibble do endereco %h", sampled_addr_int[7:4]);
 
 			if (HEX5 !== nibble_to_7seg(sampled_addr_int[7:4])) begin
-				$display("[FAIL] HEX5 mismatch (addr [7:4]): expected %b got %b", nibble_to_7seg(sampled_addr_int[3:0]), HEX5);
+				$display("[ERRO] HEX5 incorreto (addr [7:4]): esperado %b obtido %b", nibble_to_7seg(sampled_addr_int[3:0]), HEX5);
 				errors_final = errors_final + 1;
-			end else $display("[OK] HEX5 shows address nibble %h", sampled_addr_int[3:0]);
+			end else $display("[OK] HEX5 mostra nibble do endereco %h", sampled_addr_int[3:0]);
 		end
 
 		// small gap
@@ -265,7 +265,7 @@ module dram_iface_tb;
 		// Assumptions: Pressing KEY[3] while ready==1 should request a write and wEn==1.
 		// Data is sent via SW[3:0] (address in SW[9:4]).
 		// ----------------------
-		$display("\n[TEST] Write request flow");
+		$display("\n[TESTE] Fluxo de requisicao de escrita");
 
 		// Prepare write: put data into SW[3:0]
 		expected_write = 4'hA; 
@@ -276,31 +276,31 @@ module dram_iface_tb;
         // Wait for updated read
 		repeat (2) @(posedge clk);
 		if (dut.current_state !== REQ_WRITE_STATE) begin
-			$display("[FAIL] DUT did not transition to REQ_WRITE on KEY press (state=%s)", state_display_name(dut.current_state));
+			$display("[ERRO] DUT nao transitou para REQ_WRITE ao pressionar KEY (estado=%s)", state_display_name(dut.current_state));
 			errors_final = errors_final + 1;
-		end else $display("[OK] DUT transitioned to REQ_WRITE");
+		end else $display("[OK] DUT transitou para REQ_WRITE");
 
 		@(posedge clk);
 		// release KEY[3] so we don't trigger multiple writes if ready is 1
 		KEY = 4'b1111;
 
 		if (dut.current_state !== WAIT_WRITE_STATE) begin
-			$display("[FAIL] DUT did not transition to WAIT_WRITE (state=%s)", state_display_name(dut.current_state));
+			$display("[ERRO] DUT nao transitou para WAIT_WRITE (estado=%s)", state_display_name(dut.current_state));
 			errors_final = errors_final + 1;
-		end else $display("[OK] DUT transitioned to WAIT_WRITE");
+		end else $display("[OK] DUT transitou para WAIT_WRITE");
 
 		// Wait for req
 		cycles = 0;
 		while (!req && cycles < 200) begin @(posedge clk); cycles = cycles + 1; end
 		if (!req) begin
-			$display("[FAIL] DUT did not assert req for write (timeout)");
+			$display("[ERRO] DUT nao ativou req para escrita (timeout)");
 			errors_final = errors_final + 1;
 		end else begin
 			if (wEn !== 1'b1) begin
-				$display("[FAIL] DUT asserted req for write but wEn!=1 (wEn=%b)", wEn);
+				$display("[ERRO] DUT ativou req para escrita mas wEn!=1 (wEn=%b)", wEn);	
 				errors_final = errors_final + 1;
 			end else begin
-				$display("[OK] DUT asserted req for write, wEn=%b, address=%h, data on bus=%h", wEn, address[9:0], data);
+				$display("[OK] DUT ativou req para escrita, wEn=%b, endereco=%h, dados no barramento=%h", wEn, address[9:0], data);
 			end
 
 			// Sample address when request asserted
@@ -314,15 +314,15 @@ module dram_iface_tb;
 			// After wait_write completes, the FSM should automatically transition to REQ_READ
 			@(posedge clk);
 			if (dut.current_state !== REQ_READ_STATE) begin
-				$display("[FAIL] DUT did not transition to REQ_READ after WAIT_WRITE (state=%s)", state_display_name(dut.current_state));
+				$display("[ERRO] DUT nao transitou para REQ_READ apos WAIT_WRITE (estado=%s)", state_display_name(dut.current_state));
 				errors_final = errors_final + 1;
-			end else $display("[OK] DUT transitioned to REQ_READ after Write");
+			end else $display("[OK] DUT transitou para REQ_READ apos escrita");
 
 			@(posedge clk);
 			if (dut.current_state !== WAIT_READ_STATE) begin
-				$display("[FAIL] DUT did not transition to WAIT_READ after Write-Read request (state=%s)", state_display_name(dut.current_state));
+				$display("[ERRO] DUT nao transitou para WAIT_READ apos escrita/leitura (estado=%s)", state_display_name(dut.current_state));
 				errors_final = errors_final + 1;
-			end else $display("[OK] DUT transitioned to WAIT_READ after Write");
+			end else $display("[OK] DUT transitou para WAIT_READ apos escrita");
 
 			// Simulate controller responding to the automatic read request
 			// We drive the data we just "wrote" (expected_write) to verify the internal update
@@ -333,33 +333,33 @@ module dram_iface_tb;
 			// After done
 			@(posedge clk);
 			if (req) begin
-				$display("[WARN] req still asserted after write-read completion (expected deassert)");
+				$display("[ERRO] req ainda está ativo apos ciclo escrita-leitura (esperava desativado)");
 			end else begin
-				$display("[OK] Write-Read cycle completed, req deasserted");
+				$display("[OK] Ciclo escrita-leitura concluido, req desativado");
 			end
 
 			// Validate HEX outputs: 
 			// HEX1 should show the data we sent to the controller (data_out[3:0])
 			// HEX0 should show the data we just read back from the controller (data_in[3:0])
 			if (HEX1 !== nibble_to_7seg(expected_write[3:0])) begin
-				$display("[FAIL] HEX1 mismatch (write data): expected %b got %b", nibble_to_7seg(expected_write[3:0]), HEX1);
+				$display("[ERRO] HEX1 incorreto (dados escritos): esperado %b obtido %b", nibble_to_7seg(expected_write[3:0]), HEX1);
 				errors_final = errors_final + 1;
-			end else $display("[OK] HEX1 shows written data %h", expected_write[3:0]);
+			end else $display("[OK] HEX1 mostra dados escritos %h", expected_write[3:0]);
 
 			if (HEX0 !== nibble_to_7seg(expected_write[3:0])) begin
-				$display("[FAIL] HEX0 mismatch (read-back data): expected %b got %b", nibble_to_7seg(expected_write[3:0]), HEX0);
+				$display("[ERRO] HEX0 incorreto (dados relidos): esperado %b obtido %b", nibble_to_7seg(expected_write[3:0]), HEX0);
 				errors_final = errors_final + 1;
-			end else $display("[OK] HEX0 shows read-back data %h", expected_write[3:0]);
+			end else $display("[OK] HEX0 mostra dados relidos %h", expected_write[3:0]);
 
 			if (HEX4 !== nibble_to_7seg(sampled_addr_w_int[3:0])) begin
-				$display("[FAIL] HEX4 mismatch (addr [3:0]) on write: expected %b got %b", nibble_to_7seg(sampled_addr_w_int[3:0]), HEX4);
+				$display("[ERRO] HEX4 incorreto (addr [3:0]) na escrita: esperado %b obtido %b", nibble_to_7seg(sampled_addr_w_int[3:0]), HEX4);
 				errors_final = errors_final + 1;
-			end else $display("[OK] HEX4 shows address nibble %h", sampled_addr_w_int[3:0]);
+			end else $display("[OK] HEX4 mostra nibble do endereco %h", sampled_addr_w_int[3:0]);
 
 			if (HEX5 !== nibble_to_7seg(sampled_addr_w_int[7:4])) begin
-				$display("[FAIL] HEX5 mismatch (addr [7:4]) on write: expected %b got %b", nibble_to_7seg(sampled_addr_w_int[7:4]), HEX5);
+				$display("[ERRO] HEX5 incorreto (addr [7:4]) na escrita: esperado %b obtido %b", nibble_to_7seg(sampled_addr_w_int[7:4]), HEX5);
 				errors_final = errors_final + 1;
-			end else $display("[OK] HEX5 shows address nibble %h", sampled_addr_w_int[7:4]);
+			end else $display("[OK] HEX5 mostra nibble do endereco %h", sampled_addr_w_int[7:4]);
 		end
 
 		// Release TB drive and buttons
@@ -369,9 +369,9 @@ module dram_iface_tb;
 
 		// Final check / summary
 		if (errors_final == 0) begin
-			$display("\n==== dram_iface_tb: ALL TESTS PASSED ====");
+			$display("\n==== dram_iface_tb: TODOS OS TESTES PASSARAM ====");
 		end else begin
-			$display("\n==== dram_iface_tb: %0d ERRORS ====", errors_final);
+			$display("\n==== dram_iface_tb: %0d ERROS ====", errors_final);
 		end
 
 		$finish;
