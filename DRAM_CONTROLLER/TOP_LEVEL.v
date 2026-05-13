@@ -50,7 +50,7 @@ dram_controller controller(
     .clk(internal_clk),
     .reset(KEY[0]),
     .address(address),
-    .data(DRAM_DQ),
+    .data(DRAM_DQ[7:0]),
     .req(req),
     .wEn(wEn),
     .data_valid(data_valid),
@@ -67,9 +67,9 @@ dram_controller controller(
 );
 pll_143MHz pll(
     .refclk(CLOCK_50),
-    .rst(!locked),
+    .rst(1'b0),
     .outclk_0(internal_clk),
-    .outclk_1(DRAM_CLK),  
+    .outclk_1(DRAM_CLK),
     .locked(locked)
 );
 endmodule

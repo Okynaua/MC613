@@ -30,7 +30,7 @@ assign cke = 1;
 
 reg [7:0] data_out;
 wire [7:0] data_in;
-assign data = (!wEn && data_valid) ? data_out : 8'bz;
+assign data = (wEn && data_valid) ? data_out : 8'bz;
 assign data_in = data;
 
 reg [4:0] after_wait_state;  //When exiting wait state, the controller will go to after_wait_state
@@ -204,7 +204,7 @@ always @(posedge clk)begin
                 ba[1:0] <= address[24:23];
                 a[12:0] <= address[22:10];
 
-                current_state <= WRITE; //tCMH = 0.8ns
+                current_state <= WRITE1; //tCMH = 0.8ns
             end
             WRITE1: begin
                 //No Operation (NOP)

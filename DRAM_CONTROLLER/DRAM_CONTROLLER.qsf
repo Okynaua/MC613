@@ -77,6 +77,9 @@ set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME hex2bin_tb -section_id he
 set_global_assignment -name EDA_TEST_BENCH_NAME dram_controller -section_id eda_simulation
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id dram_controller
 set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME dram_controller_tb -section_id dram_controller
+set_global_assignment -name EDA_TEST_BENCH_NAME TOP_LEVEL -section_id eda_simulation
+set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id TOP_LEVEL
+set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME TOP_LEVEL_tb -section_id TOP_LEVEL
 set_global_assignment -name EDA_TEST_BENCH_FILE testbenches/counter_tb.v -section_id counter
 set_global_assignment -name EDA_TEST_BENCH_FILE counter.v -section_id counter
 set_global_assignment -name EDA_TEST_BENCH_FILE pll_143MHz_sim/pll_143MHz.vo -section_id counter
@@ -90,4 +93,7 @@ set_global_assignment -name EDA_TEST_BENCH_FILE testbenches/hex2bin.v -section_i
 set_global_assignment -name EDA_TEST_BENCH_FILE testbenches/dram_controller_tb.v -section_id dram_controller
 set_global_assignment -name EDA_TEST_BENCH_FILE dram_controller.v -section_id dram_controller
 set_global_assignment -name EDA_TEST_BENCH_FILE counter.v -section_id dram_controller
+set_global_assignment -name EDA_TEST_BENCH_FILE testbenches/TOP_LEVEL_tb.v -section_id TOP_LEVEL
+set_global_assignment -name EDA_TEST_BENCH_FILE TOP_LEVEL.v -section_id TOP_LEVEL
+set_global_assignment -name EDA_TEST_BENCH_FILE testbenches/hex2bin.v -section_id TOP_LEVEL
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
