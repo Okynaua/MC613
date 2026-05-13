@@ -235,7 +235,9 @@ module dram_controller_tb();
                       "INIT entra em WAIT", DEC);
 
         // Aguarda INIT1
-        wait(current_state == INIT1);
+		  wait(current_state == INIT1);
+		  @(negedge clk);
+		  #1;
 
         #1;
 
@@ -250,7 +252,7 @@ module dram_controller_tb();
 
         // Aguarda REFRESH
         wait(current_state == INIT2);
-
+		  @(negedge clk);
         #1;
 
         expect_signal(ras, 0,
@@ -264,7 +266,7 @@ module dram_controller_tb();
 
         // Aguarda MRS
         wait(current_state == INIT20);
-
+		  @(negedge clk);
         #1;
 
         expect_signal(ras, 0,
@@ -278,7 +280,7 @@ module dram_controller_tb();
 
         // Aguarda READY
         wait(current_state == READY);
-
+		  @(negedge clk);
         #1;
 
         expect_signal(ready, 1,
@@ -307,7 +309,7 @@ module dram_controller_tb();
         #20;
 
         expect_signal(current_state, READ,
-                      "Transicao para READ", BIN);
+                      "Transicao para READ", DEC);
 
         expect_signal(ready, 0,
                       "ready=0 durante READ", BIN);
@@ -353,7 +355,7 @@ module dram_controller_tb();
         #1;
 
         expect_signal(current_state, READ4,
-                      "Leitura apos CAS latency", BIN);
+                      "Leitura apos CAS latency", DEC);
 
         // PRECHARGE
         wait(current_state == READ5);
@@ -388,7 +390,7 @@ module dram_controller_tb();
         #20;
 
         expect_signal(current_state, WRITE,
-                      "Transicao para WRITE", BIN);
+                      "Transicao para WRITE", DEC);
 
         expect_signal(ready, 0,
                       "ready=0 durante WRITE", BIN);
@@ -453,7 +455,7 @@ module dram_controller_tb();
         #20;
 
         expect_signal(current_state, REFRESH,
-                      "Entrada em REFRESH", BIN);
+                      "Entrada em REFRESH", DEC);
 
         expect_signal(ready, 0,
                       "ready=0 durante REFRESH", BIN);

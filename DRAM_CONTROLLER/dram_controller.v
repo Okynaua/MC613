@@ -279,7 +279,7 @@ always @(posedge clk)begin
                 we <= 1;
 
                 wait_compare <= 16'd3; //tRP = 15ns
-                after_wait_state <= INIT4;
+                after_wait_state <= REFRESH2;
                 current_state <= WAIT;
             end
             REFRESH2: begin
