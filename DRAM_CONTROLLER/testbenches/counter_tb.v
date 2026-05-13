@@ -21,20 +21,32 @@ counter counter_test(
    
 
     initial begin
+	 $display("==== INICIO counter_tb ====");
+			
+		  $display("\ncounter_reset = 1");
         counter_reset = 1;
         #1000;
 
+		  $display("\ncounter_reset = 0, counter_compare = %d", 16'b1111111111111111);
         counter_reset = 0;
         counter_compare = 16'b1111111111111111;
         #100;
+		  
+		  $display("\ncounter_reset = 1");
         counter_reset = 1;
         #1000;
-
+			
+			$display("\ncounter_reset = 0, counter_compare = %d", 16'b1111);
         counter_reset = 0;
         counter_compare = 16'b1111;
-        #1000000
-
-        $stop;
+        #1000;
+		  
+		  $display("\ncounter_reset = 1");
+        counter_reset = 1;
+        #1000;
+			
+		$display("\n==== FIM counter_tb ====");
+      $stop;
     end
 
     initial begin
