@@ -2,7 +2,7 @@ module dram_controller(
 	input clk,                  
 	input reset,
 	input [25:0] address, // address[25] = byte selector, address[24:23] = ba, address[22:10] = a[12:0] line selector, a[12:0] = {0, 0, a[10], address[9:0] column selector}
-	inout [8:0] data,	
+	inout [7:0] data,	
 	input req,
     input wEn, 
     output reg data_valid,
@@ -36,9 +36,9 @@ assign data_in = data;
 reg [4:0] after_wait_state;  //When exiting wait state, the controller will go to after_wait_state
 
 reg wait_reset;
-reg wait_compare;
+reg [15:0] wait_compare;
 wire wait_overflow;
-wire wait_value;
+wire [15:0] wait_value;
 counter wait_counter(
     .clk(clk),
     .rst(wait_reset),
@@ -48,9 +48,9 @@ counter wait_counter(
 );
 
 reg refresh_reset;
-reg refresh_compare;
+reg [15:0] refresh_compare;
 wire refresh_overflow;
-wire refresh_value;
+wire [15:0] refresh_value;
 counter refresh_counter(
     .clk(clk),
     .rst(refresh_reset),
