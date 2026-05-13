@@ -34,6 +34,7 @@ assign data = (wEn && data_valid) ? data_out : 8'bz;
 assign data_in = data;
 
 reg [5:0] after_wait_state;  //When exiting wait state, the controller will go to after_wait_state
+reg [5:0] next_state;
 
 reg wait_reset;
 reg [15:0] wait_compare;
@@ -79,13 +80,19 @@ initial begin
     data_out <= 0;
 end
 
-always @(posedge clk)begin
+
+always @(posedge clk) begin
+	current_state <= next_state;
+end
+
+
+always @(*)begin
     if(reset)begin
         wait_reset <= 1;
         refresh_reset <= 1;
         data_valid <= 0;
         ready <= 0;
-        current_state <= INIT;
+        next_state <= INIT;
     
     end else begin
         case(current_state) 
@@ -94,7 +101,7 @@ always @(posedge clk)begin
                 wait_compare <= wait_compare;
                 if(wait_overflow)begin
                     wait_reset <= 1;
-                    current_state <= after_wait_state;
+                    next_state <= after_wait_state;
                 end
             end
 
@@ -110,14 +117,14 @@ always @(posedge clk)begin
                     we <= 1;
                     refresh_reset <= 1;
 
-                    current_state <= REFRESH;
+                    next_state <= REFRESH;
                 end else if(req && !wEn)begin
                     ready <= 0;
-                    current_state <= READ;
+                    next_state <= READ;
                 end else if(req && wEn)begin
                     ready <= 0;
                     data_out <= data_in;  //keeps the value to be written
-                    current_state <= WRITE;
+                    next_state <= WRITE;
                 end 
             end
 
@@ -130,7 +137,7 @@ always @(posedge clk)begin
                 ba[1:0] <= address[24:23];
                 a[12:0] <= address[22:10];
 
-                current_state <= READ1; //tCMH = 0.8ns
+                next_state <= READ1; //tCMH = 0.8ns
             end
             READ1: begin
                 //No Operation (NOP)
@@ -141,7 +148,7 @@ always @(posedge clk)begin
 
                 wait_compare <= 16'd3; //tRCD = 15ns
                 after_wait_state <= READ2;
-                current_state <= WAIT;
+                next_state <= WAIT;
             end
             READ2: begin
                 //READ
@@ -151,7 +158,7 @@ always @(posedge clk)begin
                 we <= 1;
                 a[12:0] <= {3'b0, address[9:0]};
 
-                current_state <= READ3; //tCMH = 0.8ns
+                next_state <= READ3; //tCMH = 0.8ns
             end
             READ3: begin
                 //No Operation (NOP)
@@ -162,14 +169,14 @@ always @(posedge clk)begin
 
                 wait_compare <= 16'd1; //CAS Latency - 2, since the WAIT state takes up 2 cycles time more than needed, I think
                 after_wait_state <= READ4;
-                current_state <= WAIT;
+                next_state <= WAIT;
             end
 
             READ4: begin
                 //Data capture
                 data_out <= data_in;
 
-                current_state <= READ5;
+                next_state <= READ5;
             end
             READ5: begin
                 //Precharge All Banks (PALL)
@@ -179,7 +186,7 @@ always @(posedge clk)begin
                 we <= 0;
                 a[10] <= 1;
 
-                current_state <= READ6; //tCMH = 0.8ns
+                next_state <= READ6; //tCMH = 0.8ns
             end
             READ6: begin
                 data_valid <= 1;
@@ -192,7 +199,7 @@ always @(posedge clk)begin
                 data_out <= data_in;
                 wait_compare <= 16'd3; //tRP = 15ns
                 after_wait_state <= READY;
-                current_state <= WAIT;
+                next_state <= WAIT;
             end
 
             WRITE: begin
@@ -204,7 +211,7 @@ always @(posedge clk)begin
                 ba[1:0] <= address[24:23];
                 a[12:0] <= address[22:10];
 
-                current_state <= WRITE1; //tCMH = 0.8ns
+                next_state <= WRITE1; //tCMH = 0.8ns
             end
             WRITE1: begin
                 //No Operation (NOP)
@@ -215,7 +222,7 @@ always @(posedge clk)begin
 
                 wait_compare <= 16'd3; //tRCD = 15ns
                 after_wait_state <= WRITE2;
-                current_state <= WAIT;
+                next_state <= WAIT;
             end
             WRITE2: begin
                 //WRITE
@@ -226,7 +233,7 @@ always @(posedge clk)begin
                 a[12:0] <= {3'b0, address[9:0]};
                 data_valid <= 1;
 
-                current_state <= WRITE3; //tCMH = 0.8ns
+                next_state <= WRITE3; //tCMH = 0.8ns
             end
             WRITE3: begin
                 //No Operation (NOP)
@@ -237,7 +244,7 @@ always @(posedge clk)begin
 
                 wait_compare <= 16'd3; //tRAS - tRCD = 37 - 15 = 22ns
                 after_wait_state <= WRITE4;
-                current_state <= WAIT;
+                next_state <= WAIT;
             end
             WRITE4: begin
                 //Precharge All Banks (PALL)
@@ -247,7 +254,7 @@ always @(posedge clk)begin
                 we <= 0;
                 a[10] <= 1;
 
-                current_state <= WRITE5; //tCMH = 0.8ns
+                next_state <= WRITE5; //tCMH = 0.8ns
             end
             WRITE5: begin
                 //No Operation (NOP)
@@ -259,7 +266,7 @@ always @(posedge clk)begin
                 data_out <= data_in;
                 wait_compare <= 16'd3; //tRP = 15ns
                 after_wait_state <= READY;
-                current_state <= WAIT;
+                next_state <= WAIT;
             end
 
             REFRESH: begin
@@ -270,7 +277,7 @@ always @(posedge clk)begin
                 we <= 0;
                 a[10] <= 1; //indicates that all the banks will be precharged
 
-                current_state <= REFRESH1; //tCMH = 0.8ns
+                next_state <= REFRESH1; //tCMH = 0.8ns
             end
             REFRESH1: begin
                 //No Operation (NOP)
@@ -281,7 +288,7 @@ always @(posedge clk)begin
 
                 wait_compare <= 16'd3; //tRP = 15ns
                 after_wait_state <= REFRESH2;
-                current_state <= WAIT;
+                next_state <= WAIT;
             end
             REFRESH2: begin
                 //Auto Refresh (REF) 1
@@ -290,7 +297,7 @@ always @(posedge clk)begin
                 cas <= 0;
                 we <= 1;
 
-                current_state <= REFRESH3; //tCMH = 0.8ns
+                next_state <= REFRESH3; //tCMH = 0.8ns
             end
             REFRESH3: begin
                 //No Operation (NOP)
@@ -301,7 +308,7 @@ always @(posedge clk)begin
 
                 wait_compare <= 16'd9; //tRC = 60ns
                 after_wait_state <= REFRESH4;
-                current_state <= WAIT;
+                next_state <= WAIT;
             end
             REFRESH4: begin
                 //Auto Refresh (REF) 1
@@ -310,7 +317,7 @@ always @(posedge clk)begin
                 cas <= 0;
                 we <= 1;
 
-                current_state <= REFRESH5; //tCMH = 0.8ns
+                next_state <= REFRESH5; //tCMH = 0.8ns
             end
             REFRESH5: begin
                 //No Operation (NOP)
@@ -321,7 +328,7 @@ always @(posedge clk)begin
 
                 wait_compare <= 16'd9; //tRC = 60ns
                 after_wait_state <= READY;
-                current_state <= WAIT;
+                next_state <= WAIT;
             end
 
             INIT: begin 
@@ -333,7 +340,7 @@ always @(posedge clk)begin
 
                 wait_compare <= 16'd30000;  //Just a pretty number that is more than 28600
                 after_wait_state <= INIT1;
-                current_state <= WAIT;
+                next_state <= WAIT;
             end
             INIT1: begin
                 //Precharge All Banks(PALL)
@@ -345,7 +352,7 @@ always @(posedge clk)begin
 
                 wait_compare <= 16'd3; //tRP = 15ns
                 after_wait_state <= INIT2;
-                current_state <= WAIT;
+                next_state <= WAIT;
             end
             INIT2: begin
                 //Auto Refresh (REF) 1
@@ -354,7 +361,7 @@ always @(posedge clk)begin
                 cas <= 0;
                 we <= 1;
 
-                current_state <= INIT3; //tCMH = 0.8ns
+                next_state <= INIT3; //tCMH = 0.8ns
             end
             INIT3: begin
                 //No Operation (NOP)
@@ -365,7 +372,7 @@ always @(posedge clk)begin
 
                 wait_compare <= 16'd9; //tRC = 60ns
                 after_wait_state <= INIT4;
-                current_state <= WAIT;
+                next_state <= WAIT;
             end
             INIT4: begin
                 //Auto Refresh (REF) 2
@@ -374,7 +381,7 @@ always @(posedge clk)begin
                 cas <= 0;
                 we <= 1;
 
-                current_state <= INIT5; //tCMH = 0.8ns
+                next_state <= INIT5; //tCMH = 0.8ns
             end
             INIT5: begin
                 //No Operation (NOP)
@@ -385,7 +392,7 @@ always @(posedge clk)begin
 
                 wait_compare <= 16'd9; //tRC = 60ns
                 after_wait_state <= INIT6;
-                current_state <= WAIT;
+                next_state <= WAIT;
             end
             INIT6: begin
                 //Auto Refresh (REF) 3
@@ -394,7 +401,7 @@ always @(posedge clk)begin
                 cas <= 0;
                 we <= 1;
 
-                current_state <= INIT7; //tCMH = 0.8ns
+                next_state <= INIT7; //tCMH = 0.8ns
             end
             INIT7: begin
                 //No Operation (NOP)
@@ -405,7 +412,7 @@ always @(posedge clk)begin
 
                 wait_compare <= 16'd9; //tRC = 60ns
                 after_wait_state <= INIT8;
-                current_state <= WAIT;
+                next_state <= WAIT;
 
             end
             INIT8: begin
@@ -415,7 +422,7 @@ always @(posedge clk)begin
                 cas <= 0;
                 we <= 1;
 
-                current_state <= INIT9; //tCMH = 0.8ns
+                next_state <= INIT9; //tCMH = 0.8ns
             end
             INIT9: begin
                 //No Operation (NOP)
@@ -426,7 +433,7 @@ always @(posedge clk)begin
 
                 wait_compare <= 16'd9; //tRC = 60ns
                 after_wait_state <= INIT10;
-                current_state <= WAIT;
+                next_state <= WAIT;
 
             end
             INIT10: begin
@@ -436,7 +443,7 @@ always @(posedge clk)begin
                 cas <= 0;
                 we <= 1;
 
-                current_state <= INIT11; //tCMH = 0.8ns
+                next_state <= INIT11; //tCMH = 0.8ns
             end
             INIT11: begin
                 //No Operation (NOP)
@@ -447,7 +454,7 @@ always @(posedge clk)begin
 
                 wait_compare <= 16'd9; //tRC = 60ns
                 after_wait_state <= INIT12;
-                current_state <= WAIT;
+                next_state <= WAIT;
             end
             INIT12: begin
                 //Auto Refresh (REF) 6
@@ -456,7 +463,7 @@ always @(posedge clk)begin
                 cas <= 0;
                 we <= 1;
 
-                current_state <= INIT13; //tCMH = 0.8ns
+                next_state <= INIT13; //tCMH = 0.8ns
             end
             INIT13: begin
                 //No Operation (NOP)
@@ -467,7 +474,7 @@ always @(posedge clk)begin
 
                 wait_compare <= 16'd9; //tRC = 60ns
                 after_wait_state <= INIT14;
-                current_state <= WAIT;
+                next_state <= WAIT;
             end
             INIT14: begin
                 //Auto Refresh (REF) 7
@@ -476,7 +483,7 @@ always @(posedge clk)begin
                 cas <= 0;
                 we <= 1;
 
-                current_state <= INIT15; //tCMH = 0.8ns
+                next_state <= INIT15; //tCMH = 0.8ns
             end
             INIT15: begin
                 //No Operation (NOP)
@@ -487,7 +494,7 @@ always @(posedge clk)begin
 
                 wait_compare <= 16'd9; //tRC = 60ns
                 after_wait_state <= INIT16;
-                current_state <= WAIT;
+                next_state <= WAIT;
             end
             INIT16: begin
                 //Auto Refresh (REF) 8
@@ -496,7 +503,7 @@ always @(posedge clk)begin
                 cas <= 0;
                 we <= 1;
 
-                current_state <= INIT17; //tCMH = 0.8ns
+                next_state <= INIT17; //tCMH = 0.8ns
             end
             INIT17: begin
                 //No Operation (NOP)
@@ -507,7 +514,7 @@ always @(posedge clk)begin
 
                 wait_compare <= 16'd9; //tRC = 60ns
                 after_wait_state <= INIT18;
-                current_state <= WAIT;
+                next_state <= WAIT;
             end
             INIT18: begin
                 //Auto Refresh (REF) 9
@@ -516,7 +523,7 @@ always @(posedge clk)begin
                 cas <= 0;
                 we <= 1;
 
-                current_state <= INIT19; //tCMH = 0.8ns
+                next_state <= INIT19; //tCMH = 0.8ns
             end
             INIT19: begin
                 //No Operation (NOP)
@@ -527,7 +534,7 @@ always @(posedge clk)begin
 
                 wait_compare <= 16'd9; //tRC = 60ns
                 after_wait_state <= INIT20;
-                current_state <= WAIT;
+                next_state <= WAIT;
             end
             
             INIT20: begin
@@ -545,7 +552,7 @@ always @(posedge clk)begin
                 a[2:0] <= 3'b0;
 
 
-                current_state <= INIT21; //tAH = 0.8ns
+                next_state <= INIT21; //tAH = 0.8ns
             end
             INIT21: begin
                 //No Operation (NOP)
@@ -556,7 +563,7 @@ always @(posedge clk)begin
 
                 wait_compare <= 16'd2; //tMRD = 2 cycles
                 after_wait_state <= READY;
-                current_state <= WAIT;
+                next_state <= WAIT;
             end
             
         endcase

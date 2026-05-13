@@ -239,7 +239,7 @@ module dram_controller_tb();
 		  @(negedge clk);
 		  #1;
 
-        #1;
+        #20;
 
         expect_signal(ras, 0,
                       "PRECHARGE enviado durante INIT", BIN);
@@ -253,16 +253,19 @@ module dram_controller_tb();
         // Aguarda REFRESH
         wait(current_state == INIT2);
 		  @(negedge clk);
-        #1;
-
+		  #1;
+		  
         expect_signal(ras, 0,
                       "REFRESH possui ras=0", BIN);
-
+		  
+		  @(negedge clk);
         expect_signal(cas, 0,
                       "REFRESH possui cas=0", BIN);
 
         expect_signal(we, 1,
                       "REFRESH possui we=1", BIN);
+							 
+		  
 
         // Aguarda MRS
         wait(current_state == INIT20);
