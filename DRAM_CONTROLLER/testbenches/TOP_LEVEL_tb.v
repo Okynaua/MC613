@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 
-module TOP_LEVEL_tb();
+module top_level_tb();
 
     // =====================================================
     // PARAMETERS
@@ -67,7 +67,7 @@ module TOP_LEVEL_tb();
     // DUT
     // =====================================================
 
-    TOP_LEVEL uut(
+    top_level uut(
         .CLOCK_50(CLOCK_50),
         .SW(SW),
         .KEY(KEY),
