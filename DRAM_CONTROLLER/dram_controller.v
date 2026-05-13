@@ -33,7 +33,7 @@ wire [7:0] data_in;
 assign data = (wEn && data_valid) ? data_out : 8'bz;
 assign data_in = data;
 
-reg [4:0] after_wait_state;  //When exiting wait state, the controller will go to after_wait_state
+reg [5:0] after_wait_state;  //When exiting wait state, the controller will go to after_wait_state
 
 reg wait_reset;
 reg [15:0] wait_compare;
@@ -74,8 +74,9 @@ initial begin
     dqm <= 2'b0;
     ba <= 2'b0;
     //
-    ready = 0;
-    data_valid = 0;
+    ready <= 0;
+    data_valid <= 0;
+    data_out <= 0;
 end
 
 always @(posedge clk)begin
@@ -85,15 +86,6 @@ always @(posedge clk)begin
         data_valid <= 0;
         ready <= 0;
         current_state <= INIT;
-    
-    end else if(refresh_overflow && ready)begin
-        cs <= 0;
-        ras <= 1;
-        cas <= 1;
-        we <= 1;
-        refresh_reset <= 1;
-
-        current_state <= REFRESH;
     
     end else begin
         case(current_state) 
@@ -109,14 +101,21 @@ always @(posedge clk)begin
             READY: begin
                 refresh_reset <= 0;
                 ready <= 1;
-                data_valid <= 1;
-                if(req && !wEn)begin
+                data_valid <= 0;
+                if(refresh_overflow)begin
+                    //No Operation (NOP)
+                    cs <= 0;
+                    ras <= 1;
+                    cas <= 1;
+                    we <= 1;
+                    refresh_reset <= 1;
+
+                    current_state <= REFRESH;
+                end else if(req && !wEn)begin
                     ready <= 0;
-                    data_valid <= 0;      //this gives power over data to the memory instead of the controller
                     current_state <= READ;
                 end else if(req && wEn)begin
                     ready <= 0;
-                    data_valid <= 1;      //this gives power over data to the controller instead of the memory
                     data_out <= data_in;  //keeps the value to be written
                     current_state <= WRITE;
                 end 
@@ -183,6 +182,7 @@ always @(posedge clk)begin
                 current_state <= READ6; //tCMH = 0.8ns
             end
             READ6: begin
+                data_valid <= 1;
                 //No Operation (NOP)
                 cs <= 0;
                 ras <= 1;
@@ -224,6 +224,7 @@ always @(posedge clk)begin
                 cas <= 0;
                 we <= 0;
                 a[12:0] <= {3'b0, address[9:0]};
+                data_valid <= 1;
 
                 current_state <= WRITE3; //tCMH = 0.8ns
             end

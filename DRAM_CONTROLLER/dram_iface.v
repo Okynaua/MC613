@@ -107,7 +107,7 @@ always @(posedge clk) begin
                 wEn <= 0;
                 req <= 0;
 
-                if (ready && data_valid)begin
+                if (ready) begin
                     current_state <= READY;
                 end
                 
@@ -125,7 +125,7 @@ always @(posedge clk) begin
                 wEn <= 0;
                 req <= 0;
                 
-                if(ready && data_valid)begin
+                if (ready) begin
                     current_state <= REQ_READ;
                 end
             end

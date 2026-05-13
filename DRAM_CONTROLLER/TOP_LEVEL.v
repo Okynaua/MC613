@@ -23,7 +23,9 @@ module TOP_LEVEL (
 );
 
 //wires for pll
-wire internal_clk, locked;
+wire internal_clk, ns3_delayed_clk, locked, pll_reset;
+
+assign DRAM_CLK = internal_clk;
 
 //wires to connect controller and iface
 wire wEn, req, ready, data_valid;
@@ -67,9 +69,9 @@ dram_controller controller(
 );
 pll_143MHz pll(
     .refclk(CLOCK_50),
-    .rst(1'b0),
+    .rst(pll_reset),
     .outclk_0(internal_clk),
-    .outclk_1(DRAM_CLK),
+    .outclk_1(ns3_delayed_clk),  
     .locked(locked)
 );
 endmodule
