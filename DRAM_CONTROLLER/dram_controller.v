@@ -1,4 +1,4 @@
-module dram_controler(
+module dram_controller(
 	input clk,                  
 	input reset,
 	input [25:0] address, // address[25] = byte selector, address[24:23] = ba, address[22:10] = a[12:0] line selector, a[12:0] = {0, 0, a[10], address[9:0] column selector}
@@ -7,33 +7,33 @@ module dram_controler(
     input wEn, 
     output reg data_valid,
 	output reg ready,
-    output reg [5:0] current_state;
+    output reg [5:0] current_state,
     //Memory pins
     output reg cs,
     output reg ras,
     output reg cas,
-    output reg we          
-    output reg [1:0] ba;   //bank selector
-    output reg [12:0] a;   //memory address
-    output reg [1:0] dqm;  //byte disable
-    output cke;
+    output reg we,          
+    output reg [1:0] ba,   //bank selector
+    output reg [12:0] a,   //memory address
+    output reg [1:0] dqm,  //byte disable
+    output cke
 );
 
 parameter   INIT    = 6'd00, INIT1    = 6'd01, INIT2    = 6'd02, INIT3    = 6'd03, INIT4    = 6'd04, INIT5    = 6'd05, INIT6    = 6'd06, INIT7    = 6'd07, INIT8    = 6'd08, INIT9    = 6'd09, INIT10    = 6'd10, INIT11    = 6'd11, INIT12    = 6'd12, INIT13    = 6'd13, INIT14    = 6'd14, INIT15    = 6'd15, INIT16    = 6'd16, INIT17    = 6'd17, INIT18    = 6'd18, INIT19    = 6'd19, INIT20    = 6'd20, INIT21    = 6'd21,
             READ    = 6'd30, READ1    = 6'd31, READ2    = 6'd32, READ3    = 6'd33, READ4    = 6'd34, READ5    = 6'd35, READ6    = 6'd36, 
-            WRITE   = 6'd40, WRITE1   = 6'd41, WRIT2    = 6'd42, WRITE3   = 6'd43, WRITE4   = 6'd44, WRITE5   = 6'd45,
-            REFRESH = 6'd50, REFRESH1 = 6'd51, REFRESH1 = 6'd52, REFRESH1 = 6'd53, REFRESH1 = 6'd54, REFRESH1 = 6'd55,
+            WRITE   = 6'd40, WRITE1   = 6'd41, WRITE2    = 6'd42, WRITE3   = 6'd43, WRITE4   = 6'd44, WRITE5   = 6'd45,
+            REFRESH = 6'd50, REFRESH1 = 6'd51, REFRESH2 = 6'd52, REFRESH3 = 6'd53, REFRESH4 = 6'd54, REFRESH5 = 6'd55,
             READY   = 6'd62,
             WAIT    = 6'd63;
 
 assign cke = 1;
 
-wire [7:0] data_out;
+reg [7:0] data_out;
 wire [7:0] data_in;
 assign data = (!wEn && data_valid) ? data_out : 8'bz;
 assign data_in = data;
 
-reg [4:0] after_wait_state  //When exiting wait state, the controller will go to after_wait_state
+reg [4:0] after_wait_state;  //When exiting wait state, the controller will go to after_wait_state
 
 reg wait_reset;
 reg wait_compare;
@@ -536,7 +536,7 @@ always @(posedge clk)begin
                 cas <= 0;
                 we <= 0;
                 ba <= 2'b0;
-                a[12:10] <= 0   //See page 26
+                a[12:10] <= 0;   //See page 26
                 a[9] <= 1;
                 a[8:7] <= 2'b0;
                 a[6:4] <= 3'b011;
