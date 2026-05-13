@@ -59,7 +59,7 @@ Os testes para a máquina de estados DRAM têm como objetivo garantir que a tran
 
 ## **dram_iface**
 
-Os testes para a interfa1ce DRAM têm como objetivo garantir que a máquina de estados de input esteja corretamente funcionando e esperando corretamente os timings.
+Os testes para a interface DRAM têm como objetivo garantir que a máquina de estados de input esteja corretamente funcionando e esperando corretamente os timings.
 
 ## Testes por Simulação
 

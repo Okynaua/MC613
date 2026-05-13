@@ -21,6 +21,6 @@ assign BIN = (HEX == 7'b1000000) ? 4'h0 :
              (HEX == 7'b0100001) ? 4'hD : 
              (HEX == 7'b0000110) ? 4'hE : 
              (HEX == 7'b0001110) ? 4'hF : 
-                                   4'b0000; // Caso não reconheça o padrão
+                                   4'bxxxx; // Caso não reconheça o padrão
 
 endmodule
