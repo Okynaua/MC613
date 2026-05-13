@@ -193,7 +193,7 @@ module top_level_tb();
 
     initial begin
 
-        $display("==== INICIO TOP_LEVEL_tb ====");
+        $display("==== INICIO top_level_tb ====");
 
         error_count = 0;
 
@@ -295,7 +295,7 @@ module top_level_tb();
         else
             $display("[FALHA] Total de erros: %0d", error_count);
 
-        $display("\n==== FIM TOP_LEVEL_tb ====");
+        $display("\n==== FIM top_level_tb ====");
 
         $stop;
     end
