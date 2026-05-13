@@ -32,9 +32,10 @@ counter counter_test(
 
         counter_reset = 0;
         counter_compare = 16'b1111;
-        #1000000
-
-        $stop;
+        
+        if(current_state == 6'b62)begin
+            $stop;
+        end
     end
 
     initial begin

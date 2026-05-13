@@ -19,11 +19,12 @@ module DRAM_CONTROLLER (
     output DRAM_WE_N,
     output DRAM_RAS_N,
     output DRAM_CLK
-
 );
 
 //wires for pll
-wire internal_clk, locked;
+wire internal_clk, ns3_delayed_clk, locked, pll_reset;
+
+assign DRAM_CLK = internal_clk;
 
 //wires to connect controller and iface
 wire wEn, req, ready, data_valid;
@@ -50,7 +51,7 @@ dram_controller controller(
     .clk(internal_clk),
     .reset(KEY[0]),
     .address(address),
-    .data(DRAM_DQ),
+    .data(DRAM_DQ[7:0]),
     .req(req),
     .wEn(wEn),
     .data_valid(data_valid),
@@ -67,9 +68,9 @@ dram_controller controller(
 );
 pll_143MHz pll(
     .refclk(CLOCK_50),
-    .rst(!locked),
+    .rst(pll_reset),
     .outclk_0(internal_clk),
-    .outclk_1(DRAM_CLK),  
+    .outclk_1(ns3_delayed_clk),  
     .locked(locked)
 );
 endmodule
