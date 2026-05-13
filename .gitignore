@@ -1,36 +1,53 @@
-# Temporários
-
+# TEMPORÁRIOS
 *.bak*
 *.tmp
 *.log
 *.flock
 
-# Texto/config gerado
-
+# TEXTO / CONFIG GERADO
 *.ini
 *.txt
 
-# Quartus (arquivos gerados)
-
+# QUARTUS / FPGA (GERADOS)
 db/
 incremental_db/
 output_files/
 simulation/
 
+*.done
+*.smsg
+*.summary
+*.jdi
+*.pin
+*.sld
+*.rpt
 *.qws
 *.qdf
-*.qsf
-*.rpt
 
-# ModelSim
+# Bitstreams / programação FPGA
+*.sof
+*.pof
 
+# Outros gerados pelo Quartus
+*.map.*
+*.fit.*
+*.sta.*
+*.flow.*
+*.asm.*
+*.cdf
+*.bsf
+
+# MODELSIM
 work/
 transcript
 vsim.wlf
 *.wlf
 
-# Sistema/IDE
+# Arquivos de simulação
+*.vstf
+*.ucdb
 
+# SISTEMA / IDE
 .DS_Store
 .vscode/
 .idea/
