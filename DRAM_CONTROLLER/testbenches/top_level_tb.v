@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 
-module TOP_LEVEL_tb();
+module top_level_tb();
 
     // =====================================================
     // PARAMETERS
@@ -67,7 +67,7 @@ module TOP_LEVEL_tb();
     // DUT
     // =====================================================
 
-    TOP_LEVEL uut(
+    top_level uut(
         .CLOCK_50(CLOCK_50),
         .SW(SW),
         .KEY(KEY),
@@ -193,7 +193,7 @@ module TOP_LEVEL_tb();
 
     initial begin
 
-        $display("==== INICIO TOP_LEVEL_tb ====");
+        $display("==== INICIO top_level_tb ====");
 
         error_count = 0;
 
@@ -295,7 +295,7 @@ module TOP_LEVEL_tb();
         else
             $display("[FALHA] Total de erros: %0d", error_count);
 
-        $display("\n==== FIM TOP_LEVEL_tb ====");
+        $display("\n==== FIM top_level_tb ====");
 
         $stop;
     end
