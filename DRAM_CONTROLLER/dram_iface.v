@@ -107,7 +107,7 @@ always @(posedge clk) begin
                 wEn <= 0;
                 req <= 0;
 
-                if (ready)begin
+                if (ready) begin
                     current_state <= READY;
                 end
                 

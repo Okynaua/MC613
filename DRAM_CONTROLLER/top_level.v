@@ -1,3 +1,4 @@
+
 module DRAM_CONTROLLER (
     input CLOCK_50,
     input [9:0] SW,
