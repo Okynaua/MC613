@@ -57,7 +57,8 @@ module dram_controller_tb();
               WAIT     = 6'd63;
 
     parameter BIN = 0,
-              HEX = 1;
+              HEX = 1,
+				  DEC = 2;
 
     // =====================================================
     // CLOCK
@@ -138,36 +139,66 @@ module dram_controller_tb();
     // VERIFICATION TASK
     // =====================================================
 
-    task expect_signal;
-        input [31:0] observed;
-        input [31:0] expected;
-        input [LABEL_W-1:0] label;
-        input format;
-    begin
-        #1;
+		task expect_signal;
+			 input [31:0] observed;
+			 input [31:0] expected;
+			 input [LABEL_W-1:0] label;
+			 input [1:0] format;
+		begin
+			 #1;
 
-        if (observed !== expected) begin
-            error_count = error_count + 1;
+			 if (observed !== expected) begin
+				  error_count = error_count + 1;
 
-            if (format == HEX)
-                $display("[ERRO] %0s | esperado=0x%0h obtido=0x%0h (t=%0t)",
-                         label, expected, observed, $time);
-            else
-                $display("[ERRO] %0s | esperado=%0b obtido=%0b (t=%0t)",
-                         label, expected, observed, $time);
+				  case (format)
 
-        end else begin
+						HEX:
+							 $display(
+								  "[ERRO] %0s | esperado=0x%0h obtido=0x%0h (t=%0t)",
+								  label, expected, observed, $time
+							 );
 
-            if (format == HEX)
-                $display("[OK] %0s | valor=0x%0h (t=%0t)",
-                         label, observed, $time);
-            else
-                $display("[OK] %0s | valor=%0b (t=%0t)",
-                         label, observed, $time);
+						DEC:
+							 $display(
+								  "[ERRO] %0s | esperado=%0d obtido=%0d (t=%0t)",
+								  label, expected, observed, $time
+							 );
 
-        end
-    end
-    endtask
+						default:
+							 $display(
+								  "[ERRO] %0s | esperado=%0b obtido=%0b (t=%0t)",
+								  label, expected, observed, $time
+							 );
+
+				  endcase
+
+			 end else begin
+
+				  case (format)
+
+						HEX:
+							 $display(
+								  "[OK] %0s | valor=0x%0h (t=%0t)",
+								  label, observed, $time
+							 );
+
+						DEC:
+							 $display(
+								  "[OK] %0s | valor=%0d (t=%0t)",
+								  label, observed, $time
+							 );
+
+						default:
+							 $display(
+								  "[OK] %0s | valor=%0b (t=%0t)",
+								  label, observed, $time
+							 );
+
+				  endcase
+
+			 end
+		end
+		endtask
 
     // =====================================================
     // TEST SEQUENCE
@@ -201,7 +232,7 @@ module dram_controller_tb();
                       "ready=0 durante INIT", BIN);
 
         expect_signal(current_state, WAIT,
-                      "INIT entra em WAIT", BIN);
+                      "INIT entra em WAIT", DEC);
 
         // Aguarda INIT1
         wait(current_state == INIT1);
