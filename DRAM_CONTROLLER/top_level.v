@@ -1,4 +1,3 @@
-
 module DRAM_CONTROLLER (
     input CLOCK_50,
     input [9:0] SW,
@@ -24,21 +23,25 @@ module DRAM_CONTROLLER (
 
 //wires for pll
 wire internal_clk, ns3_delayed_clk, locked, pll_reset;
+assign pll_reset = 0;
 
 assign DRAM_CLK = internal_clk;
 
+assign DRAM_DQ[15:8] = 8'bz;
+
 //wires to connect controller and iface
-wire wEn, req, ready, data_valid;
+wire wEn, req, ready;
+wire [7:0] iface_data_in, iface_data_out;
 wire [25:0] address;
 
 dram_iface interface(
     .clk(internal_clk),
     .ready(ready),
-    .data_valid(data_valid),
     .reset(KEY[0]),
     .write_req(KEY[3]),
     .SW(SW),
-    .data(DRAM_DQ[7:0]),
+    .data_in(iface_data_in),
+    .data_out(iface_data_out),
     .HEX0(HEX0),
     .HEX1(HEX1),
     .HEX4(HEX4),
@@ -52,10 +55,10 @@ dram_controller controller(
     .clk(internal_clk),
     .reset(KEY[0]),
     .address(address),
-    .data(DRAM_DQ[7:0]),
+    .data_from_iface(iface_data_out),
+    .data_to_iface(iface_data_in),
     .req(req),
     .wEn(wEn),
-    .data_valid(data_valid),
     .ready(ready),
     .current_state(LEDR[5:0]),
     .cs(DRAM_CS_N),

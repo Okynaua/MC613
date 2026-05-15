@@ -1,11 +1,11 @@
 module dram_iface(
     input clk,
     input ready,           //states if the controller can receive requests
-    input data_valid,       //states if the data from the controller is valid
     input reset,           //KEY[0] active low
     input write_req,       //KEY[3] active low
     input [9:0] SW,        //represents input switcher from the board
-    inout [7:0] data,      //connected, eventually, to data input/output from the memory
+    input [7:0] data_in,
+    output [7:0] data_out,
     output [6:0] HEX0,     //represents hex displays from the board
     output [6:0] HEX1,     //
     output [6:0] HEX4,     //
@@ -23,18 +23,11 @@ parameter READY      = 3'b100,
           REQ_WRITE  = 3'b001,
           WAIT_WRITE = 3'b011;
 
-//Logic to use data as inout
-wire [7:0] data_out;
-wire [7:0] data_in;
-assign data = (wEn) ? data_out : 8'bz;
-assign data_in = data;
-
 //output assignements
 assign address = {SW[9], 1'b0, SW[8], SW[7], SW[6], 19'b0, SW[5], SW[4]}; //as specified
 assign data_out = {4'b0, SW[3:0]};                                        //it needs to be 8 bits but only will be controlled by 4 switches
 
-reg [7:0] captured_data_in;       //Register to keep previouscvalid data_in values
-reg [9:0] previousSW;             //Register to keep previous values from the switches
+reg [9:0] previousSW = 0;             //Register to keep previous values from the switches
 
 //Converts 4 bit values to 7 segment display logic
 wire [6:0] hex0, hex1, hex4, hex5;
@@ -43,7 +36,7 @@ bin2hex getHex0(
     .HEX(hex0)
 );
 bin2hex getHex1(
-    .BIN(captured_data_in[3:0]),
+    .BIN(data_in[3:0]),
     .HEX(hex1)
 );
 bin2hex getHex4(
@@ -61,33 +54,52 @@ assign HEX5 = hex5;
 
 initial begin
     previousSW <= SW;
-	 current_state <= 3'b100;
+	current_state <= READY;
 end
 
+//Output combinational logic
+always @(*) begin
+    if (!reset) begin
+        req = 0;
+        wEn = 0;
+    end else begin
+        case(current_state)
+            READY: begin
+                wEn = 0;
+                req = 0;
+            end
+            REQ_READ: begin
+                wEn = 0;
+                req = 1;
+            end
+            WAIT_READ: begin
+                wEn = 0;
+                req = 0;
+            end
+            REQ_WRITE: begin
+                wEn = 1;
+                req = 1
+            end
+            WAIT_WRITE: begin
+                wEn = 0;
+                req = 0;
+            end
+        endcase
+    end
+end
+
+//Next state sequencial logic
 always @(posedge clk) begin
     if (ready) begin
         previousSW <= SW;
     end
-
     if (!reset) begin
         current_state <= READY;
-        req <= 0;
-        wEn <= 0;
         previousSW <= SW;
-        captured_data_in <= 8'b0;
-
     end else begin
-
-        if(data_valid) begin
-            captured_data_in <= data_in;
-        end
-        
         case(current_state)
 
             READY: begin
-                wEn <= 0;
-                req <= 0;
-
                 if (previousSW[9:4] != SW[9:4] && ready) begin 
                     current_state <= REQ_READ;
                 end else if (!write_req && ready) begin
@@ -96,35 +108,24 @@ always @(posedge clk) begin
             end
 
             REQ_READ: begin
-                wEn <= 0;
-                req <= 1;
                 if (!ready) begin
                     current_state <= WAIT_READ;
                 end
             end
 
             WAIT_READ: begin
-                wEn <= 0;
-                req <= 0;
-
                 if (ready) begin
                     current_state <= READY;
-                end
-                
+                end   
             end
 
             REQ_WRITE: begin
-                wEn <= 1;
-                req <= 1;
                 if (!ready) begin
                     current_state <= WAIT_WRITE;
                 end
             end
 
             WAIT_WRITE: begin
-                wEn <= 0;
-                req <= 0;
-                
                 if(ready)begin
                     current_state <= REQ_READ;
                 end
