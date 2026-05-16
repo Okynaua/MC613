@@ -3,6 +3,7 @@ module dram_iface(
     input ready,           //states if the controller can receive requests
     input reset,           //KEY[0] active low
     input write_req,       //KEY[3] active low
+    input handshake,
     input [9:0] SW,        //represents input switcher from the board
     input [7:0] data_in,
     output [7:0] data_out,
@@ -23,11 +24,12 @@ parameter READY      = 3'b100,
           REQ_WRITE  = 3'b001,
           WAIT_WRITE = 3'b011;
 
+reg [9:0] previousSW;             //Register to keep previous values from the switches
+reg next_wEn, next_req;
+
 //output assignements
 assign address = {SW[9], 1'b0, SW[8], SW[7], SW[6], 19'b0, SW[5], SW[4]}; //as specified
 assign data_out = {4'b0, SW[3:0]};                                        //it needs to be 8 bits but only will be controlled by 4 switches
-
-reg [9:0] previousSW = 0;             //Register to keep previous values from the switches
 
 //Converts 4 bit values to 7 segment display logic
 wire [6:0] hex0, hex1, hex4, hex5;
@@ -52,75 +54,94 @@ assign HEX1 = hex1;
 assign HEX4 = hex4;
 assign HEX5 = hex5;
 
+reg wr_req_sync0;
+reg wr_req_sync1;
+reg previousWrReq;
+wire write_pulse = (!wr_req_sync1 && previousWrReq);
+
 initial begin
-    previousSW <= SW;
+    previousSW <= 10'b0;
 	current_state <= READY;
+    previousWrReq <= 1;
+    next_req <= 0;
+    next_wEn <= 0;
 end
 
 //Output combinational logic
 always @(*) begin
     if (!reset) begin
-        req = 0;
-        wEn = 0;
+        next_req = 0;
+        next_wEn = 0;
     end else begin
+        
         case(current_state)
             READY: begin
-                wEn = 0;
-                req = 0;
+                next_wEn = 0;
+                next_req = 0;
             end
             REQ_READ: begin
-                wEn = 0;
-                req = 1;
+                next_wEn = 0;
+                next_req = 1;
             end
             WAIT_READ: begin
-                wEn = 0;
-                req = 0;
+                next_wEn = 0;
+                next_req = 0;
             end
             REQ_WRITE: begin
-                wEn = 1;
-                req = 1
+                next_wEn = 1;
+                next_req = 1;
             end
             WAIT_WRITE: begin
-                wEn = 0;
-                req = 0;
+                next_wEn = 0;
+                next_req = 0;
             end
         endcase
     end
 end
 
+
 //Next state sequencial logic
 always @(posedge clk) begin
-    if (ready) begin
-        previousSW <= SW;
-    end
+    previousWrReq <= write_req;
+    wEn <= next_wEn;
+    req <= next_req;
     if (!reset) begin
+        wr_req_sync0  <= 1'b1;
+        wr_req_sync1  <= 1'b1;
+        previousWrReq <= 1'b1;
         current_state <= READY;
         previousSW <= SW;
     end else begin
+
+        wr_req_sync0  <= write_req;
+        wr_req_sync1  <= wr_req_sync0;
+        previousWrReq <= wr_req_sync1;
+
         case(current_state)
 
             READY: begin
-                if (previousSW[9:4] != SW[9:4] && ready) begin 
+                if (previousSW[9:4] != SW[9:4]) begin 
                     current_state <= REQ_READ;
-                end else if (!write_req && ready) begin
+                end else if (write_pulse) begin
                     current_state <= REQ_WRITE;
                 end
             end
 
             REQ_READ: begin
-                if (!ready) begin
+                if (handshake) begin
                     current_state <= WAIT_READ;
                 end
             end
 
             WAIT_READ: begin
                 if (ready) begin
+                    previousSW <= SW;
                     current_state <= READY;
                 end   
             end
 
             REQ_WRITE: begin
-                if (!ready) begin
+                if (handshake) begin
                     current_state <= WAIT_WRITE;
                 end
             end
@@ -135,5 +156,4 @@ always @(posedge clk) begin
         endcase
     end
 end
-
 endmodule
