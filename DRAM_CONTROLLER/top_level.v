@@ -1,4 +1,4 @@
-module DRAM_CONTROLLER (
+module top_level(
     input CLOCK_50,
     input [9:0] SW,
     input [3:0] KEY,

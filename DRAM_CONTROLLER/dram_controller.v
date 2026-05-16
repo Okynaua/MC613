@@ -7,7 +7,6 @@ module dram_controler(
     output reg [7:0] data_to_iface,
 	input req,
     input wEn, 
-    output reg data_valid,
 	output reg ready,
     output reg [5:0] current_state,
     //Memory pins
@@ -27,12 +26,9 @@ parameter   INIT    = 6'd00, INIT1    = 6'd01, INIT2    = 6'd02, INIT3    = 6'd0
             REFRESH = 6'd50, REFRESH1 = 6'd51, REFRESH2 = 6'd52, REFRESH3 = 6'd53, REFRESH4 = 6'd54, REFRESH5 = 6'd55,
             READY   = 6'd62;
 
-assign cke = 1;
-
-reg creep; //because the controller wants to have control
 reg [7:0] data_to_mem;
 wire [7:0] data_from_mem;
-assign data = (creep) ? data_to_mem : 8'bz;
+assign data = (current_state == WRITE2 || current_state == WRITE3) ? data_to_mem : 8'bz;
 assign data_from_mem = data;
 
 reg [5:0] next_state;
@@ -61,13 +57,17 @@ counter refresh_counter(
     .counter_value(refresh_value)
 );
 
+//outputs to controll: ready, current_state, cs, ras, cas, we, ba, a, dqm, cke, refresh_reset, refresh_compare, wait_reset, wait_compare,  next_state, data_to_mem, data_to_iface
+
+assign cke = 1;
+
 initial begin
     current_state <= INIT;
     next_state <= INIT;
-    creep <= 0;
     wait_reset <= 1;
     refresh_reset <= 1;
     refresh_compare <= 1017;  //refresh needs to happen 8192 times in 60ms, that is, it needs to happen every 60*10^-3/8192 = 7.3242 micros, with that, 143 Mhz * 7,3242 micros = clock cycles needed = 1047.3606
+    wait_compare <= 0;
     //No Operation
     cs <= 0;
     ras <= 1;
@@ -79,21 +79,35 @@ initial begin
     ba <= 2'b0;
     //
     ready <= 0;
-    data_valid <= 0;
-    data_to_mem <= 0;
-    data_to_iface <= 0;
+    data_to_mem <= 8'b0;
+    data_to_iface <= 8'b0;
 end
 
-always @(posedge clk)begin
+always @(posedge clk) begin
     current_state <= next_state;
+    
+    if (current_state == READ4) begin
+        data_to_iface <= data_from_mem; 
+    end
 end
 
 always @(*)begin
+
     if(!reset)begin
         wait_reset = 1;
         refresh_reset = 1;
-        data_valid = 0;
+        refresh_compare = 1017; 
+        wait_compare = 0;
+        cs <= 0;
+        ras <= 1;
+        cas <= 1;
+        we <= 1;
+        a = 13'b0;
+        dqm = 2'b0;
+        ba = 2'b0;
         ready = 0;
+        data_to_mem = 8'b0;
+        data_to_iface = 8'b0;
         next_state = INIT;
     end else begin
         case(current_state) 
@@ -101,7 +115,6 @@ always @(*)begin
             READY: begin
                 refresh_reset = 0;
                 ready = 1;
-                creep = 0;
                 if(refresh_overflow)begin
                     //No Operation (NOP)
                     cs = 0;
@@ -167,9 +180,11 @@ always @(*)begin
                 wait_reset = 0;
                 if(wait_overflow)begin
                     wait_reset = 1;
-                    data_to_iface = data_from_mem;  //data capture
-                    next_state = READ5;
+                    next_state = READ4;
                 end
+            end
+            READ4: begin
+                next_state = READ5; //data capture
             end
             READ5: begin
                 //Precharge All Banks (PALL)
@@ -228,7 +243,6 @@ always @(*)begin
                 cas = 0;
                 we = 0;
                 a[12:0] = {3'b0, address[9:0]};
-                creep = 1;
 
                 next_state = WRITE3; //tCMH = 0.8ns
             end
