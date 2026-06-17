@@ -42,7 +42,7 @@ reg [25:0] address; // {SW[9], 1'b0, SW[8], SW[7], SW[6], 19'b0, SW[5], SW[4]}
 assign DQM = (address[0]) ? 2'b01 : 2'b10;
 
 //This solves reading upper and lower bytes
-reg [15:0] data_to_iface_register;
+reg [15:0] data_to_iface_register = 16'b0;
 assign data_to_iface = (address[0]) ? data_to_iface_register[15:8] : data_to_iface_register[7:0];
 
 //inout logic
@@ -89,7 +89,6 @@ end
 
 always @(posedge clk) begin
 	if(!reset)begin
-		data_to_iface_register <= 16'b0;
 		current_state <= INIT;
         address <= 26'b0;
         CS <= 0;
