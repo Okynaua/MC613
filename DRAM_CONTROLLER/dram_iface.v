@@ -42,11 +42,11 @@ bin2hex getHex1(
     .HEX(hex1)
 );
 bin2hex getHex4(
-    .BIN({2'b0, SW[5], SW[4]}),
+    .BIN({SW[7:4]}),
     .HEX(hex4)
 );
 bin2hex getHex5(
-    .BIN({SW[9:6]}),
+    .BIN({2'b0, SW[9], SW[8]}),
     .HEX(hex5)
 );
 assign HEX0 = hex0;

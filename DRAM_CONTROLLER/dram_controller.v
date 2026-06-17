@@ -1,10 +1,10 @@
 module dram_controller(
 	input clk,                  
 	input reset,
-	input [25:0] add, // address[25] = byte selector, address[24:23] = ba, address[22:10] = a[12:0] line selector, a[12:0] = {0, 0, a[10], address[9:0] column selector}
-	inout [7:0] data,
+	input [25:0] add, 
+	inout [15:0] data,
     input [7:0] data_from_iface,
-    output reg [7:0] data_to_iface,
+    output [7:0] data_to_iface,
 	input req,
     input wEn,
     output reg handshake,
@@ -26,15 +26,28 @@ parameter   INIT    = 6'd00, INIT1    = 6'd01, INIT2    = 6'd02, INIT3    = 6'd0
             WRITE   = 6'd40, WRITE1   = 6'd41, WRITE2   = 6'd42, WRITE3   = 6'd43, WRITE4   = 6'd44, WRITE5   = 6'd45,
             REFRESH = 6'd50, REFRESH1 = 6'd51, REFRESH2 = 6'd52, REFRESH3 = 6'd53, REFRESH4 = 6'd54, REFRESH5 = 6'd55,
             READY   = 6'd62;
+				
+
 
 //This will work in combinational logic, will be wired to their upper case relatives
 reg cs, ras, cas, we;
 reg [12:0] a;
-reg [25:0] address;
+reg [25:0] address; // {SW[9], 1'b0, SW[8], SW[7], SW[6], 19'b0, SW[5], SW[4]}
+//bank = address[25:24]
+//line selector = address[23:11]
+//row selector = {x, x, x, address[10:1]}
+//byte selector = address[0]
+
+//byte disable logic
+assign DQM = (address[0]) ? 2'b01 : 2'b10;
+
+//This solves reading upper and lower bytes
+reg [15:0] data_to_iface_register;
+assign data_to_iface = (address[0]) ? data_to_iface_register[15:8] : data_to_iface_register[7:0];
 
 //inout logic
-wire [7:0] data_from_mem;
-assign data = (current_state == WRITE2 || current_state == WRITE3) ? data_from_iface : 8'bz;
+wire [15:0] data_from_mem;
+assign data = (current_state == WRITE2 || current_state == WRITE3) ? ((address[0]) ? {data_from_iface, 8'b0} : {8'b0, data_from_iface}) : 16'bz;
 assign data_from_mem = data;
 
 reg [5:0] next_state;
@@ -67,8 +80,7 @@ counter refresh_counter(
 );
 
 assign CKE = 1;
-assign DQM = 2'b00;
-assign BA = address[24:23];
+assign BA = address[25:24];
 
 initial begin
     current_state <= INIT;
@@ -77,7 +89,7 @@ end
 
 always @(posedge clk) begin
 	if(!reset)begin
-		data_to_iface <= 8'b0;
+		data_to_iface_register <= 16'b0;
 		current_state <= INIT;
         address <= 26'b0;
         CS <= 0;
@@ -91,7 +103,7 @@ always @(posedge clk) begin
 		 
          //Data capture
 		 if (current_state == READ4) begin
-			  data_to_iface <= data_from_mem; 
+			  data_to_iface_register <= data_from_mem; 
 		 end
         //Logic to lock address if not ready
          if(current_state == READY) begin
@@ -144,7 +156,7 @@ always @(*)begin
             cs = 0; ras = 0; cas = 1; we = 1;
 
             refresh_reset = 0;
-            a[12:0] = address[22:10];
+            a[12:0] = address[23:11];
 
             next_state = READ1; //tCMH = 0.8ns
         end
@@ -152,7 +164,7 @@ always @(*)begin
             //No Operation (NOP)
 
             refresh_reset = 0;
-            a[12:0] = address[22:10];
+            a[12:0] = address[23:11];
 
             wait_compare = 16'd3; //tRCD = 15ns
             wait_reset = 0;
@@ -165,7 +177,7 @@ always @(*)begin
             cs = 0; ras = 1; cas = 0; we = 1;
 
             refresh_reset = 0;
-            a[12:0] = {3'b0, address[9:0]};
+            a[12:0] = {3'b0, address[10:1]};
             
             next_state = READ3; //tCMH = 0.8ns
         end
@@ -173,7 +185,7 @@ always @(*)begin
             //No Operation (NOP)
 
             refresh_reset = 0;
-            a[12:0] = {3'b0, address[9:0]};
+            a[12:0] = {3'b0, address[10:1]};
 
             wait_compare = 16'd3; //CAS Latency
             wait_reset = 0;
@@ -211,7 +223,7 @@ always @(*)begin
             cs = 0; ras = 0; cas = 1; we = 1;
 
             refresh_reset = 0;
-            a[12:0] = address[22:10];
+            a[12:0] = address[23:11];
 
             next_state = WRITE1; //tCMH = 0.8ns
         end
@@ -219,7 +231,7 @@ always @(*)begin
             //No Operation (NOP)
 
             refresh_reset = 0;
-            a[12:0] = address[22:10];
+            a[12:0] = address[23:11];
 
             wait_compare = 16'd3; //tRCD = 15ns
             wait_reset = 0;
@@ -232,7 +244,7 @@ always @(*)begin
             cs = 0; ras = 1; cas = 0; we = 0;
 
             refresh_reset = 0;
-            a[12:0] = {3'b0, address[9:0]};
+            a[12:0] = {3'b0, address[10:1]};
 
             next_state = WRITE3; //tCMH = 0.8ns
         end
@@ -240,7 +252,7 @@ always @(*)begin
             //No Operation (NOP)
 
             refresh_reset = 0;
-            a[12:0] = {3'b0, address[9:0]};
+            a[12:0] = {3'b0, address[10:1]};
 
             wait_compare = 16'd4; //tRAS - tRCD = 37 - 15 = 22ns
             wait_reset = 0;

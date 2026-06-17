@@ -27,7 +27,6 @@ assign pll_reset = 0;
 
 assign DRAM_CLK = ns3_delayed_clk;
 
-assign DRAM_DQ[15:8] = 8'bz;
 
 //wires to connect controller and iface
 wire wEn, req, ready, handshake;
@@ -59,7 +58,7 @@ dram_controller controller(
     .add(address),
     .data_from_iface(iface_data_out),
     .data_to_iface(iface_data_in),
-    .data(DRAM_DQ[7:0]),
+    .data(DRAM_DQ[15:0]),
     .req(req),
     .wEn(wEn),
     .ready(ready),
