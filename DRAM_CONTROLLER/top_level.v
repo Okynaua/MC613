@@ -1,4 +1,4 @@
-module top_level (
+module top_level(
     input CLOCK_50,
     input [9:0] SW,
     input [3:0] KEY,
@@ -19,26 +19,28 @@ module top_level (
     output DRAM_WE_N,
     output DRAM_RAS_N,
     output DRAM_CLK
-
 );
 
 //wires for pll
 wire internal_clk, ns3_delayed_clk, locked, pll_reset;
+assign pll_reset = 0;
 
-assign DRAM_CLK = internal_clk;
+assign DRAM_CLK = ns3_delayed_clk;
+
 
 //wires to connect controller and iface
-wire wEn, req, ready, data_valid;
+wire wEn, req, ready, handshake;
+wire [7:0] iface_data_in, iface_data_out;
 wire [25:0] address;
 
 dram_iface interface(
     .clk(internal_clk),
     .ready(ready),
-    .data_valid(data_valid),
     .reset(KEY[0]),
     .write_req(KEY[3]),
     .SW(SW),
-    .data(DRAM_DQ[7:0]),
+    .data_in(iface_data_in),
+    .data_out(iface_data_out),
     .HEX0(HEX0),
     .HEX1(HEX1),
     .HEX4(HEX4),
@@ -46,26 +48,30 @@ dram_iface interface(
     .address(address),
     .req(req),
     .wEn(wEn),
-    .current_state(LEDR[9:7])
+    .current_state(LEDR[9:7]),
+    .handshake(handshake)
 );
+
 dram_controller controller(
     .clk(internal_clk),
     .reset(KEY[0]),
-    .address(address),
-    .data(DRAM_DQ[7:0]),
+    .add(address),
+    .data_from_iface(iface_data_out),
+    .data_to_iface(iface_data_in),
+    .data(DRAM_DQ[15:0]),
     .req(req),
     .wEn(wEn),
-    .data_valid(data_valid),
     .ready(ready),
     .current_state(LEDR[5:0]),
-    .cs(DRAM_CS_N),
-    .ras(DRAM_RAS_N),
-    .cas(DRAM_CAS_N),
-    .we(DRAM_WE_N),
-    .ba(DRAM_BA),
-    .a(DRAM_ADDR),
-    .dqm({DRAM_UDQM, DRAM_LDQM}),
-    .cke(DRAM_CKE)
+    .CS(DRAM_CS_N),
+    .RAS(DRAM_RAS_N),
+    .CAS(DRAM_CAS_N),
+    .WE(DRAM_WE_N),
+    .BA(DRAM_BA),
+    .A(DRAM_ADDR),
+    .DQM({DRAM_UDQM, DRAM_LDQM}),
+    .CKE(DRAM_CKE),
+    .handshake(handshake)
 );
 pll_143MHz pll(
     .refclk(CLOCK_50),

@@ -47,6 +47,7 @@ counter counter_test(
 			
 		$display("\n==== FIM counter_tb ====");
       $stop;
+
     end
 
     initial begin

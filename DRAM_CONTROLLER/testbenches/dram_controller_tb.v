@@ -1,3 +1,4 @@
+
 `timescale 1ns/1ps
 
 module dram_controller_tb();
@@ -525,4 +526,23 @@ module dram_controller_tb();
         );
     end
 
+endmodule
+
+
+module command2str(
+    input cs,
+    input ras,
+    input cas,
+    input we,
+    output [23:0] cmd  //3 bytes = 3 char
+);
+
+assign cmd = ({cs, ras, cas, we} == 4'b0111) ? 23'b010011100100111101010000 : // NOP
+             ({cs, ras, cas, we} == 4'b0011) ? 23'b010000010100001001010100 : // ACT
+             ({cs, ras, cas, we} == 4'b0101) ? 23'b010100100100010101000100 : // RED
+             ({cs, ras, cas, we} == 4'b0010) ? 23'b010100000101001001000101 : // PRE
+             ({cs, ras, cas, we} == 4'b0100) ? 23'b010101110101001001010100 : // WRT
+             ({cs, ras, cas, we} == 4'b0001) ? 23'b010100100100010101000110 : // REF
+             ({cs, ras, cas, we} == 4'b0000) ? 23'b010011010101001001010011 : // MRS
+                                               23'b010001010101001001010010;  // ERR
 endmodule
