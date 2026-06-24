@@ -44,8 +44,12 @@ assign data = 16'hZZZZ;
 always #10 clk = ~clk;
 
 initial begin
+    $display("\n==== INICIO dram_controller_refresh_tb ====\n");
+	 
     clk = 0;
     reset = 1;
+	 
+	 $display("\n==== PRIMEIRO CICLO DE REFRESH ====");
 
     force dut.current_state = dut.READY;
     #20;
@@ -59,12 +63,26 @@ initial begin
 	 
 	 repeat(4) @(posedge clk);
 	 
+	 $display("\n==== SEGUNDO CICLO DE REFRESH ====");
+	 
 	 wait(current_state == dut.REFRESH);
 	 @(posedge clk);
 	 wait(current_state == dut.READY);
 	 
 	 #500;
-
+	 
+	 repeat(4) @(posedge clk);
+	 
+	 $display("\n==== TERCEIRO CICLO DE REFRESH ====");
+	 
+	 wait(current_state == dut.REFRESH);
+	 @(posedge clk);
+	 wait(current_state == dut.READY);
+	 
+	 #500;
+	 
+	 $display("\n==== FIM dram_controller_refresh_tb ====\n");
+	 
     $finish;
 end
 
@@ -85,7 +103,7 @@ end
 
 
 //======================================================
-// Nome dos estados
+// Nome dos estados REFRESH
 //======================================================
 
 reg [20*8:1] state_name;
@@ -107,6 +125,10 @@ always @(*) begin
     endcase
 
 end
+
+//======================================================
+// MONITOR
+//======================================================
 
 initial begin
     $monitor(

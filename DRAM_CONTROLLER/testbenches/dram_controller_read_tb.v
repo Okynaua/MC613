@@ -48,7 +48,7 @@ dram_controller dut(
 always #10 clk = ~clk;
 
 //======================================================
-// Decodificação dos comandos SDRAM
+// Decodificacao dos comandos SDRAM
 //======================================================
 
 reg [20*8:1] cmd_name;
@@ -58,12 +58,12 @@ always @(*) begin
     else if (!CS &&  RAS && !CAS &&  WE) cmd_name = "READ";
     else if (!CS && !RAS &&  CAS && !WE) cmd_name = "PRECHARGE";
     else if (!CS &&  RAS &&  CAS &&  WE) cmd_name = "NOP";
-	 else if (!CS && !RAS && !CAS &&  WE) cmd_name = "AUTO REFRESH";
+    else if (!CS && !RAS && !CAS &&  WE) cmd_name = "AUTO REFRESH";
     else                                 cmd_name = "OTHER";
 end
 
 //======================================================
-// Nome dos estados
+// Nome dos estados READ
 //======================================================
 
 reg [20*8:1] state_name;
@@ -83,7 +83,7 @@ always @(*) begin
 end
 
 //======================================================
-// Monitor principal
+// Monitor
 //======================================================
 
 initial begin
