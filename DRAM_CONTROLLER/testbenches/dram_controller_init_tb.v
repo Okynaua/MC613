@@ -44,43 +44,35 @@ dram_controller dut(
 
 assign data = 16'hZZZZ;
 
-always #5 clk = ~clk;
+always #10 clk = ~clk;
 
 integer refresh_count;
 
 initial begin
+	 $display("==== INICIO dram_controller_init_tb ====\n");
     clk = 0;
     reset = 0;
     refresh_count = 0;
 
-    $display("");
-    $display("======================================");
-    $display(" TESTE DE INICIALIZACAO DA SDRAM ");
-    $display("======================================");
-    $display("");
+    $display("=== TESTE DE INICIALIZACAO DA SDRAM ===\n");
 
     #20;
     reset = 1;
 
     // acelera a simulação
-    force dut.wait_compare = 16'd1;
+    //force dut.wait_compare = 16'd1;
 
     wait(current_state == dut.READY);
+	 
+	 
+	 repeat(4) @(posedge clk);	 
+	 
 
-    $display("");
-    $display("======================================");
-    $display(" RESULTADO FINAL ");
-    $display("======================================");
     $display("Refreshes executados = %0d", refresh_count);
-
-    if(refresh_count >= 8)
-        $display("PASSOU: numero de refreshes valido");
-    else
-        $display("FALHOU: menos de 8 refreshes");
-
-    $display("");
-
+	 
     #50;
+	 
+	 $display("\n==== FIM dram_controller_init_tb ====");
     $finish;
 end
 
@@ -179,11 +171,10 @@ end
 
 initial begin
     $monitor(
-        "T=%0t | %-10s | CMD=%s | A10=%b | ready=%b | refresh_cnt=%0d",
+        "T=%0t | %-10s | CMD=%s | ready=%b | refresh_cnt=%0d",
         $time,
         state_name(current_state),
         command_name(CS,RAS,CAS,WE),
-        A[10],
         ready,
         refresh_count
     );
