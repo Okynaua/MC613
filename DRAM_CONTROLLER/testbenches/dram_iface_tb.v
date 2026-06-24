@@ -2,7 +2,6 @@
 
 module dram_iface_tb();
 
-    // Entradas
     reg clk;
     reg ready;
     reg reset;
@@ -11,7 +10,6 @@ module dram_iface_tb();
     reg [9:0] SW;
     reg [7:0] data_in;
 
-    // Saídas
     wire [7:0] data_out;
     wire [6:0] HEX0;
     wire [6:0] HEX1;
@@ -52,9 +50,9 @@ module dram_iface_tb();
         forever #10 clk = ~clk;
     end
 	 
-    // =====================================================
+    // -----------------------------------------
     // HEX -> BIN
-    // =====================================================
+    // -----------------------------------------
 
     wire [3:0] BIN0, BIN1, BIN4, BIN5;
 
