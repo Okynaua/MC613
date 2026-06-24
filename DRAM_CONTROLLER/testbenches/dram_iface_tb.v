@@ -85,7 +85,6 @@ module dram_iface_tb();
 					 3'b010: state_name = "WAIT_READ";
 					 3'b001: state_name = "REQ_WRITE";
 					 3'b011: state_name = "WAIT_WRITE";
-					 default: state_name = "UNKNOWN";
 			   endcase
 		  end
 	 endfunction
