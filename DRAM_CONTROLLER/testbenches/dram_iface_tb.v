@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 
-module dram_iface_tb;
+module dram_iface_tb();
 
     // Entradas
     reg clk;
@@ -77,6 +77,20 @@ module dram_iface_tb;
         .HEX(HEX5),
         .BIN(BIN5)
     );
+	 
+	 function [127:0] state_name;
+	 	  input [2:0] state;
+		  begin
+			   case (state)
+					 3'b100: state_name = "READY";
+					 3'b000: state_name = "REQ_READ";
+					 3'b010: state_name = "WAIT_READ";
+					 3'b001: state_name = "REQ_WRITE";
+					 3'b011: state_name = "WAIT_WRITE";
+					 default: state_name = "UNKNOWN";
+			   endcase
+		  end
+	 endfunction
 
     //------------------------------------------
     // Monitor
@@ -84,9 +98,9 @@ module dram_iface_tb;
 	
     initial begin
         $monitor(
-            "Tempo=%0t | state=%b | ready=%b | req=%b | wEn=%b | hs=%b | addr=%h | SW=%03h | data_in=%02h | data_out=%02h | HEX=[%h%h %h%h]",
+            "Tempo=%0t | state=%s | ready=%b | req=%b | wEn=%b | hs=%b | addr=%h | SW=%03h | data_in=%02h | data_out=%02h | HEX=[%h%h %h%h]",
             $time,
-            current_state,
+            state_name(current_state),
             ready,
             req,
             wEn,
@@ -102,10 +116,9 @@ module dram_iface_tb;
         );
     end
 
-    //------------------------------------------
-    // Estímulos
-    //------------------------------------------
+
     initial begin
+	 $display("==== INICIO dram_iface_tb ====");
 
         // valores iniciais
         ready      = 1;
@@ -135,28 +148,31 @@ module dram_iface_tb;
         $display("\n=== ALTERACAO DE ENDERECO ===\n");
 
         // iface deve entrar em REQ_READ
+		  wait(current_state == dut.REQ_READ);
 
-        #20;
+        @(posedge clk);
         handshake = 1;
 
         // controlador aceitou requisição
 
-        #10;
+        @(posedge clk);
         handshake = 0;
 
-        // leitura em andamento
+        // espera a FSM entrar em WAIT_READ
+		  wait(current_state == dut.WAIT_READ);
 
         ready = 0;
 
-        #40;
+		  // simula controlador ocupado
+        repeat(4) @(posedge clk);
 
         // dado retornado pelo controlador
 
         data_in = 8'h0A;
-
         ready = 1;
 
-        #40;
+        // espera voltar para READY
+		  wait(current_state == dut.READY);
 
         //--------------------------------------------------
         // TESTE 2
@@ -170,52 +186,58 @@ module dram_iface_tb;
         // Pulso do botão KEY3
         // ativo baixo
 
-        #20;
+		  // garante que a leitura anterior terminou
+		  wait(current_state == dut.READY);
+		  
+        @(posedge clk);
         write_req = 0;
+		  
+		  // mantém pressionado por alguns clocks
+		  repeat(3) @(posedge clk);
 
-        #20;
         write_req = 1;
 
         // sincronizador interno precisa de alguns clocks
 
-        #60;
+		  // escrita detectada
+		  wait(current_state == dut.REQ_WRITE);
 
-        // controlador aceita escrita
+		  @(posedge clk);
+		  handshake = 1;
 
-        handshake = 1;
+		  @(posedge clk);
+		  handshake = 0;
 
-        #10;
-        handshake = 0;
+		  // espera WAIT_WRITE
+		  wait(current_state == dut.WAIT_WRITE);
 
-        ready = 0;
+		  ready = 0;
 
-        #50;
+		  repeat(4) @(posedge clk);
 
-        // escrita concluída
+		  ready = 1;
 
-        ready = 1;
+		  // FSM deve iniciar leitura automática
+		  wait(current_state == dut.REQ_READ);
 
-        //--------------------------------------------------
-        // após WAIT_WRITE
-        // FSM deve iniciar REQ_READ automaticamente
-        //--------------------------------------------------
+		  @(posedge clk);
+		  handshake = 1;
 
-        #20;
+		  @(posedge clk);
+		  handshake = 0;
 
-        handshake = 1;
+		  // leitura em andamento
+		  wait(current_state == dut.WAIT_READ);
 
-        #10;
-        handshake = 0;
+		  ready = 0;
 
-        ready = 0;
+		  repeat(4) @(posedge clk);
 
-        #40;
+		  data_in = 8'h05;
+		  ready = 1;
 
-        data_in = 8'h05;
-
-        ready = 1;
-
-        #50;
+		  // espera tudo terminar
+		  wait(current_state == dut.READY);
 
         //--------------------------------------------------
         // TESTE 3
@@ -224,30 +246,32 @@ module dram_iface_tb;
 
         $display("\n=== NOVA LEITURA ===\n");
 
-        SW[9:4] = 6'h2A;
+		  SW[9:4] = 6'h2A;
 
-        #30;
+		  wait(current_state == dut.REQ_READ);
 
-        handshake = 1;
+		  @(posedge clk);
+		  handshake = 1;
 
-        #10;
-        handshake = 0;
+		  @(posedge clk);
+		  handshake = 0;
 
-        ready = 0;
+		  wait(current_state == dut.WAIT_READ);
 
-        #50;
+		  ready = 0;
 
-        data_in = 8'h06;
+		  repeat(4) @(posedge clk);
 
-        ready = 1;
+		  data_in = 8'h06;
+		  ready = 1;
 
-        #50;
+		  wait(current_state == dut.READY);
 
         //--------------------------------------------------
         // Final
         //--------------------------------------------------
 
-        $display("\n=== FIM DA SIMULACAO ===\n");
+        $display("\n==== FIM dram_face_tb ====");
 
         $finish;
     end

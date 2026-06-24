@@ -3,7 +3,7 @@ module dram_iface(
     input ready,           //states if the controller can receive requests
     input reset,           //KEY[0] active low
     input write_req,       //KEY[3] active low
-    input handshake,			//confirms dram_controller received dram_iface request
+    input handshake,       //confirms dram_controller received dram_iface request
     input [9:0] SW,        //represents input switcher from the board
     input [7:0] data_in,
     output [7:0] data_out,
