@@ -95,7 +95,7 @@ module dram_iface_tb();
 	
     initial begin
         $monitor(
-            "Tempo=%0t | state=%s | ready=%b | req=%b | wEn=%b | hs=%b | addr=%h | SW=%03h | data_in=%02h | data_out=%02h | HEX=[%h%h %h%h]",
+            "Tempo=%0t | state=%s | ready=%b | req=%b | wEn=%b | hs=%b | addr=%h | SW=%b | data_in=%02h | data_out=%02h | HEX=[%h%h %h%h]",
             $time,
             state_name(current_state),
             ready,
