@@ -87,13 +87,12 @@ end
 
 initial begin
     $monitor(
-        "T=%0t | %-8s | CMD=%-10s | ready=%b | hs=%b | A=%h | data=%h | iface=%h",
+        "T=%0t | %-8s | CMD=%-10s | ready=%b | hs=%b | data=%h | iface=%h",
         $time,
         state_name,
         cmd_name,
         ready,
         handshake,
-        A,
         data,
         data_to_iface
     );
@@ -104,6 +103,7 @@ end
 //======================================================
 
 initial begin
+	 $display("\n==== INICIO dram_controller_init_tb ====\n");
 
     clk   = 0;
     reset = 1;
@@ -112,12 +112,6 @@ initial begin
 
     // banco=0 linha=1 coluna=2
     add = 26'h000802;
-
-    $display("");
-    $display("======================================");
-    $display(" TESTE DE LEITURA SDRAM ");
-    $display("======================================");
-    $display("");
 
     //--------------------------------------------------
     // Começa já em READY
@@ -145,11 +139,7 @@ initial begin
 
     wait(handshake);
 
-    $display("");
-    $display("PASSO 1: REQUISICAO ACEITA");
-    $display("");
-
-    @(posedge clk);
+    $display("\nPASSO 1: REQUISICAO ACEITA");
 
     req = 0;
 
@@ -158,41 +148,41 @@ initial begin
     //--------------------------------------------------
 
     wait(current_state == dut.READ);
-
-    $display("PASSO 2: ACTIVATE (linha selecionada)");
+	 @(posedge clk);
+    $display("\nPASSO 2: ACTIVATE (linha selecionada)");
 
     //--------------------------------------------------
     // tRCD
     //--------------------------------------------------
 
     wait(current_state == dut.READ1);
-
-    $display("PASSO 3: ESPERA tRCD");
+	 @(posedge clk);
+    $display("\nPASSO 3: ESPERA tRCD");
 
     //--------------------------------------------------
     // READ
     //--------------------------------------------------
 
     wait(current_state == dut.READ2);
-
-    $display("PASSO 4: COMANDO READ");
+	 @(posedge clk);
+    $display("\nPASSO 4: COMANDO READ");
 
     //--------------------------------------------------
     // CAS LATENCY
     //--------------------------------------------------
 
     wait(current_state == dut.READ3);
-
-    $display("PASSO 5: ESPERA CAS LATENCY");
+	 @(posedge clk);
+    $display("\nPASSO 5: ESPERA CAS LATENCY");
 
     //--------------------------------------------------
     // CAPTURA
     //--------------------------------------------------
 
     wait(current_state == dut.READ4);
-
+	 @(posedge clk);
     $display(
-        "PASSO 6: DADO CAPTURADO = %h",
+        "\nPASSO 6: DADO CAPTURADO = %h",
         data
     );
 
@@ -201,39 +191,28 @@ initial begin
     //--------------------------------------------------
 
     wait(current_state == dut.READ5);
-
-    $display("PASSO 7: PRECHARGE");
+	 @(posedge clk);
+    $display("\nPASSO 7: PRECHARGE");
 
     //--------------------------------------------------
     // tRP
     //--------------------------------------------------
 
     wait(current_state == dut.READ6);
-
-    $display("PASSO 8: ESPERA tRP");
+	 @(posedge clk);
+    $display("\nPASSO 8: ESPERA tRP");
 
     //--------------------------------------------------
     // READY
     //--------------------------------------------------
 
     wait(current_state == dut.READY);
-
-    $display("");
-    $display("======================================");
-    $display(" RESULTADO FINAL ");
-    $display("======================================");
-    $display("");
-
-    $display("ACTIVATE executado");
-    $display("tRCD respeitado");
-    $display("READ executado");
-    $display("CAS latency respeitada");
-    $display("Dado capturado");
-    $display("PRECHARGE executado");
-    $display("tRP respeitado");
-    $display("Retorno ao READY");
+	 
+	 repeat(4) @(posedge clk);	 
 
     #50;
+	 $display("\n==== FIM dram_controller_read_tb ====");
+	 
     $finish;
 end
 

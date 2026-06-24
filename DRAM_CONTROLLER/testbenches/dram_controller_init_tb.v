@@ -54,8 +54,6 @@ initial begin
     reset = 0;
     refresh_count = 0;
 
-    $display("=== TESTE DE INICIALIZACAO DA SDRAM ===\n");
-
     #20;
     reset = 1;
 
