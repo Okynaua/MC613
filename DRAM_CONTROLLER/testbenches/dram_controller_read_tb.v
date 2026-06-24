@@ -58,6 +58,7 @@ always @(*) begin
     else if (!CS &&  RAS && !CAS &&  WE) cmd_name = "READ";
     else if (!CS && !RAS &&  CAS && !WE) cmd_name = "PRECHARGE";
     else if (!CS &&  RAS &&  CAS &&  WE) cmd_name = "NOP";
+	 else if (!CS && !RAS && !CAS &&  WE) cmd_name = "AUTO REFRESH";
     else                                 cmd_name = "OTHER";
 end
 
